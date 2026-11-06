@@ -99,3 +99,18 @@ This is the strongest brief so far, because it turns the homepage into an honest
 **Decision (2026-11-07).** Pavlos chose Tree v2 as the direction for the real site, out of 18 concepts across three rounds.
 
 **Lesson.** A metaphor can be organic while the rendering stays precise. The tree works best as a data visualisation that hints at a tree, not as a drawing of one.
+
+### 2026-11-07 · From mock to real site
+
+**Decisions.** Pavlos will host on Vercel and write entries as Markdown files. The first version has three pages: the tree homepage, one page per entry, and About. All sample entries were removed, so the tree starts empty and grows from his first real entry.
+
+**Stack.** Astro 7, fully static, zero config on Vercel. Two content collections: `branches` (name, category, optional end date) and `entries` (title, date, branch, optional body). A branch's start date comes from its first entry, so there is nothing to keep in sync by hand.
+
+**Design problems solved while generalising the mock.**
+- The mock had hand-placed lanes. The real tree has to lay itself out from any data, so lanes are now picked by a small search that minimises fork curves crossing other branches. Crossing a live branch costs more than crossing an ended one, because it is more visible. A lane can only be reused some months after its branch ended, so a new fork never lands on an old "ended" tag.
+- Cards were narrowed from 190px to 176px, so text never touches the neighbouring branch.
+- Every branch's first card sits just above its fork, on the inner side, so it never overlaps the curve or the year column.
+- A 1200px tree is unreadable on a phone. Below 760px the page switches to a vertical feed grouped by year, using the same colours, and the branch pills become one swipeable row.
+- An empty state for launch day: a single sprout with a glowing tip and "The first branch is about to sprout", so the site looks intentional before any content exists.
+- The entry page repeats the tree in miniature: an "On this branch" timeline in the branch colour, with the current entry filled in.
+- Entries without a body show on the tree as plain markers and are not links, so nothing leads to an empty page.
