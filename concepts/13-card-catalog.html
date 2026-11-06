@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Card catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#22201C;--muted:#8A8172;--card:#F7F1E3}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:14px/1.5 Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;background:#E6DFD2 radial-gradient(ellipse at 50% -10%,#F6F1E8,transparent 70%)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 32px 72px}
+  header{display:flex;justify-content:space-between;font-size:13px}
+  header nav{display:flex;gap:24px;color:var(--muted)}
+  .layout{display:grid;grid-template-columns:420px 1fr;gap:56px;margin-top:56px;align-items:start}
+  h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:54px;line-height:1;letter-spacing:-.015em}
+  h1 em{color:#8A7B66}
+  .lead{margin-top:18px;font-size:15px;line-height:1.65;color:#5F574B}
+  .wood{background:linear-gradient(180deg,#8E5F38,#7A4F2C);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .09' numOctaves='3' seed='2'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .13 0 0 0 0 .05 1.2 0 0 0 -.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),linear-gradient(180deg,#956340,#7A4F2C)}
+  .cabinet{margin-top:40px;padding:14px;border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,220,180,.3),0 24px 40px -18px rgba(50,25,8,.55)}
+  .drawers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .drawer{height:92px;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;position:relative;transition:transform .3s cubic-bezier(.2,.8,.2,1);
+    box-shadow:inset 0 1px 0 rgba(255,220,180,.25),inset 0 -2px 3px rgba(0,0,0,.3),0 2px 3px rgba(0,0,0,.25)}
+  .drawer:hover{transform:translateY(-2px)}
+  .drawer.on{box-shadow:inset 0 3px 10px rgba(0,0,0,.6)}
+  .holder{width:110px;height:30px;border-radius:2px;padding:3px;background:linear-gradient(180deg,#E9D398,#B8914A 60%,#D7B66E);box-shadow:0 1px 2px rgba(0,0,0,.4)}
+  .holder span{display:flex;align-items:center;justify-content:center;height:100%;background:#F5EEDC;font:700 11px "Courier Prime",monospace;letter-spacing:.08em;color:#3A3226}
+  .knob{width:38px;height:12px;border-radius:0 0 18px 18px;background:linear-gradient(180deg,#D7B66E,#9C7838);box-shadow:0 2px 2px rgba(0,0,0,.35)}
+  .drawer .count{position:absolute;right:10px;top:8px;font:11px "Courier Prime",monospace;color:rgba(255,235,210,.6)}
+
+  .tray{position:relative;border-radius:6px;padding:22px 26px 26px;min-height:640px;box-shadow:inset 0 1px 0 rgba(255,220,180,.3),0 24px 40px -18px rgba(50,25,8,.55)}
+  .tray-in{position:relative;height:600px;border-radius:3px;background:linear-gradient(180deg,#3A2414,#5A3A22);box-shadow:inset 0 10px 24px rgba(0,0,0,.6),inset 0 -2px 0 rgba(255,220,180,.15);overflow:hidden;perspective:1200px}
+  .rod{position:absolute;left:50%;top:0;bottom:0;width:6px;margin-left:-3px;background:linear-gradient(90deg,#8A6A30,#E6CF90,#8A6A30);z-index:0;opacity:.0}
+  .lip{position:absolute;left:0;right:0;bottom:0;height:96px;z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;
+    box-shadow:0 -10px 18px -6px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,220,180,.35)}
+  .card{position:absolute;left:28px;right:28px;height:236px;background:var(--card);border-radius:4px 4px 2px 2px;padding:18px 26px;cursor:pointer;
+    transform-origin:bottom center;transform:translateY(var(--y)) rotateX(var(--rx,8deg));transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .3s;
+    box-shadow:0 -1px 0 rgba(255,255,255,.6) inset,0 -6px 14px -6px rgba(0,0,0,.45);
+    background-image:linear-gradient(180deg,transparent 52px,#C9473C 52px 53px,transparent 53px),repeating-linear-gradient(180deg,transparent 0 25px,#E3DCCB 25px 26px);background-position:0 0,0 54px}
+  .card::after{content:"";position:absolute;bottom:22px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#4A2E19;box-shadow:inset 0 2px 3px rgba(0,0,0,.6)}
+  .card .top{display:flex;justify-content:space-between;font:12px "Courier Prime",monospace;color:#6E6352;height:36px;align-items:center}
+  .card .top b{color:var(--ink);font-weight:700;letter-spacing:.06em}
+  .card h3{font-family:"Courier Prime",monospace;font-weight:700;font-size:19px;line-height:26px;margin-top:2px}
+  .card p{font:15px/26px "Courier Prime",monospace;color:#4D453A}
+  .card .tag{position:absolute;top:-18px;left:var(--tab,40px);height:20px;padding:0 12px;border-radius:4px 4px 0 0;background:var(--card);font:700 10px "Courier Prime",monospace;letter-spacing:.1em;line-height:20px;color:#6E6352}
+  .card:hover{--rx:2deg;transform:translateY(calc(var(--y) - 18px)) rotateX(var(--rx))}
+  .card.front,.card.front:hover{--rx:0deg;transform:translateY(var(--y));box-shadow:0 -1px 0 rgba(255,255,255,.6) inset,0 24px 30px -12px rgba(0,0,0,.6)}
+  .stamp{display:inline-block;margin-top:10px;font:700 11px "Courier Prime",monospace;letter-spacing:.14em;color:#B8423A;border:2px solid #B8423A;padding:1px 7px;border-radius:3px;transform:rotate(-4deg);opacity:.8}
+  .help{display:flex;justify-content:space-between;margin-top:14px;font:12px "Courier Prime",monospace;color:rgba(255,235,210,.7)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><b>Pavlos</b><nav><a href="#">Catalog</a><a href="#">About</a><a href="#">RSS</a></nav></header>
+  <div class="layout">
+    <div>
+      <h1>Every note, <em>filed by hand.</em></h1>
+      <p class="lead">I'm a product designer who keeps a card for everything I learn. This is that catalog. Open a drawer, flip through the cards, pull one out to read it.</p>
+      <div class="cabinet wood"><div class="drawers">
+        <div class="drawer wood on" data-k="all"><span class="count">48</span><div class="holder"><span>ALL NOTES</span></div><div class="knob"></div></div>
+        <div class="drawer wood" data-k="LEARNING"><span class="count">21</span><div class="holder"><span>LEARNINGS</span></div><div class="knob"></div></div>
+        <div class="drawer wood" data-k="THOUGHT"><span class="count">17</span><div class="holder"><span>THOUGHTS</span></div><div class="knob"></div></div>
+        <div class="drawer wood" data-k="UPDATE"><span class="count">10</span><div class="holder"><span>UPDATES</span></div><div class="knob"></div></div>
+        <div class="drawer wood"><div class="holder"><span>NOW</span></div><div class="knob"></div></div>
+        <div class="drawer wood"><div class="holder"><span>ABOUT</span></div><div class="knob"></div></div>
+      </div></div>
+    </div>
+    <div class="tray wood">
+      <div class="tray-in"><div id="tray"></div><div class="lip wood"><div class="holder" style="width:150px"><span id="lbl">ALL NOTES</span></div><div class="knob" style="width:56px"></div></div></div>
+      <div class="help"><span>Click a card to pull it out. Arrow keys flip.</span><span id="pos">1 / 6</span></div>
+    </div>
+  </div>
+</div>
+<script>
+  const notes=[
+    ['LEARNING','02.11.2026','Defaults are the real design','Most people never open settings. Whatever ships as the default becomes the product.','4 MIN'],
+    ['THOUGHT','24.10.2026','Quiet software is underrated','Interfaces that wait for you instead of asking for attention.','3 MIN'],
+    ['UPDATE','12.10.2026','I rebuilt this site with less','Fewer pages, one typeface, and a card catalog instead of a blog.','2 MIN'],
+    ['LEARNING','30.09.2026','Naming things is half the interface','A good label saves a tooltip, an onboarding step, and a support ticket.','5 MIN'],
+    ['THOUGHT','18.09.2026','On working alone, together','A year of mostly async collaboration, as an introvert.','6 MIN'],
+    ['LEARNING','03.09.2026','Spacing scales I actually use','A 4pt base, five steps that matter, and why I stopped using the rest.','4 MIN']];
+  const tray=document.getElementById('tray');let list=notes,front=0;
+  function render(){tray.innerHTML='';const n=list.length;
+    list.forEach((c,i)=>{const el=document.createElement('div');el.className='card'+(i===front?' front':'');
+      el.style.setProperty('--y',(i===front?18:462-(n-1-i)*40)+'px');el.style.setProperty('--tab',(140+(i%3)*110)+'px');el.style.zIndex=i===front?100:i;
+      el.innerHTML=`<span class="tag">${c[0]}</span><div class="top"><b>NO. ${String(48-notes.indexOf(c)).padStart(3,'0')}</b><span>${c[1]}</span></div><h3>${c[2]}</h3><p>${c[3]}</p><span class="stamp">${c[4]} READ</span>`;
+      el.onclick=()=>{front=i;render()};tray.appendChild(el)});
+    document.getElementById('pos').textContent=`${front+1} / ${n}`}
+  document.querySelectorAll('.drawer[data-k]').forEach(d=>d.onclick=()=>{document.querySelectorAll('.drawer').forEach(x=>x.classList.remove('on'));d.classList.add('on');
+    list=d.dataset.k==='all'?notes:notes.filter(n=>n[0]===d.dataset.k);front=0;document.getElementById('lbl').textContent=d.querySelector('.holder span').textContent;render()});
+  addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowRight')front=Math.min(front+1,list.length-1);if(e.key==='ArrowUp'||e.key==='ArrowLeft')front=Math.max(front-1,0);render()});
+  render();
+</script>
+</body>
+</html>

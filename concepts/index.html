@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Personal site · Concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#EEEBE5;--ink:#1B1A18;--muted:#86817A;--line:#DDD8CF}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:14px/1.5 Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1360px;margin:0 auto;padding:48px 32px 96px}
+  h1{font-size:32px;font-weight:500;letter-spacing:-.03em}
+  .sub{color:var(--muted);margin-top:8px;max-width:620px;font-size:15px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:40px}
+  .c{display:block}
+  .frame{position:relative;aspect-ratio:16/10;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:0 20px 40px -30px rgba(0,0,0,.35);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+  .frame iframe{position:absolute;top:0;left:0;width:1440px;height:900px;border:0;transform-origin:0 0;pointer-events:none}
+  .c:hover .frame{transform:translateY(-4px);box-shadow:0 30px 50px -30px rgba(0,0,0,.45)}
+  .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
+  .meta h2{font-size:16px;font-weight:500;letter-spacing:-.01em}
+  .meta span{font-size:12px;color:var(--muted)}
+  .c p{color:var(--muted);font-size:13.5px;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Personal site: 9 directions</h1>
+  <p class="sub">Each one is a full homepage mock with the same content, so you can compare the feeling rather than the copy. Click any to open it full size.</p>
+  <div class="grid">
+    <a class="c" href="01-paper.html"><div class="frame"><iframe src="01-paper.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>01 · Paper</h2><span>Editorial, serif, warm</span></div><p>A quiet single column on cream paper. Reads like a well set book. The safest, most timeless option.</p></a>
+    <a class="c" href="02-terminal.html"><div class="frame"><iframe src="02-terminal.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>02 · Terminal</h2><span>Mono, dark, keyboard first</span></div><p>Posts as files, keyboard navigation with j and k. Shows the tech side without feeling like a hacker cliché.</p></a>
+    <a class="c" href="03-swiss.html"><div class="frame"><iframe src="03-swiss.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>03 · Swiss</h2><span>Grid, huge type, one red</span></div><p>European typographic tradition. Confident and structured, the most "designer" of the set.</p></a>
+    <a class="c" href="04-index.html"><div class="frame"><iframe src="04-index.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>04 · Index</h2><span>Archive table, filters</span></div><p>Everything in one sortable list with working filters. Great once you have lots of posts, and it rewards consistency.</p></a>
+    <a class="c" href="05-garden.html"><div class="frame"><iframe src="05-garden.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>05 · Garden</h2><span>Notes that grow, sage tones</span></div><p>A digital garden where notes are seedlings, budding, or evergreen. Removes the pressure to publish finished essays.</p></a>
+    <a class="c" href="06-ambient.html"><div class="frame"><iframe src="06-ambient.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>06 · Ambient</h2><span>Night, soft glow, live clock</span></div><p>Calm dark mode with drifting light and a "currently" strip. Chill and introverted, with a modern edge.</p></a>
+    <a class="c" href="07-bento.html"><div class="frame"><iframe src="07-bento.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>07 · Bento</h2><span>Tiles, playful, personal</span></div><p>A grid of small windows into your life: latest post, music, time, tools. The most personality per pixel.</p></a>
+    <a class="c" href="08-letter.html"><div class="frame"><iframe src="08-letter.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>08 · Letter</h2><span>Intimate, signed, margin notes</span></div><p>The homepage is a short letter to the reader, with posts linked inline. Warm and human, built around a newsletter.</p></a>
+    <a class="c" href="09-desk.html"><div class="frame"><iframe src="09-desk.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>09 · Desk</h2><span>Canvas, draggable, spatial</span></div><p>A dotted canvas like your Figma desk. Drag notes around. The most experimental and memorable, with a list view fallback.</p></a>
+  </div>
+
+  <h1 style="margin-top:88px">Round 2: physical objects</h1>
+  <p class="sub">Following the Desk direction. Each homepage is a real object you can touch: things move, flip, open, and get pulled out the way they would on a real table.</p>
+  <div class="grid">
+    <a class="c" href="10-workbench.html"><div class="frame"><iframe src="10-workbench.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>10 · Workbench</h2><span>Wood table, top down</span></div><p>Your real desk from above: spiral notebook, index cards, coffee, pencil, phone playing music. Everything is draggable.</p></a>
+    <a class="c" href="11-corkboard.html"><div class="frame"><iframe src="11-corkboard.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>11 · Corkboard</h2><span>Pins, string, tickets</span></div><p>Notes pinned to cork with red string linking related ideas. Hover straightens a note. Feels like thinking in progress.</p></a>
+    <a class="c" href="12-bookshelf.html"><div class="frame"><iframe src="12-bookshelf.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>12 · Bookshelf</h2><span>Spines, shelves, open book</span></div><p>Each post is a book. One shelf per type. Click a spine and it opens as a two page spread to read.</p></a>
+    <a class="c" href="13-card-catalog.html"><div class="frame"><iframe src="13-card-catalog.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>13 · Card catalog</h2><span>Library drawers, typed cards</span></div><p>Old library catalog. Drawers filter by type, cards flip with arrow keys and pull up to read. The most systematic of the set.</p></a>
+    <a class="c" href="14-notebook.html"><div class="frame"><iframe src="14-notebook.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>14 · Notebook</h2><span>Dot grid, tabs, page turn</span></div><p>An open notebook with contents, colored tabs, an elastic band, and handwritten margin notes. Tabs turn the page.</p></a>
+    <a class="c" href="15-postcards.html"><div class="frame"><iframe src="15-postcards.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>15 · Postcards</h2><span>Stamps, postmarks, flip</span></div><p>Every post is a postcard to the reader. Click to flip to the picture, drag to rearrange. Pairs naturally with a newsletter.</p></a>
+  </div>
+
+  <h1 style="margin-top:88px">Round 3: timelines that branch</h1>
+  <p class="sub">You land on the latest activity and follow a path back in time. Every interest is its own branch, colored by type: product design, writing, hobbies, new interests. Branches that ended stop growing. Live ones keep growing at the tip.</p>
+  <div class="grid">
+    <a class="c" href="16-branches.html"><div class="frame"><iframe src="16-branches.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>16 · Branches</h2><span>Vertical, git style, filters</span></div><p>A clean history graph with one lane per branch. Growing tips pulse at the top, ended lanes cap off and turn grey. Hover a row to trace its branch.</p></a>
+    <a class="c" href="17-tree-v2.html"><div class="frame"><iframe src="17-tree-v2.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>17 · Tree</h2><span>Fine line, draws in as you scroll</span></div><p>A living tree drawn in thin ink. Today is the canopy, 2019 is the roots. Live branches glow at the tip and carry leaves. Ended ones fade to grey and stop.</p></a>
+    <a class="c" href="18-trail-map.html"><div class="frame"><iframe src="18-trail-map.html" loading="lazy" tabindex="-1" scrolling="no"></iframe></div><div class="meta"><h2>18 · Trail map</h2><span>Paper map, horizontal, drag</span></div><p>A hiking map with contour lines. You are here at today, walk right into the past. Trails fork off the main route and end at a sign when I stopped.</p></a>
+  </div>
+</div>
+<script>
+  const fit=()=>document.querySelectorAll('.frame').forEach(f=>{f.querySelector('iframe').style.transform=`scale(${f.clientWidth/1440})`});
+  addEventListener('resize',fit);fit();
+</script>
+</body>
+</html>

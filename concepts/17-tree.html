@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Tree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F3EEE3;--ink:#22201C;--muted:#8A8172}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{color:var(--ink);font:14px/1.5 Inter,sans-serif;-webkit-font-smoothing:antialiased;
+    background:linear-gradient(180deg,#EEF0E6 0,#F3EEE3 900px,#F3EEE3 calc(100% - 340px),#E3D6C0 calc(100% - 200px),#CDB99A 100%)}
+  a{color:inherit;text-decoration:none}
+  header{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:16px 28px;font-size:13px;background:linear-gradient(180deg,rgba(238,240,230,.95),rgba(238,240,230,0))}
+  header nav{display:flex;gap:24px;color:var(--muted)}
+  .intro{text-align:center;padding:110px 24px 0;max-width:640px;margin:0 auto}
+  .intro h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:58px;line-height:1;letter-spacing:-.015em}
+  .intro h1 em{color:#5E7D58}
+  .intro p{margin-top:16px;color:#5F574B;font-size:15px;line-height:1.65}
+  .legend{display:flex;justify-content:center;gap:20px;margin-top:20px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:9px;height:9px;border-radius:50% 0}
+  .stage{position:relative;margin:0 auto;max-width:1400px}
+  svg{display:block;overflow:visible;width:100%;height:auto}
+  .lbl{font-family:"Instrument Serif",serif;font-size:17px;fill:var(--ink)}
+  .lbl.dead{fill:#9C9385}
+  .date{font:11px "IBM Plex Mono",monospace;fill:var(--muted)}
+  .bname{font:600 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+  .yr{font-family:"Instrument Serif",serif;font-size:26px;fill:#B9AF9E}
+  .ev{cursor:pointer}
+  .ev:hover .lbl{fill:#2F6B5A;text-decoration:underline}
+  .tip{animation:bud 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
+  @keyframes bud{50%{transform:scale(1.25) translateY(-2px)}}
+  .grow{stroke-dasharray:3 6;animation:grow 1.4s linear infinite}
+  @keyframes grow{to{stroke-dashoffset:-9}}
+  .sway{animation:sway 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
+  @keyframes sway{50%{transform:rotate(4deg)}}
+  .yearpin{position:fixed;left:28px;bottom:24px;z-index:30;font-family:"Instrument Serif",serif;font-size:44px;line-height:1;color:#5E7D58}
+  .yearpin small{display:block;font:12px Inter,sans-serif;color:var(--muted);margin-top:4px}
+</style>
+</head>
+<body>
+<header><b>Pavlos</b><nav><a href="#">Tree</a><a href="#">Writing</a><a href="#">About</a></nav></header>
+<section class="intro">
+  <h1>Still growing, <em>one branch at a time.</em></h1>
+  <p>I'm a product designer. This tree is everything I've spent time on. The top is today. Scroll down to go back in time, all the way to the roots. Live branches keep growing. The ones I let go of dry out and stop.</p>
+  <div class="legend" id="legend"></div>
+</section>
+<div class="stage"><svg id="tree"></svg></div>
+<div class="yearpin" id="yp">2026<small>Scroll down to go back</small></div>
+<script src="timeline-data.js"></script>
+<script>
+  const W=1400,CX=W/2,PX=380,TOP=170,START=2018.75,H=TOP+(NOW-START)*PX+260;
+  const Y=t=>TOP+(NOW-t)*PX;
+  const SIDE={design:[-1,590],music:[-1,290],writing:[-1,290],photo:[1,590],climb:[1,590],print:[1,290],swift:[1,290]};
+  const wrap=(s,n=30)=>{const out=[''];s.split(' ').forEach(w=>{if((out[out.length-1]+' '+w).trim().length>n)out.push(w);else out[out.length-1]=(out[out.length-1]+' '+w).trim()});return out};
+  const RISE=200,ease=p=>1-Math.pow(1-p,3);
+  const SEED={design:1,music:2.4,writing:3.1,photo:4.7,climb:5.3,print:6.2,swift:7.6};
+  const xAt=(b,y)=>{const[s,r]=SIDE[b.id],y0=Y(b.ys)+RISE;const p=Math.max(0,Math.min(1,(y0-y)/RISE));return CX+s*(16+r*ease(p))+p*7*Math.sin(y/110+SEED[b.id])};
+  const legend=document.getElementById('legend');
+  Object.values(CATS).forEach(c=>legend.insertAdjacentHTML('beforeend',`<span><i style="background:${c.color}"></i>${c.label}</span>`));
+  legend.insertAdjacentHTML('beforeend',`<span><i style="background:#C9BCA6"></i>Ended</span>`);
+
+  let s=`<defs><linearGradient id="bark" x1="0" x2="1"><stop offset="0" stop-color="#5A4330"/><stop offset=".5" stop-color="#7A5C40"/><stop offset="1" stop-color="#4E3A29"/></linearGradient></defs>`;
+  for(let yr=2019;yr<=2026;yr++){const yy=Y(yr);s+=`<line x1="20" x2="${W-20}" y1="${yy}" y2="${yy}" stroke="#E0D8C8" stroke-dasharray="2 6"/>`}
+
+  const yTrunkTop=Y(NOW)-40,yBase=H-200;
+  s+=`<path d="M${CX-26},${yBase} C${CX-18},${yBase-400} ${CX-10},${yTrunkTop+300} ${CX-5},${yTrunkTop} L${CX+5},${yTrunkTop} C${CX+10},${yTrunkTop+300} ${CX+18},${yBase-400} ${CX+26},${yBase} Z" fill="url(#bark)"/>`;
+  [[-1,90,60],[1,110,70],[-1,170,40],[1,60,90],[-1,40,110]].forEach(([d,w,h])=>s+=`<path d="M${CX+d*8},${yBase-6} C${CX+d*w*.4},${yBase+h*.2} ${CX+d*w*.8},${yBase+h*.5} ${CX+d*w},${yBase+h}" stroke="#6E523A" stroke-width="5" fill="none" stroke-linecap="round" opacity=".75"/>`);
+  s+=`<text class="lbl" x="${CX}" y="${yBase+150}" text-anchor="middle" style="font-size:22px">The roots · 2019</text><text class="date" x="${CX}" y="${yBase+172}" text-anchor="middle">where it all started</text>`;
+  s+=`<path class="tip" d="M${CX},${yTrunkTop-2} q-9,-14 0,-26 q9,12 0,26Z" fill="#7FA36E"/>`;
+  for(let yr=2019;yr<=2026;yr++)s+=`<text x="${CX}" y="${Y(yr)+4}" text-anchor="middle" style="font:500 11px 'IBM Plex Mono',monospace;fill:#F1E4CC;letter-spacing:.04em">${yr}</text>`;
+
+  const leaf=(x,y,dir,col,dead)=>`<path d="M${x},${y} q${dir*10},-14 ${dir*24},-10 q${-dir*4},14 ${-dir*24},10Z" fill="${col}" opacity="${dead?.55:1}"/>`;
+  BRANCHES.forEach(b=>{
+    const[side,reach]=SIDE[b.id],dead=!!b.ye,col=CATS[b.cat].color,es=EVENTS.filter(e=>e.b===b.id);
+    const y0=Y(b.ys)+RISE,y1=dead?Y(b.ye)-6:Y(NOW)-10;let d=`M${CX+side*4},${y0+16}`;
+    for(let yy=y0;yy>=y1;yy-=6)d+=` L${xAt(b,yy).toFixed(1)},${yy.toFixed(1)}`;
+    s+=`<path d="${d}" stroke="${dead?'#B5A792':'url(#bark)'}" stroke-width="${dead?5:8}" fill="none" stroke-linecap="round"/>`;
+    const xe=xAt(b,y1),ta=side<0?'start':'end',lx=o=>xAt(b,o)-side*32;
+    if(dead){s+=`<path d="M${xe},${y1} l${side*10},-12 M${xe},${y1+8} l${-side*9},-9" stroke="#B5A792" stroke-width="3" stroke-linecap="round"/>`}
+    else{s+=`<line x1="${xe}" y1="${y1}" x2="${xe}" y2="${y1-34}" stroke="${col}" stroke-width="4" stroke-linecap="round" class="grow"/><path class="tip" d="M${xe},${y1-36} q-7,-12 0,-22 q7,10 0,22Z" fill="${col}"/>`}
+    if(!dead){let k=0;for(let yy=y1+40;yy<Y(b.ys)-20;yy+=58,k++){const xx=xAt(b,yy),d=k%2?1:-1;
+      s+=`<path class="sway" style="animation-delay:${-k*.7}s" d="M${xx},${yy} q${d*7},-10 ${d*16},-7 q${-d*3},10 ${-d*16},7Z" fill="${col}" opacity=".38"/>`}}
+    const nameY=dead?y1-20:y1-70;
+    s+=`<text class="bname" x="${xe}" y="${nameY}" text-anchor="middle" fill="${dead?'#A89C88':col}">${b.name}${dead?' · ended':''}</text>`;
+    let prevLY=-1e9;
+    es.forEach((e,i)=>{const yy=Y(e.y),xx=xAt(b,yy),lines=wrap(e.t),ly=Math.max(yy,prevLY);prevLY=ly+30+lines.length*19;
+      if(ly-yy>4)s+=`<path d="M${xx-side*8},${yy} C${lx(yy)},${yy} ${xx-side*12},${ly-6} ${lx(yy)+side*6},${ly-10}" stroke="#CFC5B2" stroke-width="1" fill="none"/>`;
+      s+=`<g class="ev">`+(e.kind==='end'?'':`<g class="sway" style="animation-delay:${-i*1.3}s">${leaf(xx,yy,side,dead?'#C9BCA6':col,dead)}${leaf(xx,yy,-side,dead?'#D5CAB6':col,dead)}</g>`)+
+        `<circle cx="${xx}" cy="${yy}" r="4.5" fill="${dead?'#B5A792':col}" stroke="#F3EEE3" stroke-width="2"/>`+
+        `<text class="date" x="${lx(yy)}" y="${ly-6}" text-anchor="${ta}">${fmt(e.d)}${e.kind==='end'?' · stopped':e.kind==='start'?' · sprouted':''}</text>`+
+        `<text class="lbl${dead?' dead':''}" y="${ly+14}" text-anchor="${ta}">${lines.map((l,j)=>`<tspan x="${lx(yy)}" dy="${j?19:0}">${l}</tspan>`).join('')}</text></g>`});
+  });
+  [[CX+300,yBase+40],[CX+330,yBase+70],[CX-280,yBase+60]].forEach(([x,y],i)=>s+=`<path d="M${x},${y} q8,-10 20,-6 q-4,10 -20,6Z" fill="#C9AE84" transform="rotate(${i*40} ${x} ${y})" opacity=".8"/>`);
+  const svg=document.getElementById('tree');svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML=s;
+  const yp=document.getElementById('yp'),off=()=>svg.getBoundingClientRect().top,k=()=>svg.clientWidth/W;
+  addEventListener('scroll',()=>{const t=NOW-((innerHeight*.5-off())/k()-TOP)/PX;yp.firstChild.textContent=Math.max(2019,Math.min(2026,Math.floor(t)))});
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Trail map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F1E9D8;--ink:#2A2620;--muted:#8A7F6C}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:#DCD2BF;color:var(--ink);font:14px/1.5 Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .map{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;cursor:grab;scrollbar-width:none}
+  .map::-webkit-scrollbar{display:none}
+  .map.drag{cursor:grabbing}
+  .sheet{position:relative;height:100%;background-color:var(--paper);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .32 0 0 0 0 .2 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .sheet svg{position:absolute;left:0;top:50%;transform:translateY(-50%)}
+  .lbl{font-family:"Instrument Serif",serif;font-size:17px;fill:var(--ink)}
+  .lbl.dead{fill:#9C917E}
+  .date{font:10.5px "IBM Plex Mono",monospace;fill:var(--muted);letter-spacing:.02em}
+  .tname{font:600 10.5px Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+  .yr{font:500 12px "IBM Plex Mono",monospace;fill:#A89B82;letter-spacing:.1em}
+  .wp{cursor:pointer}
+  .wp:hover .lbl{fill:#2F6B5A}
+  .walk{stroke-dasharray:2 7;animation:walk 1.2s linear infinite}
+  @keyframes walk{to{stroke-dashoffset:9}}
+  .here{animation:here 2.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+  @keyframes here{0%{transform:scale(1);opacity:.5}100%{transform:scale(3.4);opacity:0}}
+  .ui{position:fixed;z-index:10;background:rgba(248,243,232,.94);border:1px solid #CFC2A6;box-shadow:0 10px 24px -14px rgba(60,45,20,.45)}
+  .cartouche{left:24px;top:24px;width:380px;padding:6px}
+  .cartouche>div{border:1px solid #CFC2A6;padding:22px 24px}
+  .cartouche small{font:500 10.5px "IBM Plex Mono",monospace;letter-spacing:.14em;color:var(--muted)}
+  .cartouche h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:40px;line-height:1;margin:10px 0 12px;letter-spacing:-.01em}
+  .cartouche h1 em{color:#7D6E58}
+  .cartouche p{font-size:13.5px;line-height:1.6;color:#5F574B}
+  .cartouche{transition:width .3s}
+  .cartouche.mini{width:250px}
+  .cartouche.mini p,.cartouche.mini nav{display:none}
+  .cartouche.mini h1{font-size:22px;margin:6px 0 0}
+  .cartouche.mini h1 br{display:none}
+  .cartouche nav{display:flex;gap:16px;margin-top:14px;font-size:12.5px;color:var(--muted)}
+  .legend{left:24px;bottom:24px;padding:14px 16px;font-size:12px}
+  .legend b{display:block;font:600 10.5px Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .legend div{display:grid;grid-template-columns:repeat(2,auto);gap:6px 20px}
+  .legend span{display:flex;align-items:center;gap:8px}
+  .compass{right:24px;top:24px;width:96px;height:96px;border-radius:50%;display:grid;place-items:center}
+  .scale{right:24px;bottom:24px;padding:12px 16px;font:11px "IBM Plex Mono",monospace;color:var(--muted);display:flex;align-items:center;gap:14px}
+  .scale button{font:500 12px Inter,sans-serif;border:1px solid #CFC2A6;background:#fff;border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--ink)}
+  .bar{display:flex;flex-direction:column;gap:4px}
+  .bar i{display:block;width:140px;height:6px;background:repeating-linear-gradient(90deg,var(--ink) 0 35px,#fff 35px 70px);border:1px solid var(--ink)}
+</style>
+</head>
+<body>
+<div class="map" id="map"><div class="sheet" id="sheet"><svg id="svg"></svg></div></div>
+
+<div class="ui cartouche"><div>
+  <small>SHEET 01 · PAVLOS · 2019 TO TODAY</small>
+  <h1>A map of where <em>I've been heading.</em></h1>
+  <p>I'm a product designer. Every interest is a trail off the main route. You're standing at today. Walk right to go back in time. Some trails end where I stopped. The live ones are still being walked.</p>
+  <nav><a href="#">Writing</a><a href="#">About</a><a href="#">RSS</a></nav>
+</div></div>
+<div class="ui legend" id="legend"><b>Legend</b><div></div></div>
+<div class="ui compass"><svg width="80" height="80" viewBox="-40 -40 80 80"><circle r="34" fill="none" stroke="#CFC2A6"/><circle r="26" fill="none" stroke="#E2D8C3"/><path d="M0,-30 L6,0 L0,30 L-6,0Z" fill="#2A2620"/><path d="M0,-30 L6,0 L-6,0Z" fill="#C2573C"/><path d="M-30,0 L0,-4 L30,0 L0,4Z" fill="#8A7F6C" opacity=".6"/><text y="-34" text-anchor="middle" style="font:600 9px Inter;fill:#2A2620" dy="-2">N</text></svg></div>
+<div class="ui scale"><div class="bar"><i></i><span>1 year ≈ 560px</span></div><span>← today · the past →</span><button id="today">Back to today</button></div>
+
+<script src="timeline-data.js"></script>
+<script>
+  const PXY=560,X0=660,H=760,MID=390,W=X0+(NOW-2018.8)*PXY+240;
+  const X=t=>X0+(NOW-t)*PXY;
+  const LANE={design:0,writing:-140,swift:-305,print:-305,music:-305,photo:150,climb:150};
+  const DIR={design:1,writing:-1,swift:-1,print:-1,music:-1,photo:1,climb:1};
+  const SEED={design:.3,writing:1.7,swift:2.2,print:3.9,music:5.1,photo:4.4,climb:6.1};
+  const yAt=(b,x)=>MID+LANE[b.id]+(b.id==='design'?8:12)*Math.sin(x/140+SEED[b.id]);
+  let r=7;const rnd=()=>(r=(r*9301+49297)%233280)/233280;
+  document.getElementById('sheet').style.width=W+'px';
+  let s='';
+  for(let i=0;i<26;i++){const cx=rnd()*W,cy=40+rnd()*(H-80),rings=3+Math.floor(rnd()*4),base=40+rnd()*70,ph=rnd()*6;
+    for(let k=0;k<rings;k++){const rad=base+k*22;let d='';for(let a=0;a<=64;a++){const th=a/64*Math.PI*2,rr=rad*(1+.18*Math.sin(th*3+ph)+.1*Math.sin(th*5+ph*2));d+=(a?'L':'M')+(cx+Math.cos(th)*rr*1.5).toFixed(1)+','+(cy+Math.sin(th)*rr).toFixed(1)}
+      s+=`<path d="${d}Z" fill="none" stroke="#D8C9AB" stroke-width="${k===rings-1?1.2:.8}" opacity=".75"/>`}}
+  const lake=(cx,cy,R)=>{let d='';for(let a=0;a<=64;a++){const th=a/64*Math.PI*2,rr=R*(1+.15*Math.sin(th*3)+.08*Math.sin(th*7));d+=(a?'L':'M')+(cx+Math.cos(th)*rr*1.7).toFixed(1)+','+(cy+Math.sin(th)*rr).toFixed(1)}return d+'Z'};
+  s+=`<path d="${lake(X(2023.35),MID+290,48)}" fill="#CFE0E0" stroke="#9FBFC2"/><path d="${lake(X(2023.35),MID+290,34)}" fill="none" stroke="#B6D0D2"/><text x="${X(2023.35)}" y="${MID+294}" text-anchor="middle" style="font:italic 13px 'Instrument Serif';fill:#6E9396">Lisbon lake</text>`;
+  for(let i=0;i<60;i++){const x=rnd()*W,y=20+rnd()*(H-40);if(Math.abs(y-MID)<300&&rnd()<.7)continue;s+=`<path d="M${x},${y} l5,-11 l5,11Z" fill="#B7BF9C" opacity=".7"/>`}
+  for(let yr=2019;yr<=2026;yr++){const x=X(yr);s+=`<line x1="${x}" x2="${x}" y1="0" y2="${H}" stroke="#CDBF9F" stroke-dasharray="1 5"/><text class="yr" x="${x+8}" y="22">${yr}</text><text class="yr" x="${x+8}" y="${H-12}">${yr}</text>`}
+
+  const path=(b,x1,x2)=>{let d='';for(let x=x1;x<=x2;x+=8)d+=(d?'L':'M')+x.toFixed(1)+','+yAt(b,x).toFixed(1);return d};
+  const design=BRANCHES.find(b=>b.id==='design');
+  BRANCHES.forEach(b=>{
+    const col=CATS[b.cat].color,dead=!!b.ye,xs=X(b.ys),xe=dead?X(b.ye):X(NOW),main=b.id==='design';
+    if(main){s+=`<path d="${path(b,xe,xs)}" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"/><path d="${path(b,xe,xs)}" stroke="${col}" stroke-width="5" fill="none" stroke-linecap="round"/>`}
+    else{const fx=xs+150,fy=yAt(design,fx),ly=yAt(b,xs);
+      s+=`<path d="M${fx},${fy} C${xs+60},${fy} ${xs+70},${ly} ${xs},${ly}" stroke="${dead?'#B9AD97':col}" stroke-width="3" fill="none" stroke-dasharray="9 6" stroke-linecap="round"/>`;
+      s+=`<path d="${path(b,xe,xs)}" stroke="${dead?'#B9AD97':col}" stroke-width="3" fill="none" stroke-dasharray="9 6" stroke-linecap="round"/>`}
+    const ye=yAt(b,xe);
+    if(dead){s+=`<g transform="translate(${xe},${ye})"><line x1="0" y1="0" x2="-14" y2="0" stroke="#B9AD97" stroke-width="3" stroke-linecap="round"/><line x1="-16" y1="-11" x2="-16" y2="11" stroke="#8A7F6C" stroke-width="3" stroke-linecap="round"/><line x1="-22" y1="-6" x2="-10" y2="6" stroke="#C2573C" stroke-width="2"/><line x1="-22" y1="6" x2="-10" y2="-6" stroke="#C2573C" stroke-width="2"/></g>`;
+      s+=`<text class="tname" x="${xe+8}" y="${ye-DIR[b.id]*16+4}" fill="#A3967E">${b.name} · trail ends</text>`}
+    else{s+=`<path d="M${xe},${ye} L${xe-70},${ye}" stroke="${col}" stroke-width="${main?5:3}" fill="none" stroke-linecap="round" class="walk"/>`;
+      s+=`<circle cx="${xe-76}" cy="${ye}" r="7" fill="${col}" class="here"/><circle cx="${xe-76}" cy="${ye}" r="6" fill="${col}" stroke="#fff" stroke-width="2"/>`;
+      s+=`<text class="tname" x="${xe-92}" y="${ye+4}" text-anchor="end" fill="${col}">${b.name}</text>`}
+  });
+  s+=`<g transform="translate(${X(NOW)-76},${MID-46})"><path d="M0,0 L0,36" stroke="#2A2620" stroke-width="1.5"/><rect x="-46" y="-22" width="92" height="22" rx="3" fill="#2A2620"/><text x="0" y="-7" text-anchor="middle" style="font:600 10px Inter;fill:#F1E9D8;letter-spacing:.12em">YOU ARE HERE</text></g>`;
+
+  BRANCHES.forEach(b=>{
+    const col=CATS[b.cat].color,dead=!!b.ye,es=EVENTS.filter(e=>e.b===b.id),dir=DIR[b.id];
+    let lastEnd=-1e9,tier=0;
+    es.forEach(e=>{const x=X(e.y),y=yAt(b,x),w=Math.max(e.t.length*6.9,90)+10;
+      tier=x<lastEnd+12?tier+1:0;if(tier>2)tier=0;lastEnd=Math.max(lastEnd,x+w);
+      const d=dir,off=d*(30+tier*36),ty=y+off;
+      s+=`<g class="wp"><line x1="${x}" y1="${y}" x2="${x}" y2="${ty+(d<0?6:-14)}" stroke="#B9AD97" stroke-width="1"/>`+
+        `<circle cx="${x}" cy="${y}" r="${b.id==='design'?6:5}" fill="#fff" stroke="${dead?'#B9AD97':col}" stroke-width="2.5"/>`+
+        (e.kind==='start'?`<path d="M${x},${y-6} v-16 l11,4 l-11,4" fill="${dead?'#B9AD97':col}" stroke="${dead?'#B9AD97':col}" stroke-width="1.2"/>`:'')+
+        `<text class="date" x="${x+6}" y="${ty-(d<0?14:0)}">${fmt(e.d)}${e.kind==='start'?' · trailhead':e.kind==='end'?' · last walked':''}</text>`+
+        `<text class="lbl${dead?' dead':''}" x="${x+6}" y="${ty+(d<0?2:16)}">${e.t}</text></g>`});
+  });
+  const svg=document.getElementById('svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML=s;
+  const fit=()=>{const k=Math.min(1.15,innerHeight/H);svg.setAttribute('width',W*k);svg.setAttribute('height',H*k);document.getElementById('sheet').style.width=W*k+'px'};
+  fit();addEventListener('resize',fit);
+
+  const lg=document.querySelector('#legend div');
+  Object.values(CATS).forEach(c=>lg.insertAdjacentHTML('beforeend',`<span><svg width="26" height="6"><line x1="1" y1="3" x2="25" y2="3" stroke="${c.color}" stroke-width="3" stroke-dasharray="7 4"/></svg>${c.label}</span>`));
+  lg.insertAdjacentHTML('beforeend',`<span><svg width="26" height="14"><line x1="1" y1="7" x2="25" y2="7" stroke="#2A2620" stroke-width="2" class="walk"/></svg>Still walking</span><span><svg width="26" height="14"><line x1="8" y1="1" x2="8" y2="13" stroke="#8A7F6C" stroke-width="2.5"/><line x1="3" y1="3" x2="13" y2="11" stroke="#C2573C" stroke-width="1.6"/><line x1="3" y1="11" x2="13" y2="3" stroke="#C2573C" stroke-width="1.6"/></svg>Trail ends</span>`);
+
+  const map=document.getElementById('map');let down=false,sx=0,sl=0;
+  map.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sl=map.scrollLeft;map.classList.add('drag')});
+  addEventListener('pointermove',e=>{if(down)map.scrollLeft=sl-(e.clientX-sx)});
+  addEventListener('pointerup',()=>{down=false;map.classList.remove('drag')});
+  map.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){map.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
+  const cart=document.querySelector('.cartouche');
+  map.addEventListener('scroll',()=>cart.classList.toggle('mini',map.scrollLeft>160));
+  document.getElementById('today').onclick=()=>map.scrollTo({left:0,behavior:'smooth'});
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Corkboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#22201C;--muted:#8A8172}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:14px/1.5 Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;
+    background:#E9E3D8 radial-gradient(ellipse at 50% 0%,#F4EFE6,transparent 70%)}
+  a{color:inherit;text-decoration:none}
+  header{max-width:1240px;margin:0 auto;padding:24px 32px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+  header nav{display:flex;gap:24px;color:var(--muted)}
+  header nav a:hover{color:var(--ink)}
+  .frame{max-width:1240px;margin:0 auto 48px;padding:18px;border-radius:6px;
+    background:linear-gradient(135deg,#9A6B43,#6E4526 50%,#8A5D38);box-shadow:inset 0 1px 0 rgba(255,220,180,.35),0 2px 3px rgba(40,20,5,.3),0 30px 60px -20px rgba(40,20,5,.45)}
+  .board{position:relative;height:760px;border-radius:2px;overflow:hidden;box-shadow:inset 0 2px 10px rgba(40,20,5,.5);
+    background-color:#C29468;
+    background-image:
+      radial-gradient(rgba(110,66,30,.45) 1px,transparent 1.6px),
+      radial-gradient(rgba(240,200,150,.35) 1px,transparent 1.6px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .25 0 0 0 0 .1 1.4 0 0 0 -.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+    background-size:7px 7px,11px 11px,300px 300px;background-position:0 0,3px 5px,0 0}
+  .it{position:absolute;transform:rotate(var(--r,0deg));transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;
+    box-shadow:0 1px 1px rgba(40,20,5,.25),0 10px 16px -6px rgba(40,20,5,.4)}
+  .it:hover{transform:rotate(0deg) translateY(-4px);box-shadow:0 2px 2px rgba(40,20,5,.2),0 22px 30px -10px rgba(40,20,5,.5);z-index:20}
+  .pin{position:absolute;top:-8px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;z-index:3;
+    background:radial-gradient(circle at 35% 30%,#fff 0 8%,var(--pc,#D2463A) 30%,color-mix(in srgb,var(--pc,#D2463A) 60%,#000) 100%);
+    box-shadow:2px 5px 4px rgba(40,20,5,.45)}
+  .sheet{width:380px;padding:34px 34px 30px;background:#FBF8F1;--r:-1.5deg}
+  .sheet small{font:12px "Courier Prime",monospace;color:var(--muted);letter-spacing:.04em}
+  .sheet h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:44px;line-height:1.02;margin:12px 0 14px;letter-spacing:-.01em}
+  .sheet h1 em{color:#8A7B66}
+  .sheet p{font-size:15px;line-height:1.6;color:#4A443B}
+  .card{width:250px;padding:20px 20px 18px;background:#FFFEFA;
+    background-image:linear-gradient(180deg,transparent 46px,#E58B7E 46px 47px,transparent 47px),repeating-linear-gradient(180deg,transparent 0 23px,#E0E7EC 23px 24px);background-position:0 0,0 47px}
+  .card .meta{display:flex;justify-content:space-between;font:12px "Courier Prime",monospace;color:var(--muted);height:30px}
+  .card h3{font-family:"Instrument Serif",serif;font-weight:400;font-size:26px;line-height:1.1}
+  .card p{font-family:Caveat,cursive;font-size:20px;color:#2C4A7A;margin-top:8px;line-height:1.1}
+  .stamp{display:inline-block;font:700 11px "Courier Prime",monospace;letter-spacing:.12em;color:#B8423A;border:2px solid #B8423A;padding:1px 6px;border-radius:3px;transform:rotate(-6deg);opacity:.85}
+  .ticket{width:300px;display:flex;background:#EFE2C7;--r:4deg;
+    -webkit-mask:radial-gradient(circle 6px at 0 50%,transparent 98%,#000) left/51% 100% no-repeat,radial-gradient(circle 6px at 100% 50%,transparent 98%,#000) right/51% 100% no-repeat}
+  .ticket .main{flex:1;padding:16px 18px;border-right:2px dashed rgba(90,70,40,.35)}
+  .ticket .main small{font:11px "Courier Prime",monospace;color:#8A7454;letter-spacing:.1em}
+  .ticket .main b{display:block;font-family:"Instrument Serif",serif;font-weight:400;font-size:24px;line-height:1.1;margin:6px 0}
+  .ticket .main span{font:12px "Courier Prime",monospace;color:#6E5C40}
+  .ticket .stub{width:72px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font:700 12px "Courier Prime",monospace;letter-spacing:.2em;color:#8A7454}
+  .polaroid{width:200px;padding:11px 11px 42px;background:#F7F5F0;--r:-5deg}
+  .polaroid .img{height:178px;background:linear-gradient(180deg,#B9CCD8 0%,#E3D6C1 55%,#A08D70 100%);position:relative;overflow:hidden}
+  .polaroid .img::after{content:"";position:absolute;left:-15%;right:-15%;bottom:-24px;height:80px;border-radius:50%;background:#6A5D49}
+  .polaroid span{position:absolute;left:16px;bottom:10px;font:22px Caveat,cursive;color:#3A3530}
+  .sticky{width:210px;min-height:200px;padding:20px 20px 24px;background:linear-gradient(180deg,#F8E79A,#F2D873);--r:3deg}
+  .sticky div{font:22px/1.25 Caveat,cursive;color:#3B3420}
+  .sticky b{display:block;font-size:27px;font-weight:600;margin-bottom:2px}
+  .cal{width:150px;background:#FFFEFA;text-align:center;--r:-3deg}
+  .cal .top{background:#C9473C;color:#fff;font:600 12px Inter,sans-serif;letter-spacing:.2em;padding:8px 0}
+  .cal .d{font-family:"Instrument Serif",serif;font-size:76px;line-height:1;padding:8px 0 2px}
+  .cal .w{font:12px "Courier Prime",monospace;color:var(--muted);padding-bottom:12px}
+  .cal .holes{position:absolute;top:-5px;left:20px;right:20px;display:flex;justify-content:space-between}
+  .cal .holes i{width:8px;height:8px;border-radius:50%;background:#7A5030}
+  svg.str{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+  .foot{max-width:1240px;margin:0 auto;padding:0 32px 40px;display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><b>Pavlos</b><nav><a href="#">Board</a><a href="#">Archive</a><a href="#">About</a><a href="#">RSS</a></nav></header>
+<div class="frame"><div class="board" id="board">
+  <svg class="str" id="str"></svg>
+
+  <div class="it sheet" style="left:4%;top:7%" data-pin="a"><span class="pin" style="--pc:#3D6FB0"></span>
+    <small>PAVLOS / PRODUCT DESIGNER</small>
+    <h1>Things I'm learning, <em>pinned up as I go.</em></h1>
+    <p>This board is my homepage. Learnings, thoughts, and updates get pinned here first. When something proves useful, it moves into the archive.</p>
+  </div>
+
+  <a class="it card" href="#" style="left:38%;top:6%;--r:2.5deg" data-pin="b"><span class="pin"></span><div class="meta"><span class="stamp">LEARNING</span><span>02.11.26</span></div><h3>Defaults are the real design</h3><p>what ships first is the product</p></a>
+  <a class="it card" href="#" style="left:62%;top:12%;--r:-3deg" data-pin="c"><span class="pin" style="--pc:#E2B03C"></span><div class="meta"><span class="stamp" style="color:#4A6E8F;border-color:#4A6E8F">THOUGHT</span><span>24.10.26</span></div><h3>Quiet software is underrated</h3><p>apps that wait for you</p></a>
+  <a class="it card" href="#" style="left:41%;top:48%;--r:-2deg" data-pin="d"><span class="pin" style="--pc:#3D6FB0"></span><div class="meta"><span class="stamp">LEARNING</span><span>30.09.26</span></div><h3>Naming things is half the interface</h3><p>a good label saves a tooltip</p></a>
+
+  <a class="it ticket" href="#" style="left:4%;top:58%"><span class="pin" style="--pc:#4F8A5B;left:40%"></span><div class="main"><small>UPDATE · NO. 22</small><b>I rebuilt this site with less</b><span>12 OCT 2026 · 2 MIN</span></div><div class="stub">ADMIT ONE</div></a>
+
+  <div class="it polaroid" style="left:84%;top:8%"><span class="pin" style="--pc:#D2463A;top:-6px"></span><div class="img"></div><span>morning view</span></div>
+  <div class="it sticky" style="left:66%;top:52%"><span class="pin" style="--pc:#3D6FB0"></span><div><b>Now</b>building a decision log<br>reading Shape of Design<br>learning SwiftUI</div></div>
+  <div class="it cal" style="left:85%;top:56%"><span class="holes"><i></i><i></i><i></i></span><div class="top">NOV</div><div class="d">06</div><div class="w">last updated</div></div>
+  <a class="it card" href="#" style="left:31%;top:74%;--r:4deg;width:230px" data-pin="e"><span class="pin" style="--pc:#E2B03C"></span><div class="meta"><span class="stamp" style="color:#4A6E8F;border-color:#4A6E8F">THOUGHT</span><span>18.09.26</span></div><h3>On working alone, together</h3></a>
+</div></div>
+<div class="foot"><span>Hover to straighten a note. Click to read.</span><span>hello@pavlos.design</span></div>
+<script>
+  const board=document.getElementById('board'),svg=document.getElementById('str');
+  const pinOf=id=>{const p=document.querySelector(`[data-pin="${id}"] .pin`).getBoundingClientRect(),b=board.getBoundingClientRect();return[p.left+p.width/2-b.left,p.top+p.height/2-b.top]};
+  function draw(){const pts=['b','d','e'].map(pinOf),[a,c]=[pinOf('c'),pinOf('d')];
+    const sag=(p,q)=>`M${p[0]},${p[1]} Q${(p[0]+q[0])/2},${Math.max(p[1],q[1])+40} ${q[0]},${q[1]}`;
+    svg.innerHTML=[sag(pts[0],pts[1]),sag(pts[1],pts[2]),sag(a,c)].map(d=>`<path d="${d}" fill="none" stroke="#B3362E" stroke-width="1.6" opacity=".85" style="filter:drop-shadow(1px 3px 2px rgba(40,20,5,.35))"/>`).join('')}
+  document.fonts.ready.then(draw);addEventListener('resize',draw);draw();
+</script>
+</body>
+</html>

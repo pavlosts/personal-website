@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#ECEEE3;--card:#F6F6EF;--ink:#1F2A21;--muted:#6E7868;--line:#D7DBCB;--leaf:#4F7A4A;--bud:#A7A04A;--seed:#B98A56}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 32px 96px}
+  header{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-size:20px;font-weight:450}
+  header nav{display:flex;gap:26px;color:var(--muted)}
+  header nav a:hover{color:var(--ink)}
+  .hero{display:grid;grid-template-columns:1.4fr 1fr;gap:64px;padding:96px 0 64px;align-items:end}
+  .hero h1{font-family:Fraunces,serif;font-weight:330;font-size:60px;line-height:1.04;letter-spacing:-.01em;font-variation-settings:"opsz" 96}
+  .hero h1 em{color:var(--leaf);font-weight:300}
+  .hero p{font-size:16px;line-height:1.65;color:var(--muted)}
+  .legend{display:flex;gap:20px;margin-top:20px;font-size:13px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .stage{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .grid{columns:3;column-gap:18px}
+  .card{break-inside:avoid;display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px;margin-bottom:18px;transition:transform .25s ease,box-shadow .25s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:0 10px 30px -18px rgba(31,42,33,.35)}
+  .card h3{font-family:Fraunces,serif;font-weight:420;font-size:22px;line-height:1.2;letter-spacing:-.01em;margin:12px 0 8px}
+  .card p{font-size:14px;line-height:1.6;color:var(--muted)}
+  .card .foot{display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+  .card.feature{background:var(--ink);color:#EEF0E6;border-color:var(--ink)}
+  .card.feature p,.card.feature .foot,.card.feature .stage{color:#AAB5A6}
+  .card.feature .foot{border-color:#34433A}
+  .card.feature h3{font-size:28px}
+  .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .links span{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--bg);color:var(--muted)}
+  .tabs{display:flex;gap:8px;margin-bottom:24px}
+  .tab{font-size:13px;padding:7px 14px;border-radius:999px;color:var(--muted);border:1px solid var(--line)}
+  .tab.on{background:var(--ink);color:#EEF0E6;border-color:var(--ink)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="seed" viewBox="0 0 16 16"><circle cx="8" cy="10" r="3" fill="#B98A56"/></symbol>
+  <symbol id="bud" viewBox="0 0 16 16"><path d="M8 14V7" stroke="#A7A04A" stroke-width="1.5" stroke-linecap="round"/><path d="M8 8c0-3 2-5 5-5 0 3-2 5-5 5Z" fill="#A7A04A"/></symbol>
+  <symbol id="tree" viewBox="0 0 16 16"><path d="M8 15V8" stroke="#4F7A4A" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="6" r="5" fill="#4F7A4A"/></symbol>
+</svg>
+<div class="wrap">
+  <header>
+    <a class="logo" href="#"><svg width="18" height="18"><use href="#tree"/></svg>Pavlos</a>
+    <nav><a href="#">Garden</a><a href="#">Updates</a><a href="#">Now</a><a href="#">About</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1>A small garden of notes, <em>tended slowly.</em></h1>
+    <div>
+      <p>I'm a product designer. Instead of polished articles, I keep notes here that grow over time. Some are seeds, some are fully grown. All of them are honest.</p>
+      <div class="legend">
+        <span><svg width="14" height="14"><use href="#seed"/></svg>Seedling</span>
+        <span><svg width="14" height="14"><use href="#bud"/></svg>Budding</span>
+        <span><svg width="14" height="14"><use href="#tree"/></svg>Evergreen</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="tabs"><span class="tab on">Recently tended</span><span class="tab">Learnings</span><span class="tab">Thoughts</span><span class="tab">Updates</span></div>
+
+  <div class="grid">
+    <a class="card feature" href="#"><span class="stage"><svg width="14" height="14"><use href="#tree"/></svg>Evergreen · Learning</span><h3>Defaults are the real design</h3><p>Most people never open settings. What ships as the default is what the product is. A collection of defaults I've changed my mind about.</p><div class="foot"><span>Tended Nov 2</span><span>Planted Mar 2025</span></div></a>
+    <a class="card" href="#"><span class="stage"><svg width="14" height="14"><use href="#seed"/></svg>Seedling · Thought</span><h3>Quiet software</h3><p>Apps that wait for you. Early thoughts, still forming.</p><div class="foot"><span>Tended Oct 24</span><span>2 min</span></div></a>
+    <a class="card" href="#"><span class="stage"><svg width="14" height="14"><use href="#bud"/></svg>Budding · Learning</span><h3>Naming things is half the interface</h3><p>A good label saves a tooltip, an onboarding step, and a support ticket. Examples from recent projects.</p><div class="links"><span>copy</span><span>product</span><span>3 backlinks</span></div><div class="foot"><span>Tended Sep 30</span><span>5 min</span></div></a>
+    <a class="card" href="#"><span class="stage"><svg width="14" height="14"><use href="#bud"/></svg>Budding · Update</span><h3>I rebuilt this site with less</h3><p>Fewer pages, one typeface, and a garden instead of a blog.</p><div class="foot"><span>Tended Oct 12</span><span>2 min</span></div></a>
+    <a class="card" href="#"><span class="stage"><svg width="14" height="14"><use href="#tree"/></svg>Evergreen · Learning</span><h3>Spacing scales I actually use</h3><p>A 4pt base, five steps that matter, and why I stopped using the rest.</p><div class="links"><span>craft</span><span>systems</span></div><div class="foot"><span>Tended Sep 3</span><span>4 min</span></div></a>
+    <a class="card" href="#"><span class="stage"><svg width="14" height="14"><use href="#seed"/></svg>Seedling · Thought</span><h3>On working alone, together</h3><p>A year of async collaboration as an introvert. Mostly good.</p><div class="foot"><span>Tended Sep 18</span><span>6 min</span></div></a>
+  </div>
+</div>
+</body>
+</html>

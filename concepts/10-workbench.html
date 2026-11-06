@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#FBF7EE;--ink:#22201C;--muted:#8A8172}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{font:14px/1.5 Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;user-select:none;
+    background-color:#A87B52;
+    background-image:
+      radial-gradient(ellipse at 22% 12%,rgba(255,226,180,.38),transparent 55%),
+      radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(40,20,5,.45) 100%),
+      repeating-linear-gradient(180deg,transparent 0 268px,rgba(55,30,12,.45) 268px 270px,rgba(255,230,200,.08) 270px 271px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='900'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0025 .11' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .28 0 0 0 0 .15 0 0 0 0 .06 1.3 0 0 0 -.38'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  }
+  a{color:inherit;text-decoration:none}
+  .obj{position:absolute;transform:rotate(var(--r,0deg));cursor:grab;transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .25s;filter:drop-shadow(0 2px 2px rgba(30,15,5,.35)) drop-shadow(0 14px 18px rgba(30,15,5,.28))}
+  .obj.lift{cursor:grabbing;transform:rotate(var(--r,0deg)) scale(1.03);filter:drop-shadow(0 4px 4px rgba(30,15,5,.3)) drop-shadow(0 30px 34px rgba(30,15,5,.35));transition:none}
+
+  .notebook{width:520px;height:380px;--r:-2deg;background:var(--paper);border-radius:3px 8px 8px 3px;padding:38px 40px 30px 74px;
+    background-image:linear-gradient(90deg,transparent 58px,#E7A9A0 58px 59px,transparent 59px),repeating-linear-gradient(180deg,transparent 0 27px,#D9E2EA 27px 28px);background-position:0 0,0 14px}
+  .rings{position:absolute;left:-12px;top:22px;bottom:22px;display:flex;flex-direction:column;justify-content:space-between}
+  .rings i{width:30px;height:10px;border-radius:6px;border:2.5px solid #8C8F94;border-left-color:#C9CCD0;background:transparent}
+  .notebook h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:46px;line-height:1.02;letter-spacing:-.01em}
+  .notebook h1 em{color:#7A6E5E}
+  .notebook p{font-family:"Instrument Serif",serif;font-size:19px;line-height:28px;margin-top:14px;color:#3D3830}
+  .hand{font-family:Caveat,cursive;font-weight:500;color:#2C4A7A}
+  .notebook .hand{position:absolute;right:30px;bottom:22px;font-size:24px;transform:rotate(-3deg)}
+
+  .card{width:290px;height:178px;background:#FFFEFA;padding:16px 18px;border-radius:2px;
+    background-image:linear-gradient(180deg,transparent 40px,#E58B7E 40px 41px,transparent 41px),repeating-linear-gradient(180deg,transparent 0 23px,#DCE5EC 23px 24px);background-position:0 0,0 41px}
+  .card .meta{font:12px "Courier Prime",monospace;color:var(--muted);display:flex;justify-content:space-between;height:28px}
+  .card h3{font-family:"Instrument Serif",serif;font-weight:400;font-size:25px;line-height:1.1;margin-top:4px}
+  .card p{font-family:Caveat,cursive;font-size:20px;line-height:24px;color:#2C4A7A;margin-top:6px}
+  .card:hover h3{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+
+  .polaroid{width:210px;padding:12px 12px 44px;background:#F7F5F0;--r:5deg}
+  .polaroid .img{height:186px;background:linear-gradient(180deg,#F2C79B 0%,#E7A276 38%,#9C6C6E 62%,#4C4A5E 100%);position:relative;overflow:hidden}
+  .polaroid .img::before{content:"";position:absolute;left:58%;top:36%;width:46px;height:46px;border-radius:50%;background:#FCE4C2;box-shadow:0 0 40px 10px rgba(252,228,194,.6)}
+  .polaroid .img::after{content:"";position:absolute;left:-20%;right:-20%;bottom:-36px;height:96px;border-radius:50% 50% 0 0;background:#2F2C3A}
+  .polaroid .hand{position:absolute;left:16px;bottom:10px;font-size:22px;color:#3A3530}
+  .tape{position:absolute;top:-12px;left:50%;width:90px;height:26px;transform:translateX(-50%) rotate(-4deg);background:rgba(224,206,160,.72);clip-path:polygon(3% 0,97% 4%,100% 50%,96% 100%,2% 96%,0 50%)}
+
+  .mug{width:150px;height:150px;--r:0deg}
+  .mug .cup{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 35%,#FFFFFF,#E9E4DA 60%,#CFC7B8)}
+  .mug .coffee{position:absolute;inset:16px;border-radius:50%;background:radial-gradient(circle at 42% 38%,#7A4A2A,#3E2213 55%,#24130A);box-shadow:inset 0 4px 10px rgba(0,0,0,.6)}
+  .mug .coffee::after{content:"";position:absolute;left:24%;top:22%;width:30%;height:16%;border-radius:50%;background:rgba(255,235,210,.18);filter:blur(2px)}
+  .mug .handle{position:absolute;right:-30px;top:52px;width:46px;height:46px;border-radius:50%;border:12px solid #E3DDD1;border-left-color:transparent;transform:rotate(45deg)}
+  .stain{position:absolute;width:150px;height:150px;border-radius:50%;border:5px solid rgba(70,35,10,.22);filter:blur(.6px);pointer-events:none}
+
+  .pencil{width:380px;height:20px;--r:-24deg;filter:drop-shadow(0 6px 6px rgba(30,15,5,.4))}
+  .pencil .body{position:absolute;left:44px;right:56px;top:0;bottom:0;background:linear-gradient(180deg,#F7C948 0%,#F2B42C 35%,#D99A1E 36%,#E9AD2A 70%,#B98316 100%)}
+  .pencil .tip{position:absolute;right:0;top:0;width:58px;height:20px;background:linear-gradient(180deg,#F2D3A6,#D9B07C);clip-path:polygon(0 0,100% 50%,0 100%)}
+  .pencil .tip::after{content:"";position:absolute;right:0;top:6px;width:16px;height:8px;background:#2B2B2B;clip-path:polygon(0 0,100% 50%,0 100%)}
+  .pencil .ferrule{position:absolute;left:24px;width:22px;top:0;bottom:0;background:linear-gradient(180deg,#E8E8E8,#A9A9A9 50%,#D8D8D8)}
+  .pencil .eraser{position:absolute;left:0;width:26px;top:0;bottom:0;border-radius:6px 0 0 6px;background:linear-gradient(180deg,#F1A3A0,#D9726E)}
+
+  .phone{width:170px;height:340px;--r:8deg;background:#1B1B1D;border-radius:30px;padding:10px}
+  .phone .screen{height:100%;border-radius:22px;background:linear-gradient(170deg,#2B2F3A,#14161B);padding:40px 16px 16px;color:#EDEBE6;display:flex;flex-direction:column}
+  .phone .art{height:138px;border-radius:12px;background:conic-gradient(from 220deg,#2E3A4F,#7A8BA6,#D9D3C4,#2E3A4F)}
+  .phone small{font-size:10px;color:#8E8C95;margin-top:14px;letter-spacing:.06em;text-transform:uppercase}
+  .phone b{font-weight:500;font-size:15px;margin-top:2px}
+  .phone span{font-size:12px;color:#8E8C95}
+  .phone .bar{height:3px;border-radius:2px;background:#3A3D46;margin-top:auto}
+  .phone .bar i{display:block;width:42%;height:100%;background:#EDEBE6;border-radius:2px}
+
+  .sticky{width:200px;height:200px;--r:-5deg;background:linear-gradient(180deg,#F8E79A,#F3DA7A);padding:20px}
+  .sticky .hand{font-size:22px;line-height:1.25;color:#3B3420}
+  .sticky .hand b{display:block;font-weight:600;font-size:26px;margin-bottom:4px}
+
+  .hud{position:fixed;z-index:999;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;pointer-events:none}
+  .pill{pointer-events:auto;background:rgba(251,247,238,.92);backdrop-filter:blur(8px);border-radius:10px;padding:8px 14px;font-size:13px;box-shadow:0 6px 18px -8px rgba(30,15,5,.5);display:flex;gap:12px;align-items:center}
+  .pill span{color:var(--muted)}
+  .hint{position:fixed;z-index:999;left:18px;bottom:18px}
+</style>
+</head>
+<body>
+<div class="hud"><div class="pill"><b>Pavlos</b><span>Workbench</span></div><div class="pill"><a href="#">Writing</a><a href="#">About</a><a href="#">List view</a></div></div>
+
+<div class="stain" style="left:63%;top:6%"></div>
+
+<div class="obj notebook" style="left:7%;top:14%">
+  <div class="rings"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <h1>Hi, I'm Pavlos.<br><em>This is my workbench.</em></h1>
+  <p>I'm a product designer. Everything on this table is something I'm learning, thinking about, or working on. Pick things up, move them around.</p>
+  <span class="hand">start with the cards →</span>
+</div>
+
+<a class="obj card" href="#" style="left:47%;top:13%;--r:3deg"><div class="meta"><span>LEARNING</span><span>02.11.26</span></div><h3>Defaults are the real design</h3><p>what ships first is the product</p></a>
+<a class="obj card" href="#" style="left:49%;top:43%;--r:-4deg"><div class="meta"><span>THOUGHT</span><span>24.10.26</span></div><h3>Quiet software is underrated</h3><p>apps that wait for you</p></a>
+<a class="obj card" href="#" style="left:30%;top:63%;--r:2deg"><div class="meta"><span>UPDATE</span><span>12.10.26</span></div><h3>I rebuilt this site with less</h3><p>and turned it into a table</p></a>
+
+<div class="obj mug" style="left:69%;top:8%"><div class="handle"></div><div class="cup"></div><div class="coffee"></div></div>
+<div class="obj polaroid" style="left:8%;top:60%"><div class="tape"></div><div class="img"></div><span class="hand">morning walk, october</span></div>
+<div class="obj pencil" style="left:22%;top:56%"><div class="eraser"></div><div class="ferrule"></div><div class="body"></div><div class="tip"></div></div>
+<div class="obj phone" style="left:82%;top:34%"><div class="screen"><div class="art"></div><small>Now playing</small><b>Spaces</b><span>Nils Frahm</span><div class="bar"><i></i></div></div></div>
+<div class="obj sticky" style="left:68%;top:62%"><div class="hand"><b>Now</b>building a decision log<br>reading Shape of Design<br>learning SwiftUI</div></div>
+
+<div class="pill hint"><span>Drag anything. Click a card to read it.</span></div>
+<script>
+  let drag=null,ox=0,oy=0,z=10,moved=false;
+  document.querySelectorAll('.obj').forEach(o=>{
+    o.addEventListener('pointerdown',e=>{drag=o;moved=false;ox=e.clientX-o.offsetLeft;oy=e.clientY-o.offsetTop;o.style.zIndex=++z;o.classList.add('lift');o.setPointerCapture(e.pointerId)});
+    o.addEventListener('click',e=>{if(moved)e.preventDefault()});
+  });
+  addEventListener('pointermove',e=>{if(!drag)return;moved=true;drag.style.left=(e.clientX-ox)+'px';drag.style.top=(e.clientY-oy)+'px'});
+  addEventListener('pointerup',()=>{if(drag)drag.classList.remove('lift');drag=null});
+</script>
+</body>
+</html>

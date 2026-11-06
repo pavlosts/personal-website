@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Ambient</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0D0E12;--ink:#ECEAE6;--muted:#8D8B92;--dim:#55545B;--line:rgba(255,255,255,.07)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:Geist,Inter,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .glow{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .glow i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:drift 22s ease-in-out infinite alternate}
+  .glow i:nth-child(1){width:520px;height:520px;background:#3B3F8F;top:-160px;left:12%}
+  .glow i:nth-child(2){width:440px;height:440px;background:#8A4D6B;top:80px;right:6%;animation-delay:-8s;opacity:.32}
+  .glow i:nth-child(3){width:380px;height:380px;background:#C08A4E;bottom:-200px;left:40%;animation-delay:-14s;opacity:.18}
+  @keyframes drift{to{transform:translate(60px,40px) scale(1.08)}}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:36px 24px 96px}
+  header{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+  .me{display:flex;align-items:center;gap:10px;color:var(--ink)}
+  .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#C9B6A0,#6E6A8E)}
+  .clock{font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+  .clock i{width:6px;height:6px;border-radius:50%;background:#7FD1A3;box-shadow:0 0 10px #7FD1A3}
+  .hero{padding:140px 0 80px}
+  .hero h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:64px;line-height:1;letter-spacing:-.02em}
+  .hero h1 em{color:#C9C3F0}
+  .hero p{margin-top:24px;font-size:17px;line-height:1.65;color:var(--muted);font-weight:300;max-width:500px}
+  .currently{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;backdrop-filter:blur(20px)}
+  .currently div{background:rgba(18,19,25,.7);padding:16px 18px}
+  .currently small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .currently span{font-size:14px;line-height:1.4}
+  .eq{display:inline-flex;gap:2px;align-items:flex-end;height:10px;margin-right:6px}
+  .eq b{width:2px;background:#C9C3F0;animation:eq 1s ease-in-out infinite alternate}
+  .eq b:nth-child(2){animation-delay:-.3s}.eq b:nth-child(3){animation-delay:-.6s}
+  @keyframes eq{from{height:2px}to{height:10px}}
+  h2{font-size:13px;font-weight:400;color:var(--dim);margin:72px 0 8px}
+  .post{display:flex;justify-content:space-between;align-items:baseline;gap:24px;padding:16px 0;border-bottom:1px solid var(--line);transition:padding .3s ease}
+  .post span:first-child{font-size:16px;transition:color .2s}
+  .post span:last-child{font-size:13px;color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .post:hover{padding-left:8px}
+  .post:hover span:first-child{color:#C9C3F0}
+  footer{margin-top:80px;font-size:13px;color:var(--dim);display:flex;justify-content:space-between}
+  footer a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="glow"><i></i><i></i><i></i></div>
+<div class="grain"></div>
+<div class="wrap">
+  <header>
+    <a class="me" href="#"><span class="av"></span>Pavlos</a>
+    <span class="clock"><i></i><span id="t">19:58</span> in Europe</span>
+  </header>
+
+  <section class="hero">
+    <h1>Thinking slowly,<br><em>designing quietly.</em></h1>
+    <p>I'm a product designer who prefers calm tools, small teams, and long walks. Here I share what I'm learning, thinking about, and making.</p>
+  </section>
+
+  <div class="currently">
+    <div><small>Making</small><span>A decision log for design teams</span></div>
+    <div><small>Reading</small><span>The Shape of Design</span></div>
+    <div><small>Listening</small><span><span class="eq"><b></b><b></b><b></b></span>Nils Frahm</span></div>
+  </div>
+
+  <h2>Writing</h2>
+  <a class="post" href="#"><span>Defaults are the real design</span><span>Nov 2026</span></a>
+  <a class="post" href="#"><span>Quiet software is underrated</span><span>Oct 2026</span></a>
+  <a class="post" href="#"><span>I rebuilt this site with less</span><span>Oct 2026</span></a>
+  <a class="post" href="#"><span>Naming things is half the interface</span><span>Sep 2026</span></a>
+  <a class="post" href="#"><span>On working alone, together</span><span>Sep 2026</span></a>
+
+  <footer><span>Say hi: hello@pavlos.design</span><span><a href="#">LinkedIn</a> · <a href="#">Read.cv</a> · <a href="#">RSS</a></span></footer>
+</div>
+<script>
+  const t=document.getElementById('t');const f=()=>t.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Athens'});f();setInterval(f,30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F4EFE6;--ink:#1F1D1A;--muted:#7A7368;--line:#E2DACB;--accent:#9A4B2F}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Newsreader",Georgia,serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:680px;margin:0 auto;padding:56px 28px 96px}
+  header{display:flex;justify-content:space-between;align-items:baseline;font-family:Inter,sans-serif;font-size:13px;color:var(--muted)}
+  header .name{color:var(--ink);font-weight:500;letter-spacing:-.01em}
+  nav{display:flex;gap:22px}
+  nav a:hover{color:var(--ink)}
+  .hero{padding:120px 0 72px;border-bottom:1px solid var(--line)}
+  .hero h1{font-weight:350;font-size:44px;line-height:1.12;letter-spacing:-.02em;font-variation-settings:"opsz" 72;text-wrap:balance}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero p{margin-top:28px;font-size:19px;line-height:1.6;color:#4A453E;max-width:540px}
+  .section-label{font-family:Inter,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:64px 0 18px}
+  .post{display:grid;grid-template-columns:88px 1fr auto;gap:20px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+  .post time{font-family:Inter,sans-serif;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .post h3{font-weight:400;font-size:21px;letter-spacing:-.01em;transition:color .2s}
+  .post p{font-size:15.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .post .tag{font-family:Inter,sans-serif;font-size:12px;color:var(--muted)}
+  .post:hover h3{color:var(--accent)}
+  .now{display:grid;grid-template-columns:88px 1fr;gap:20px;font-size:17px;line-height:1.65;color:#4A453E}
+  .now dt{font-family:Inter,sans-serif;font-size:13px;color:var(--muted);padding-top:3px}
+  .now dd{margin-bottom:10px}
+  .subscribe{margin-top:72px;padding:32px;background:#EDE6D9;border-radius:4px}
+  .subscribe h4{font-weight:400;font-size:22px}
+  .subscribe p{color:var(--muted);font-size:16px;margin-top:6px}
+  .field{display:flex;margin-top:20px;border-bottom:1px solid var(--ink)}
+  .field input{flex:1;background:transparent;border:0;padding:10px 0;font:16px Inter,sans-serif;color:var(--ink);outline:none}
+  .field button{background:none;border:0;font:500 14px Inter,sans-serif;color:var(--ink);cursor:pointer}
+  footer{margin-top:72px;display:flex;justify-content:space-between;font-family:Inter,sans-serif;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="name" href="#">Pavlos</a>
+    <nav><a href="#">Writing</a><a href="#">Now</a><a href="#">About</a></nav>
+  </header>
+
+  <section class="hero">
+    <h1>I design calm, useful software and write down <em>what I learn</em> along the way.</h1>
+    <p>Product designer based in Europe. This is where I keep notes on craft, small experiments, and the occasional update on what I'm working on.</p>
+  </section>
+
+  <div class="section-label">Recent writing</div>
+  <a class="post" href="#"><time>Nov 02</time><div><h3>Defaults are the real design</h3><p>Most people never open settings. What they see first is the product.</p></div><span class="tag">Learning</span></a>
+  <a class="post" href="#"><time>Oct 24</time><div><h3>Quiet software is underrated</h3><p>On interfaces that wait for you instead of asking for attention.</p></div><span class="tag">Thought</span></a>
+  <a class="post" href="#"><time>Oct 12</time><div><h3>I rebuilt this site with less</h3><p>Fewer pages, one typeface, and no analytics popups.</p></div><span class="tag">Update</span></a>
+  <a class="post" href="#"><time>Sep 30</time><div><h3>Naming things is half the interface</h3><p>A good label saves a tooltip, an onboarding step, and a support ticket.</p></div><span class="tag">Learning</span></a>
+  <a class="post" href="#"><time>Sep 18</time><div><h3>On working alone, together</h3><p>Notes from a year of remote, mostly asynchronous collaboration.</p></div><span class="tag">Thought</span></a>
+
+  <div class="section-label">Now</div>
+  <dl class="now">
+    <dt>Building</dt><dd>A small tool for keeping design decisions in one place.</dd>
+    <dt>Reading</dt><dd><em>The Shape of Design</em> by Frank Chimero, again.</dd>
+    <dt>Learning</dt><dd>Enough SwiftUI to prototype without asking for help.</dd>
+  </dl>
+
+  <div class="subscribe">
+    <h4>A short letter, once a month</h4>
+    <p>New notes and one thing I found useful. Nothing else.</p>
+    <div class="field"><input placeholder="you@email.com"><button>Subscribe</button></div>
+  </div>
+
+  <footer><span>© 2026 Pavlos</span><span>Email · LinkedIn · RSS</span></footer>
+</div>
+</body>
+</html>

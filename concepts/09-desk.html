@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#EFECE6;--card:#FDFCFA;--ink:#1C1B19;--muted:#8D877D;--line:#E2DDD3;--dot:#D3CEC4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{background:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:22px 22px;color:var(--ink);font:14px/1.5 Inter,sans-serif;-webkit-font-smoothing:antialiased;user-select:none}
+  a{color:inherit;text-decoration:none}
+  .hud{position:fixed;z-index:50;top:20px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+  .hud>*{pointer-events:auto}
+  .pill{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px;box-shadow:0 2px 8px -4px rgba(0,0,0,.12);display:flex;align-items:center;gap:10px;font-size:13px}
+  .pill b{font-weight:600}
+  .pill .sep{width:1px;height:14px;background:var(--line)}
+  .pill span{color:var(--muted)}
+  .tools{display:flex;gap:2px;padding:4px}
+  .tools i{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--muted);font-style:normal}
+  .tools i.on{background:var(--ink);color:#fff}
+  .zoom{position:fixed;z-index:50;bottom:20px;right:20px}
+  .hint{position:fixed;z-index:50;bottom:20px;left:20px}
+  .card{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 32px -20px rgba(40,30,20,.3);cursor:grab;transition:box-shadow .2s}
+  .card:active{cursor:grabbing;box-shadow:0 1px 2px rgba(0,0,0,.04),0 24px 48px -20px rgba(40,30,20,.45)}
+  .card .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .card .k i{width:6px;height:6px;border-radius:2px}
+  .card h3{font-family:"Instrument Serif",serif;font-weight:400;font-size:26px;line-height:1.1;margin:10px 0 6px;letter-spacing:-.01em}
+  .card p{color:var(--muted);font-size:13px}
+  .hello{width:400px;padding:28px}
+  .hello h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:52px;line-height:1;letter-spacing:-.02em}
+  .hello h1 em{color:var(--muted)}
+  .hello p{font-size:15px;color:#5F5A52;margin-top:16px;line-height:1.6}
+  .sticky{background:#F6E7B8;border-color:#EAD99F;width:200px;transform:rotate(2deg)}
+  .sticky p{color:#6B5A2A;font-size:14px}
+  .photo{width:220px;padding:10px 10px 14px}
+  .photo .img{height:160px;border-radius:8px;background:linear-gradient(180deg,#9DB3C7 0%,#D8C7AE 60%,#8C7B62 100%);position:relative;overflow:hidden}
+  .photo .img::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-30px;height:80px;border-radius:50%;background:#5E5444}
+  .photo p{margin-top:10px;font-size:12px}
+  .now{width:260px}
+  .now li{list-style:none;display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .now li:last-child{border:0}
+  .now li span:first-child{color:var(--muted)}
+  svg.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+</style>
+</head>
+<body>
+<div class="hud">
+  <div class="pill"><b>Pavlos</b><span class="sep"></span><span>My desk</span></div>
+  <div class="pill tools">
+    <i class="on"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 8-6 1.5L10 19z"/></svg></i>
+    <i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5v-6a1.5 1.5 0 0 1 3 0V11m0-4.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5a6 6 0 0 1-5-2.7L3 15a1.5 1.5 0 0 1 2.4-1.8L8 15.5V11"/></svg></i>
+    <i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></i>
+  </div>
+  <div class="pill"><a href="#">List view</a><span class="sep"></span><a href="#">About</a></div>
+</div>
+
+<svg class="links" id="links"></svg>
+
+<div class="card hello" style="left:8%;top:22%" data-id="hello">
+  <h1>Hi, I'm Pavlos. <em>Welcome to my desk.</em></h1>
+  <p>Product designer. This is where my learnings, thoughts, and updates live. Drag things around, open anything that looks interesting.</p>
+</div>
+<a class="card" style="left:44%;top:14%;width:290px" data-id="a" href="#"><span class="k"><i style="background:#4F7A4A"></i>Learning · Nov 2</span><h3>Defaults are the real design</h3><p>What ships as the default is what the product is.</p></a>
+<a class="card" style="left:70%;top:24%;width:250px" data-id="b" href="#"><span class="k"><i style="background:#B9873A"></i>Thought · Oct 24</span><h3>Quiet software is underrated</h3><p>Interfaces that wait for you.</p></a>
+<div class="card sticky" style="left:47%;top:50%" data-id="s"><p>Reminder to self: write less, ship more. Walk before deciding anything.</p></div>
+<a class="card" style="left:66%;top:60%;width:260px" data-id="c" href="#"><span class="k"><i style="background:#5B6BB5"></i>Update · Oct 12</span><h3>I rebuilt this site with less</h3><p>And turned it into a desk.</p></a>
+<div class="card photo" style="left:12%;top:64%" data-id="p"><div class="img"></div><p>Morning view, late October</p></div>
+<div class="card now" style="left:28%;top:62%" data-id="n"><span class="k">Now</span><ul style="margin-top:8px"><li><span>Building</span><span>Decision log</span></li><li><span>Reading</span><span>Shape of Design</span></li><li><span>Learning</span><span>SwiftUI</span></li></ul></div>
+
+<div class="pill hint"><span>Drag cards to rearrange. Press L for list view.</span></div>
+<div class="pill zoom"><span>−</span><b>100%</b><span>+</span></div>
+
+<script>
+  const svg=document.getElementById('links');
+  const pairs=[['hello','a'],['a','b'],['a','s'],['s','c']];
+  const el=id=>document.querySelector(`[data-id="${id}"]`);
+  const ctr=e=>{const r=e.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]};
+  function draw(){svg.innerHTML=pairs.map(([x,y])=>{const[a,b]=ctr(el(x)),[c,d]=ctr(el(y));const mx=(a+c)/2;
+    return `<path d="M${a},${b} C${mx},${b} ${mx},${d} ${c},${d}" fill="none" stroke="#C9C3B7" stroke-width="1.2" stroke-dasharray="4 5"/>`}).join('')}
+  let drag=null,ox=0,oy=0,z=10,moved=false;
+  document.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('pointerdown',e=>{drag=c;moved=false;const r=c.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;c.style.zIndex=++z;c.setPointerCapture(e.pointerId)});
+    c.addEventListener('click',e=>{if(moved)e.preventDefault()});
+  });
+  addEventListener('pointermove',e=>{if(!drag)return;moved=true;drag.style.left=(e.clientX-ox)+'px';drag.style.top=(e.clientY-oy)+'px';draw()});
+  addEventListener('pointerup',()=>drag=null);
+  addEventListener('resize',draw);document.fonts.ready.then(draw);draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Swiss</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F1EEE8;--ink:#111;--muted:#77736B;--red:#E0391D;--line:#111}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Inter Tight",Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .g{display:grid;grid-template-columns:repeat(12,1fr);column-gap:20px;padding:0 32px}
+  header.g{padding-top:24px;font-size:13px;font-weight:500}
+  header .c1{grid-column:1/4}
+  header .c2{grid-column:4/7;color:var(--muted)}
+  header nav{grid-column:7/13;display:flex;justify-content:flex-end;gap:28px}
+  header nav a:hover{color:var(--red)}
+  .name{padding:7vw 0 0;font-size:30vw;line-height:.78;font-weight:700;letter-spacing:-.055em;margin-left:-.9vw}
+  .name span{color:var(--red)}
+  .intro{margin-top:56px;padding-top:16px;border-top:2px solid var(--line)}
+  .intro .lbl{grid-column:1/4;font-size:13px;font-weight:600}
+  .intro p{grid-column:4/10;font-size:30px;line-height:1.18;letter-spacing:-.025em;font-weight:500}
+  .intro .meta{grid-column:10/13;font-size:13px;line-height:1.6;color:var(--muted);text-align:right}
+  .sec{margin-top:96px}
+  .sec-head{padding-bottom:12px;border-bottom:2px solid var(--line);font-size:13px;font-weight:600;align-items:end}
+  .sec-head .c1{grid-column:1/4}
+  .sec-head .c2{grid-column:4/10;color:var(--muted);font-weight:500}
+  .sec-head .c3{grid-column:10/13;text-align:right;color:var(--muted);font-weight:500}
+  .item{padding-top:22px;padding-bottom:22px;border-bottom:1px solid #CFCAC0;align-items:baseline}
+  .item .n{grid-column:1/2;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .item .k{grid-column:2/4;font-size:13px;font-weight:500}
+  .item h3{grid-column:4/10;font-size:26px;font-weight:500;letter-spacing:-.025em;line-height:1.15}
+  .item time{grid-column:10/13;text-align:right;font-size:13px;color:var(--muted)}
+  .item:hover h3{color:var(--red)}
+  footer.g{margin:120px 0 0;padding:16px 32px 28px;border-top:2px solid var(--line);font-size:13px;font-weight:500}
+  footer .c1{grid-column:1/4}
+  footer .c2{grid-column:4/10;color:var(--muted)}
+  footer .c3{grid-column:10/13;text-align:right}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:8px;vertical-align:1px}
+</style>
+</head>
+<body>
+<header class="g"><span class="c1">Pavlos</span><span class="c2">Product designer, Europe</span><nav><a href="#">Index</a><a href="#">Learnings</a><a href="#">Thoughts</a><a href="#">Updates</a><a href="#">About</a></nav></header>
+
+<div class="g"><h1 class="name" style="grid-column:1/13">Pavlos<span>.</span></h1></div>
+
+<section class="g intro">
+  <span class="lbl">About</span>
+  <p>Designing calm, structured interfaces. Writing down what I learn, what I think, and what I'm working on.</p>
+  <div class="meta"><span class="dot"></span>Open to one new project<br>from January 2027</div>
+</section>
+
+<section class="sec">
+  <div class="g sec-head"><span class="c1">Index</span><span class="c2">Title</span><span class="c3">Date</span></div>
+  <a href="#" class="g item"><span class="n">024</span><span class="k">Learning</span><h3>Defaults are the real design</h3><time>02.11.2026</time></a>
+  <a href="#" class="g item"><span class="n">023</span><span class="k">Thought</span><h3>Quiet software is underrated</h3><time>24.10.2026</time></a>
+  <a href="#" class="g item"><span class="n">022</span><span class="k">Update</span><h3>I rebuilt this site with less</h3><time>12.10.2026</time></a>
+  <a href="#" class="g item"><span class="n">021</span><span class="k">Learning</span><h3>Naming things is half the interface</h3><time>30.09.2026</time></a>
+  <a href="#" class="g item"><span class="n">020</span><span class="k">Thought</span><h3>On working alone, together</h3><time>18.09.2026</time></a>
+  <a href="#" class="g item"><span class="n">019</span><span class="k">Learning</span><h3>Spacing scales I actually use</h3><time>03.09.2026</time></a>
+</section>
+
+<footer class="g"><span class="c1">© 2026</span><span class="c2">Set in Inter Tight. Built on a 12 column grid.</span><span class="c3">Email · LinkedIn · RSS</span></footer>
+</body>
+</html>

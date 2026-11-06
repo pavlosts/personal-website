@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Bookshelf</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root{--wall:#EAE2D4;--ink:#22201C;--muted:#8A8172}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:14px/1.5 Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;
+    background-color:var(--wall);
+    background-image:radial-gradient(ellipse at 30% 0%,rgba(255,240,215,.75),transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .32 0 0 0 0 .22 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E")}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 32px 80px}
+  header{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+  header nav{display:flex;gap:24px;color:var(--muted)}
+  .intro{display:grid;grid-template-columns:1.2fr 1fr;gap:56px;align-items:end;padding:72px 0 48px}
+  .intro h1{font-family:"Instrument Serif",serif;font-weight:400;font-size:60px;line-height:1;letter-spacing:-.015em}
+  .intro h1 em{color:#8A7B66}
+  .intro p{font-size:15px;line-height:1.65;color:#5F574B}
+
+  .shelf{position:relative;margin-top:36px}
+  .row{display:flex;align-items:flex-end;gap:3px;padding:0 28px;height:290px;position:relative;z-index:1}
+  .plank{height:22px;margin-top:-2px;position:relative;z-index:2;border-radius:2px;
+    background:linear-gradient(180deg,#B58457 0,#9C6C42 30%,#80542F 100%);
+    box-shadow:0 1px 0 rgba(255,220,180,.35) inset,0 18px 22px -10px rgba(60,35,15,.45)}
+  .plank::after{content:attr(data-label);position:absolute;left:50%;top:4px;transform:translateX(-50%);font:600 10px Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#4A3218;background:linear-gradient(180deg,#E8CF95,#C9A65E);padding:1px 12px;border-radius:2px;box-shadow:0 1px 1px rgba(0,0,0,.3)}
+  .shelf::before{content:"";position:absolute;left:0;right:0;top:0;height:290px;background:linear-gradient(180deg,rgba(60,35,15,.10),rgba(60,35,15,.04));border-radius:2px}
+
+  .book{position:relative;width:var(--w,46px);height:var(--h,240px);background:var(--c);border-radius:3px 3px 1px 1px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:transform .35s cubic-bezier(.2,.8,.2,1);
+    box-shadow:inset 3px 0 4px rgba(255,255,255,.18),inset -4px 0 6px rgba(0,0,0,.25),2px 0 2px rgba(0,0,0,.15)}
+  .book::before,.book::after{content:"";position:absolute;left:0;right:0;height:2px;background:var(--band,rgba(232,207,149,.75))}
+  .book::before{top:16px}.book::after{bottom:16px}
+  .book span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:Fraunces,serif;font-size:14px;color:var(--t,#F6F0E4);white-space:nowrap;overflow:hidden;max-height:calc(100% - 50px);letter-spacing:.01em}
+  .book:hover{transform:translateY(-14px)}
+  .book.tilt{transform:rotate(-7deg);transform-origin:bottom left;margin-left:12px}
+  .book.tilt:hover{transform:rotate(-7deg) translateY(-14px)}
+  .flat{display:flex;flex-direction:column;justify-content:flex-end;margin:0 10px}
+  .flat i{display:block;height:24px;border-radius:2px;margin-top:2px;box-shadow:inset 0 2px 3px rgba(255,255,255,.15),inset 0 -3px 4px rgba(0,0,0,.2)}
+  .plant{width:110px;height:220px;position:relative;margin:0 8px}
+  .plant .pot{position:absolute;bottom:0;left:18px;width:74px;height:70px;background:linear-gradient(90deg,#C9744F,#E08E63 40%,#B5603E);clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);border-radius:2px}
+  .plant .pot::before{content:"";position:absolute;top:0;left:-4px;right:-4px;height:12px;background:#B5603E}
+  .plant .leaf{position:absolute;bottom:62px;left:52px;width:20px;height:110px;background:linear-gradient(90deg,#3E6B45,#5E8F5F);border-radius:50% 50% 50% 50%/80% 80% 20% 20%;transform-origin:bottom center}
+  .frame-photo{width:120px;height:150px;margin:0 14px;padding:9px;background:#2C2925;border-radius:2px;box-shadow:0 6px 10px -4px rgba(0,0,0,.4)}
+  .frame-photo div{height:100%;background:#F6F1E7;padding:8px}
+  .frame-photo div div{height:100%;padding:0;background:linear-gradient(180deg,#F2C79B,#D98B6A 50%,#5B4A60)}
+  .bookend{width:18px;height:140px;background:linear-gradient(90deg,#3A3836,#5A5754);border-radius:2px 2px 0 0;margin-left:2px}
+
+  .reader{position:fixed;inset:0;background:rgba(40,30,20,.45);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:50}
+  .reader.on{display:flex}
+  .open{display:flex;width:880px;height:540px;filter:drop-shadow(0 30px 40px rgba(30,20,10,.5));animation:pop .45s cubic-bezier(.2,.8,.2,1)}
+  @keyframes pop{from{transform:translateY(20px) scale(.96);opacity:0}}
+  .page{flex:1;background:#FBF7EE;padding:56px 52px;position:relative}
+  .page.l{border-radius:4px 0 0 4px;background:linear-gradient(90deg,#FBF7EE 80%,#EDE4D2)}
+  .page.r{border-radius:0 4px 4px 0;background:linear-gradient(90deg,#E9DFCB,#FBF7EE 18%)}
+  .page small{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .page h2{font-family:"Instrument Serif",serif;font-weight:400;font-size:44px;line-height:1.02;margin-top:18px}
+  .page .by{margin-top:auto;position:absolute;bottom:52px;font-size:13px;color:var(--muted)}
+  .page p{font-family:"Instrument Serif",serif;font-size:19px;line-height:1.6;color:#3D3830;margin-bottom:14px}
+  .page p:first-of-type::first-letter{float:left;font-size:58px;line-height:.9;padding:4px 8px 0 0}
+  .page .num{position:absolute;bottom:24px;font-size:12px;color:var(--muted)}
+  .page.l .num{left:52px}.page.r .num{right:52px}
+  .page .go{display:inline-block;margin-top:10px;font:500 13px Inter,sans-serif;border-bottom:1px solid currentColor}
+  .close{position:absolute;top:24px;right:28px;color:#fff;font-size:13px;cursor:pointer;opacity:.85}
+  .legend{margin-top:28px;display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><b>Pavlos</b><nav><a href="#">Shelf</a><a href="#">Archive</a><a href="#">About</a><a href="#">RSS</a></nav></header>
+  <section class="intro">
+    <h1>A small library of <em>things I've learned.</em></h1>
+    <p>I'm a product designer. Every note I write ends up on this shelf: learnings on the top row, thoughts in the middle, updates at the bottom. Pull any book out to read it.</p>
+  </section>
+
+  <div class="shelf"><div class="row">
+    <div class="book" style="--c:#2F4A3A;--h:250px;--w:52px" data-t="Defaults are the real design" data-k="Learning" data-d="Nov 2026"><span>Defaults are the real design</span></div>
+    <div class="book" style="--c:#C5B596;--t:#3A3226;--band:#7C6A4C;--h:226px;--w:40px" data-t="Naming things is half the interface" data-k="Learning" data-d="Sep 2026"><span>Naming things</span></div>
+    <div class="book" style="--c:#8F3E2E;--h:262px;--w:48px" data-t="Spacing scales I actually use" data-k="Learning" data-d="Sep 2026"><span>Spacing scales I use</span></div>
+    <div class="book" style="--c:#2B3346;--h:236px;--w:44px" data-t="Empty states are onboarding in disguise" data-k="Learning" data-d="Aug 2026"><span>Empty states</span></div>
+    <div class="book" style="--c:#6E7F6A;--h:248px;--w:42px" data-t="Write the empty state first" data-k="Learning" data-d="Jul 2026"><span>Empty state first</span></div>
+    <div class="book" style="--c:#EADFC8;--t:#3A3226;--band:#A08E6A;--h:232px;--w:36px" data-t="Fewer colours, more contrast" data-k="Learning" data-d="Jun 2026"><span>Fewer colours</span></div>
+    <div class="book" style="--c:#3B3F4A;--h:256px;--w:50px" data-t="How I run a design critique alone" data-k="Learning" data-d="May 2026"><span>Critique alone</span></div>
+    <div class="book" style="--c:#B7553D;--h:240px;--w:40px" data-t="Prototypes are arguments" data-k="Learning" data-d="Apr 2026"><span>Prototypes are arguments</span></div>
+    <div class="book tilt" style="--c:#D6A54A;--t:#3A2C10;--band:#8A6420;--h:214px;--w:38px" data-t="Taste is mostly saying no early" data-k="Learning" data-d="Jul 2026"><span>Saying no early</span></div>
+    <div style="flex:1"></div>
+    <div class="frame-photo"><div><div></div></div></div>
+    <div class="plant"><div class="leaf" style="transform:rotate(-28deg)"></div><div class="leaf" style="transform:rotate(-6deg);height:130px"></div><div class="leaf" style="transform:rotate(20deg);height:100px"></div><div class="leaf" style="transform:rotate(40deg);height:80px"></div><div class="pot"></div></div>
+  </div><div class="plank" data-label="Learnings"></div></div>
+
+  <div class="shelf"><div class="row">
+    <div class="flat"><i style="background:#6E7F6A;width:150px"></i><i style="background:#C8B89A;width:140px"></i><i style="background:#3B3F4A;width:156px"></i></div>
+    <div class="book" style="--c:#4A5C7A;--h:244px;--w:50px" data-t="Quiet software is underrated" data-k="Thought" data-d="Oct 2026"><span>Quiet software</span></div>
+    <div class="book" style="--c:#E7DCC6;--t:#3A3226;--band:#A08E6A;--h:258px;--w:44px" data-t="On working alone, together" data-k="Thought" data-d="Sep 2026"><span>Working alone, together</span></div>
+    <div class="book" style="--c:#7A5A3C;--h:230px;--w:40px" data-t="Slow is a feature" data-k="Thought" data-d="Jun 2026"><span>Slow is a feature</span></div>
+    <div class="book" style="--c:#2F2D2A;--h:266px;--w:54px" data-t="What I mean by calm" data-k="Thought" data-d="May 2026"><span>What I mean by calm</span></div>
+    <div class="book" style="--c:#8F3E2E;--h:238px;--w:42px" data-t="Introverts make good designers" data-k="Thought" data-d="Apr 2026"><span>Introverts and design</span></div>
+    <div class="book" style="--c:#C5B596;--t:#3A3226;--band:#7C6A4C;--h:250px;--w:46px" data-t="The case for boring tools" data-k="Thought" data-d="Mar 2026"><span>Boring tools</span></div>
+    <div class="book" style="--c:#2F4A3A;--h:228px;--w:38px" data-t="Walking is my best tool" data-k="Thought" data-d="Feb 2026"><span>Walking</span></div>
+    <div class="bookend"></div>
+    <div style="flex:1"></div>
+    <div class="frame-photo" style="width:150px;height:110px"><div><div style="background:linear-gradient(180deg,#B9CCD8,#E3D6C1 55%,#A08D70)"></div></div></div>
+  </div><div class="plank" data-label="Thoughts"></div></div>
+
+  <div class="shelf"><div class="row">
+    <div class="book" style="--c:#9C4A36;--h:236px;--w:46px" data-t="I rebuilt this site with less" data-k="Update" data-d="Oct 2026"><span>Rebuilt with less</span></div>
+    <div class="book" style="--c:#5B6B4E;--h:254px;--w:50px" data-t="Three months of fractional design" data-k="Update" data-d="Aug 2026"><span>Fractional design</span></div>
+    <div class="book" style="--c:#D9CDB4;--t:#3A3226;--band:#A08E6A;--h:220px;--w:38px" data-t="New year, smaller plans" data-k="Update" data-d="Jan 2026"><span>Smaller plans</span></div>
+    <div class="book" style="--c:#2B3346;--h:246px;--w:44px" data-t="One year of writing here" data-k="Update" data-d="Nov 2025"><span>One year of writing</span></div>
+    <div class="book" style="--c:#D6A54A;--t:#3A2C10;--band:#8A6420;--h:232px;--w:40px" data-t="Going independent" data-k="Update" data-d="Sep 2025"><span>Going independent</span></div>
+    <div class="book" style="--c:#4A5C7A;--h:258px;--w:48px" data-t="Hello, world" data-k="Update" data-d="Nov 2024"><span>Hello, world</span></div>
+    <div style="flex:1"></div>
+    <div class="flat"><i style="background:#B7553D;width:170px"></i><i style="background:#2B3346;width:160px"></i></div>
+  </div><div class="plank" data-label="Updates"></div></div>
+
+  <div class="legend"><span>24 books · last added November 2</span><span>hello@pavlos.design</span></div>
+</div>
+
+<div class="reader" id="reader">
+  <span class="close" id="close">Put it back ✕</span>
+  <div class="open">
+    <div class="page l"><small id="rk">Learning</small><h2 id="rt">Defaults are the real design</h2><div class="by" id="rd">By Pavlos · Nov 2026</div><span class="num">12</span></div>
+    <div class="page r"><p>Most people never open settings. Whatever ships as the default becomes the product, for almost everyone, for the whole life of the feature.</p><p>So I've started designing defaults first and options last. It changes which questions get asked in review, and it makes the product feel opinionated in a calm way.</p><a class="go" href="#">Keep reading →</a><span class="num">13</span></div>
+  </div>
+</div>
+<script>
+  const R=document.getElementById('reader');
+  document.querySelectorAll('.book').forEach(b=>b.onclick=()=>{rt.textContent=b.dataset.t;rk.textContent=b.dataset.k;rd.textContent='By Pavlos · '+b.dataset.d;R.classList.add('on')});
+  R.onclick=e=>{if(e.target===R||e.target.id==='close')R.classList.remove('on')};
+  addEventListener('keydown',e=>{if(e.key==='Escape')R.classList.remove('on')});
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Letter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..500&family=Inter:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F6F1E9;--paper:#FBF8F2;--ink:#24211D;--muted:#8A8276;--line:#E6DFD2;--link:#3E5C76}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .top{display:flex;justify-content:space-between;max-width:1040px;margin:0 auto;padding:28px 32px;font:13px Inter,sans-serif;color:var(--muted)}
+  .top nav{display:flex;gap:22px}
+  .top b{color:var(--ink);font-weight:500}
+  .sheet{position:relative;max-width:720px;margin:48px auto 0;background:var(--paper);padding:80px 88px 72px;border-radius:2px;box-shadow:0 1px 0 var(--line),0 30px 60px -40px rgba(60,45,25,.35)}
+  .date{font:13px Inter,sans-serif;color:var(--muted);margin-bottom:40px}
+  .sheet p{font-size:20px;line-height:1.7;margin-bottom:22px;font-weight:350}
+  .sheet p.greet{font-style:italic}
+  .sheet a{color:var(--link);background-image:linear-gradient(currentColor,currentColor);background-size:100% 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .3s}
+  .sheet a:hover{background-size:0 1px;background-position:100% 100%}
+  .note{position:absolute;right:-210px;width:170px;font:13px/1.5 Inter,sans-serif;color:var(--muted);border-left:1px solid var(--line);padding-left:14px}
+  .sign{font-family:"Mrs Saint Delafield",cursive;font-size:64px;line-height:1;color:#2B3A55;margin-top:18px;transform:rotate(-4deg);transform-origin:left}
+  .ps{margin-top:40px;padding-top:24px;border-top:1px dashed var(--line);font-size:16px !important;color:var(--muted)}
+  .archive{max-width:720px;margin:88px auto 0;padding:0 32px 96px}
+  .archive h2{font:500 12px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .archive a{display:grid;grid-template-columns:120px 1fr auto;gap:16px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line)}
+  .archive a span:first-child,.archive a span:last-child{font:13px Inter,sans-serif;color:var(--muted)}
+  .archive a span:nth-child(2){font-size:19px;transition:color .2s}
+  .archive a:hover span:nth-child(2){color:var(--link)}
+</style>
+</head>
+<body>
+<div class="top"><b>Pavlos</b><nav><a href="#">Letters</a><a href="#">Notes</a><a href="#">About</a><a href="#">Subscribe</a></nav></div>
+
+<article class="sheet">
+  <div class="date">Friday, November 6, 2026 · Letter no. 24</div>
+  <p class="greet">Hello, and thanks for stopping by.</p>
+  <p>I'm Pavlos, a product designer. I spend most of my days making software feel a little calmer and a little more obvious. It's quiet work, and I like it that way.</p>
+  <p>This site is where I think out loud. Lately I've been writing about <a href="#">why defaults matter more than features</a>, and about <a href="#">software that waits for you</a> instead of asking for attention.<span class="note" style="margin-top:-60px">Both started as notes on my phone during walks. Most things here do.</span></p>
+  <p>If you're new, the <a href="#">notes on naming things</a> are a good place to start. If you're a designer working mostly alone, <a href="#">this one is for you</a>.</p>
+  <p>I write a short letter like this once a month. No tracking, no tricks, and you can leave any time.</p>
+  <p>Warmly,</p>
+  <div class="sign">Pavlos</div>
+  <p class="ps">P.S. I'm currently building a small tool for keeping design decisions in one place. If that sounds useful, reply and tell me why.</p>
+</article>
+
+<section class="archive">
+  <h2>Earlier letters</h2>
+  <a href="#"><span>Oct 2026</span><span>I rebuilt this site with less</span><span>No. 23</span></a>
+  <a href="#"><span>Sep 2026</span><span>On working alone, together</span><span>No. 22</span></a>
+  <a href="#"><span>Sep 2026</span><span>Spacing scales I actually use</span><span>No. 21</span></a>
+  <a href="#"><span>Aug 2026</span><span>Three months of fractional design</span><span>No. 20</span></a>
+</section>
+</body>
+</html>

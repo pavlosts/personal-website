@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pavlos · Bento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#ECE9E2;--tile:#FBFAF7;--ink:#1B1A18;--muted:#8B867D;--line:#E4E0D7;--accent:#E8673C}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:14px/1.5 Inter,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 28px 64px}
+  header{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 24px}
+  header .me{font-weight:600}
+  header nav{display:flex;gap:4px;background:var(--tile);padding:4px;border-radius:999px;border:1px solid var(--line)}
+  header nav a{padding:6px 14px;border-radius:999px;color:var(--muted);font-size:13px}
+  header nav a.on{background:var(--ink);color:#fff}
+  .bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:190px;gap:14px}
+  .t{background:var(--tile);border:1px solid var(--line);border-radius:22px;padding:22px;position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+  a.t:hover{transform:translateY(-3px)}
+  .lbl{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .intro{grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;padding:30px}
+  .intro .face{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#F2C9A8,#B9785A 60%,#6D4535)}
+  .intro h1{font-size:38px;line-height:1.1;letter-spacing:-.035em;font-weight:500}
+  .intro h1 span{color:var(--muted)}
+  .intro .cta{display:flex;gap:8px}
+  .btn{font-size:13px;font-weight:500;padding:9px 16px;border-radius:999px;border:1px solid var(--line)}
+  .btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .latest{grid-column:span 2;display:flex;flex-direction:column;justify-content:space-between;background:var(--ink);color:#F3F1EC;border-color:var(--ink)}
+  .latest .lbl{color:#8F8A80}
+  .latest h3{font-size:26px;font-weight:500;letter-spacing:-.03em;line-height:1.15;max-width:420px}
+  .latest .row{display:flex;justify-content:space-between;color:#8F8A80;font-size:13px}
+  .arrow{position:absolute;top:20px;right:20px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:grid;place-items:center}
+  .art{background:linear-gradient(160deg,#F4B98A 0%,#E8673C 45%,#5B2E4F 100%);border:0}
+  .art .sun{position:absolute;width:90px;height:90px;border-radius:50%;background:#FBE3C6;left:50%;top:58%;transform:translate(-50%,-50%);box-shadow:0 0 60px #FBE3C6}
+  .art .hill{position:absolute;left:-10%;right:-10%;bottom:-40px;height:110px;border-radius:50%;background:#3C2140}
+  .art .lbl{color:rgba(255,255,255,.8);position:relative;z-index:1}
+  .clock{display:flex;flex-direction:column;justify-content:space-between}
+  .clock .time{font-size:46px;font-weight:500;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .clock .sub{color:var(--muted);font-size:13px}
+  .music{grid-column:span 2;display:flex;gap:18px;align-items:center}
+  .cover{width:146px;height:146px;flex:none;border-radius:14px;background:conic-gradient(from 200deg,#2E3A4F,#7A8BA6,#D9D3C4,#2E3A4F)}
+  .music h4{font-size:18px;font-weight:500;letter-spacing:-.02em;margin-top:8px}
+  .music p{color:var(--muted);font-size:13px}
+  .bars{display:flex;gap:3px;align-items:flex-end;height:22px;margin-top:18px}
+  .bars i{width:3px;background:var(--accent);border-radius:2px;animation:eq .9s ease-in-out infinite alternate}
+  .bars i:nth-child(2n){animation-delay:-.4s}.bars i:nth-child(3n){animation-delay:-.7s}
+  @keyframes eq{from{height:3px}to{height:22px}}
+  .list{grid-column:span 2;grid-row:span 2}
+  .list a{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line)}
+  .list a:last-child{border:0}
+  .list a span:last-child{color:var(--muted);font-size:13px}
+  .list a:hover span:first-child{color:var(--accent)}
+  .pill{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted);margin-right:8px}
+  .stack{display:flex;flex-direction:column;justify-content:space-between}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chips span{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+  .sub-t{display:flex;flex-direction:column;justify-content:space-between;background:#F3E3D3;border-color:#EAD3BE}
+  .sub-t h4{font-size:18px;font-weight:500;letter-spacing:-.02em;line-height:1.25}
+  .sub-t .in{display:flex;background:#fff;border-radius:999px;padding:4px 4px 4px 14px;align-items:center}
+  .sub-t input{border:0;outline:0;flex:1;font:inherit;font-size:13px;min-width:0}
+  .sub-t button{border:0;background:var(--ink);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer}
+  .num{display:flex;flex-direction:column;justify-content:space-between}
+  .num .big{font-size:56px;font-weight:500;letter-spacing:-.05em;line-height:1}
+  .else{display:flex;flex-direction:column;justify-content:space-between}
+  .else .links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .else .links a{display:flex;justify-content:space-between;padding:12px 14px;border-radius:12px;background:var(--bg);font-weight:500;transition:background .2s}
+  .else .links a:hover{background:#E3DFD6}
+  .else .links a span:last-child{color:var(--muted)}
+  .dot{width:7px;height:7px;border-radius:50%;background:#45B36B}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><span class="me">Pavlos</span><nav><a class="on" href="#">Home</a><a href="#">Writing</a><a href="#">Now</a><a href="#">About</a></nav><span style="color:var(--muted);font-size:13px">hello@pavlos.design</span></header>
+  <div class="bento">
+    <div class="t intro">
+      <div class="face"></div>
+      <h1>Pavlos. Product designer. <span>Notes on craft, calm tools, and what I'm learning.</span></h1>
+      <div class="cta"><a class="btn dark" href="#">Read the writing</a><a class="btn" href="#">About me</a></div>
+    </div>
+    <a class="t latest" href="#">
+      <span class="lbl">Latest · Learning</span>
+      <span class="arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 17 17 7M8 7h9v9"/></svg></span>
+      <h3>Defaults are the real design</h3>
+      <div class="row"><span>Nov 2, 2026</span><span>4 min read</span></div>
+    </a>
+    <div class="t art"><span class="lbl">Evening walk, last Sunday</span><div class="sun"></div><div class="hill"></div></div>
+    <div class="t clock"><span class="lbl"><span class="dot"></span>Online, slowly</span><div><div class="time" id="clk">19:58</div><div class="sub">Local time, UTC+2</div></div></div>
+    <div class="t list">
+      <span class="lbl">Recent writing</span>
+      <div style="margin-top:10px">
+        <a href="#"><span><span class="pill">Thought</span>Quiet software is underrated</span><span>Oct 24</span></a>
+        <a href="#"><span><span class="pill">Update</span>I rebuilt this site with less</span><span>Oct 12</span></a>
+        <a href="#"><span><span class="pill">Learning</span>Naming things is half the interface</span><span>Sep 30</span></a>
+        <a href="#"><span><span class="pill">Thought</span>On working alone, together</span><span>Sep 18</span></a>
+        <a href="#"><span><span class="pill">Learning</span>Spacing scales I actually use</span><span>Sep 03</span></a>
+        <a href="#"><span><span class="pill">Update</span>Three months of fractional design</span><span>Aug 20</span></a>
+      </div>
+    </div>
+    <div class="t music"><div class="cover"></div><div><span class="lbl">On repeat</span><h4>Spaces</h4><p>Nils Frahm</p><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+    <div class="t num"><span class="lbl">Notes written</span><div><div class="big">48</div><div class="lbl" style="margin-top:6px">since 2023</div></div></div>
+    <div class="t stack"><span class="lbl">Tools I use</span><div class="chips"><span>Figma</span><span>Cursor</span><span>Astro</span><span>Notion</span><span>Paper</span></div></div>
+    <div class="t sub-t" style="grid-column:span 2"><span class="lbl">Monthly letter</span><h4>One email a month with new notes and one useful find.</h4><div class="in"><input placeholder="you@email.com"><button>→</button></div></div>
+    <div class="t else" style="grid-column:span 2"><span class="lbl">Elsewhere</span><div class="links"><a href="#"><span>LinkedIn</span><span>↗</span></a><a href="#"><span>Read.cv</span><span>↗</span></a><a href="#"><span>Email</span><span>↗</span></a><a href="#"><span>RSS</span><span>↗</span></a></div></div>
+  </div>
+</div>
+<script>
+  const c=document.getElementById('clk');const f=()=>c.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Athens'});f();setInterval(f,30000);
+</script>
+</body>
+</html>

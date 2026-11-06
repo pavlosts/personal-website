@@ -1,0 +1,358 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadTimeline } from '../lib/timeline';
+import { CATEGORIES, iso, monthYear } from '../lib/site';
+
+const { branches, entries } = await loadTimeline();
+const empty = entries.length === 0;
+const firstYear = empty ? null : branches[0].start.getUTCFullYear();
+const latest = entries[0];
+
+const pills = [...branches].sort((a, c) => Number(!!a.ended) - Number(!!c.ended));
+const span = (b: (typeof branches)[number]) => {
+  const s = b.start.getUTCFullYear();
+  if (!b.ended) return `since ${s}`;
+  const e = b.ended.getUTCFullYear();
+  return s === e ? `${s}` : `${s}–${e}`;
+};
+
+const byYear = new Map<number, typeof entries>();
+for (const e of entries) {
+  const y = e.date.getUTCFullYear();
+  byYear.set(y, [...(byYear.get(y) ?? []), e]);
+}
+const branchOf = (id: string) => branches.find((b) => b.id === id)!;
+
+const data = {
+  colors: Object.fromEntries(Object.entries(CATEGORIES).map(([k, v]) => [k, v.color])),
+  branches: branches.map((b) => ({
+    id: b.id,
+    name: b.name,
+    category: b.category,
+    ended: b.ended ? iso(b.ended) : null,
+  })),
+  entries: entries.map((e) => ({
+    slug: e.slug,
+    title: e.title,
+    date: iso(e.date),
+    branch: e.branchId,
+    kind: e.kind,
+    link: e.hasBody,
+  })),
+};
+---
+
+<Base nav="growth">
+  <section class="intro">
+    <span class="badge"><span class="live"></span>Living timeline · {latest ? `updated ${monthYear(latest.date)}` : 'just planted'}</span>
+    <h1>Still growing, <span>one branch at a time.</span></h1>
+    {empty ? (
+      <p class="lead">I'm a product designer. Everything I spend time on becomes a branch here. The ones I'm into keep growing. The ones I let go of stop where they ended. The first branch is about to sprout.</p>
+    ) : (
+      <p class="lead">I'm a product designer. Everything I spend time on becomes a branch. The ones I'm into keep growing. The ones I let go of stop where they ended. Start at today and scroll back to {firstYear}.</p>
+    )}
+  </section>
+
+  {empty ? (
+    <div class="sprout" aria-hidden="true">
+      <svg viewBox="0 0 240 260" width="240" height="260">
+        <defs>
+          <linearGradient id="sp" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#191816" stop-opacity=".1" />
+            <stop offset=".4" stop-color="#191816" stop-opacity=".85" />
+            <stop offset="1" stop-color="#191816" />
+          </linearGradient>
+        </defs>
+        <path d="M118.4,210 C118.8,150 119.4,90 119.5,60 L120.5,60 C120.6,90 121.2,150 121.6,210 Z" fill="url(#sp)" />
+        <line x1="120" y1="58" x2="120" y2="30" stroke="#2F6B5A" stroke-width="2" stroke-linecap="round" class="flow" opacity=".7" />
+        <circle cx="120" cy="26" r="14" fill="#2F6B5A" opacity=".16" class="halo" />
+        <circle cx="120" cy="26" r="4.5" fill="#2F6B5A" />
+        <circle cx="120" cy="26" r="1.6" fill="#fff" />
+        {[[-1, 60, 30], [1, 70, 24], [-1, 30, 44], [1, 34, 40]].map(([d, w, h], i) => (
+          <path d={`M120,202 C${120 + d * w * .25},${210 + h * .35} ${120 + d * w * .7},${210 + h * .55} ${120 + d * w},${210 + h}`} stroke="#191816" stroke-opacity={.2 - i * .03} stroke-width="1.2" fill="none" stroke-linecap="round" />
+        ))}
+      </svg>
+    </div>
+  ) : (
+    <>
+      <div class="index" id="index">
+        {pills.map((b) => (
+          <button class:list={['pill', { dead: b.ended }]} data-b={b.id} type="button">
+            <i style={`background:${b.color}`}></i>{b.name}<small>{span(b)}</small>
+          </button>
+        ))}
+      </div>
+
+      <div class="wrap" id="wrap"><div class="stage" id="stage"><svg id="svg"></svg></div></div>
+      <div class="viewing" id="viewing"><div class="prog"><i id="prog"></i></div><div><small>Viewing</small><b id="yr"></b></div></div>
+
+      <section class="feed">
+        {[...byYear.entries()].map(([year, list]) => (
+          <div class="fy">
+            <h2>{year}</h2>
+            <ol>
+              {list.map((e) => {
+                const b = branchOf(e.branchId);
+                const Tag = e.hasBody ? 'a' : 'div';
+                return (
+                  <li>
+                    <Tag class:list={['fi', { dead: b.ended }]} href={e.hasBody ? `/notes/${e.slug}` : undefined}>
+                      <i style={`background:${b.color}`}></i>
+                      <span class="d">{monthYear(e.date)} · {b.name}{e.kind && <em>{e.kind === 'start' ? 'started' : 'ended'}</em>}</span>
+                      <span class="t">{e.title}</span>
+                    </Tag>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        ))}
+      </section>
+
+      <script type="application/json" id="tree-data" set:html={JSON.stringify(data)} />
+    </>
+  )}
+</Base>
+
+<style is:global>
+  .intro { max-width: 760px; margin: 0 auto; padding: 150px 24px 0; text-align: center; }
+  .intro h1 { font-weight: 600; font-size: 68px; line-height: 1; letter-spacing: -.045em; margin-top: 24px; text-wrap: balance; }
+  .intro h1 span { color: var(--soft); }
+  .lead { margin: 22px auto 0; max-width: 560px; color: var(--ink2); font-size: 16.5px; line-height: 1.6; text-wrap: pretty; }
+
+  .sprout { display: flex; justify-content: center; margin: 56px 0 40px; }
+
+  .index { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 900px; margin: 40px auto 0; padding: 0 24px; }
+  .index .pill { font: inherit; font-size: 13px; color: inherit; cursor: pointer; }
+  .index .pill:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -8px rgba(25, 24, 22, .25); }
+  .index .pill.dead { color: var(--muted); }
+
+  .wrap { position: relative; margin-top: 24px; }
+  .stage { position: relative; width: 1200px; margin: 0 auto; transform-origin: top center; }
+  .stage svg { position: absolute; left: 0; top: 0; overflow: visible; }
+  .yr { font: 500 12px var(--mono); fill: #ABA69C; }
+  .br path.stem { transition: stroke-dashoffset 1.8s cubic-bezier(.45, .05, .2, 1); }
+  .br .fade { opacity: 0; transition: opacity .6s ease .9s; }
+  .br.in .fade { opacity: 1; }
+  .ev { opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; }
+  .ev.in { opacity: 1; transform: none; }
+  .dimming .br:not(.hl), .dimming .ev:not(.hl), .dimming .tag:not(.hl) { opacity: .12 !important; }
+  .halo { animation: halo 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes halo { 50% { transform: scale(1.5); opacity: .35; } }
+  .flow { stroke-dasharray: 2 5; animation: flow 1s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -7; } }
+  .leaf { transform-box: view-box; animation: sway 7s ease-in-out infinite; }
+  @keyframes sway { 50% { transform: rotate(6deg); } }
+
+  .ev { position: absolute; width: 176px; cursor: default; }
+  a.ev { cursor: pointer; }
+  .ev.r { text-align: right; }
+  .ev .d, .fi .d { font: 500 11px var(--mono); color: var(--muted); display: flex; gap: 6px; align-items: center; }
+  .ev.r .d { justify-content: flex-end; }
+  .ev .d em, .fi .d em { font-style: normal; font-size: 10px; padding: 1px 6px; border-radius: 4px; background: rgba(25, 24, 22, .05); color: var(--ink2); letter-spacing: .02em; }
+  .ev .t { font-size: 14px; font-weight: 500; line-height: 1.35; margin-top: 2px; letter-spacing: -.01em; text-wrap: pretty; }
+  .ev.dead .t { color: var(--muted); font-weight: 400; }
+  a.ev:hover .t, a.fi:hover .t { text-decoration: underline; text-decoration-color: rgba(25, 24, 22, .25); text-underline-offset: 3px; }
+  .tag { position: absolute; transform: translate(-50%, -100%); display: flex; align-items: center; gap: 7px; white-space: nowrap; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--card); border: 1px solid var(--line); box-shadow: 0 4px 14px -6px rgba(25, 24, 22, .2); transition: opacity .25s; }
+  .tag i { width: 7px; height: 7px; border-radius: 50%; }
+  .tag small { font: 500 10.5px var(--mono); color: var(--muted); }
+  .tag.dead { background: var(--bg); box-shadow: none; color: var(--muted); }
+  .tag.me { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .today { position: absolute; left: 0; transform: translateY(-50%); font: 500 11px var(--mono); color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px; }
+  .roots-title { font: 600 15px Geist, sans-serif; fill: var(--ink); letter-spacing: -.01em; }
+  .roots-sub { font: 500 11px var(--mono); fill: var(--muted); }
+
+  .viewing { position: fixed; left: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 14px; background: rgba(255, 255, 255, .78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: 0 10px 30px -14px rgba(25, 24, 22, .3); opacity: 0; transition: opacity .4s; }
+  .viewing.on { opacity: 1; }
+  .viewing b { font-size: 22px; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .viewing small { display: block; font: 500 11px var(--mono); color: var(--muted); }
+  .prog { width: 4px; height: 36px; border-radius: 2px; background: rgba(25, 24, 22, .08); overflow: hidden; }
+  .prog i { display: block; width: 100%; background: var(--ink); border-radius: 2px; }
+
+  .feed { display: none; }
+
+  @media (max-width: 760px) {
+    .intro { padding-top: 120px; }
+    .intro h1 { font-size: 44px; }
+    .lead { font-size: 15.5px; }
+    .index { margin-top: 28px; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
+    .index::-webkit-scrollbar { display: none; }
+    .index .pill { flex: none; }
+    .wrap, .viewing { display: none; }
+    .feed { display: block; max-width: 560px; margin: 40px auto 0; padding: 0 24px; }
+    .fy h2 { font: 500 12px var(--mono); color: var(--soft); padding: 18px 0 10px; border-top: 1px solid var(--line); }
+    .fy ol { list-style: none; position: relative; padding-bottom: 12px; }
+    .fy ol::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 18px; width: 1px; background: rgba(25, 24, 22, .12); }
+    .fi { display: grid; grid-template-columns: 9px 1fr; column-gap: 16px; padding: 8px 0; position: relative; }
+    .fi i { grid-row: span 2; width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; box-shadow: 0 0 0 4px var(--bg); }
+    .fi .t { font-size: 15px; font-weight: 500; line-height: 1.4; margin-top: 2px; letter-spacing: -.01em; }
+    .fi.dead .t { color: var(--muted); font-weight: 400; }
+  }
+</style>
+
+<script is:inline>
+(() => {
+  const el = document.getElementById('tree-data');
+  if (!el) return;
+  const DATA = JSON.parse(el.textContent);
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const yearOf = (s) => { const [y, m, d] = s.split('-').map(Number); return y + (m - 1) / 12 + (d - 1) / 365; };
+  const fmt = (s) => { const [y, m] = s.split('-'); return `${MON[+m - 1]} ${y}`; };
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const today = new Date();
+  const NOW = today.getFullYear() + today.getMonth() / 12 + (today.getDate() - 1) / 365;
+
+  const W = 1200, CX = 600, PX = 400, TOP = 140, RISE = 170, DEAD = '#C9C3B8';
+  const events = DATA.entries.map((e) => ({ ...e, y: Math.min(NOW, yearOf(e.date)) }));
+  const branches = DATA.branches.map((b, i) => {
+    const ev = events.filter((e) => e.branch === b.id).sort((a, c) => a.y - c.y);
+    return { ...b, ev, ys: ev[0].y, ye: b.ended ? Math.min(NOW, yearOf(b.ended)) : null, seed: 1 + i * 1.37, col: DATA.colors[b.category] };
+  }).sort((a, c) => a.ys - c.ys);
+
+  const LANES = [-430, 430, -215, 215], FORK = 170 / 400;
+  const alive = (o, t) => o.ys <= t && (o.ye == null || o.ye >= t - FORK);
+  const crossCost = (b, off, placed) => placed.reduce((sum, o) =>
+    Math.sign(o.off) === Math.sign(off) && Math.abs(o.off) < Math.abs(off) && alive(o, b.ys) ? sum + (o.ye == null ? 2 : 1) : sum, 0);
+  let best = { cost: Infinity, offs: null }, budget = 20000;
+  const search = (i, placed, cost) => {
+    if (cost >= best.cost || budget-- < 0) return;
+    if (i === branches.length) { best = { cost, offs: placed.map((p) => p.off) }; return; }
+    const b = branches[i];
+    const busy = (off, gap) => placed.some((o) => o.off === off && (o.ye == null || o.ye > b.ys - gap));
+    let options = LANES.filter((off) => !busy(off, 0.2));
+    if (!options.length) options = LANES;
+    options.forEach((off, rank) => {
+      const clash = busy(off, 0.2) ? 10 : busy(off, 0.6) ? 1.5 : 0;
+      search(i + 1, [...placed, { off, ys: b.ys, ye: b.ye }], cost + crossCost(b, off, placed) + clash + rank * 0.01);
+    });
+  };
+  search(0, [], 0);
+  branches.forEach((b, i) => { b.off = best.offs ? best.offs[i] : LANES[i % 4]; });
+
+  const START = branches[0].ys - 0.35, H = TOP + (NOW - START) * PX + 260;
+  const firstYear = Math.floor(branches[0].ys), nowYear = Math.floor(NOW);
+  const Y = (t) => TOP + (NOW - t) * PX;
+  const stage = document.getElementById('stage'), svg = document.getElementById('svg'), wrap = document.getElementById('wrap');
+  stage.style.height = H + 'px'; svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const bx = (b) => CX + b.off;
+  const forkY = (b) => Y(b.ys) + RISE;
+  const xAt = (b, y) => { const top = forkY(b) - RISE, k = Math.max(0, Math.min(1, (top - y) / 120)); return bx(b) + k * 4 * Math.sin(y / 150 + b.seed); };
+
+  let s = `<defs><linearGradient id="trunk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#191816" stop-opacity=".15"/><stop offset=".25" stop-color="#191816" stop-opacity=".9"/><stop offset="1" stop-color="#191816"/></linearGradient>`;
+  branches.forEach((b) => { if (!b.ye) s += `<linearGradient id="g-${b.id}" gradientUnits="userSpaceOnUse" x1="0" y1="${forkY(b)}" x2="0" y2="${forkY(b) - RISE * 1.6}"><stop offset="0" stop-color="#191816" stop-opacity=".8"/><stop offset="1" stop-color="${b.col}"/></linearGradient>`; });
+  s += `</defs>`;
+
+  for (let yr = Math.ceil(START); yr <= nowYear; yr++) {
+    const y = Y(yr);
+    s += `<line x1="56" x2="${W}" y1="${y}" y2="${y}" stroke="rgba(25,24,22,.06)"/><text class="yr" x="0" y="${y - 10}">${yr}</text>`;
+  }
+  s += `<line x1="72" x2="${W}" y1="${Y(NOW)}" y2="${Y(NOW)}" stroke="rgba(25,24,22,.18)" stroke-dasharray="3 5"/>`;
+
+  const yRoot = Y(START) + 40, yTip = Y(NOW) - 44;
+  s += `<path d="M${CX - 3.6},${yRoot} C${CX - 3},${yRoot - 600} ${CX - 1.4},${yTip + 500} ${CX - 1.1},${yTip} L${CX + 1.1},${yTip} C${CX + 1.4},${yTip + 500} ${CX + 3},${yRoot - 600} ${CX + 3.6},${yRoot} Z" fill="url(#trunk)"/>`;
+  s += `<circle cx="${CX}" cy="${yTip - 4}" r="3.5" fill="#191816"/>`;
+  [[-1, 120, 90], [1, 150, 70], [-1, 60, 130], [1, 70, 120], [-1, 190, 50], [1, 210, 40]].forEach(([d, w, h], i) => {
+    s += `<path d="M${CX},${yRoot - 8} C${CX + d * w * .25},${yRoot + h * .35} ${CX + d * w * .7},${yRoot + h * .55} ${CX + d * w},${yRoot + h}" stroke="#191816" stroke-opacity="${.22 - i * .02}" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+  });
+
+  const evs = [], tags = [];
+  branches.forEach((b) => {
+    const side = Math.sign(b.off), dead = !!b.ye, X = bx(b), fy = forkY(b), top = fy - RISE, yE = dead ? Y(b.ye) : Y(NOW);
+    let d = `M${CX},${fy} C${CX},${fy - RISE * .55} ${X},${fy - RISE * .5} ${X},${top}`;
+    for (let y = top - 10; y >= yE; y -= 10) d += ` L${xAt(b, y).toFixed(1)},${y.toFixed(1)}`;
+    d += ` L${xAt(b, yE).toFixed(1)},${yE}`;
+    let g = `<g class="br" data-b="${b.id}" data-top="${yE}"><path class="stem" d="${d}" fill="none" stroke="${dead ? DEAD : `url(#g-${b.id})`}" stroke-width="${dead ? 1.5 : 2.2}" stroke-linecap="round"/><g class="fade">`;
+    const xt = xAt(b, yE);
+    if (!dead) {
+      let k = 0;
+      for (let y = yE + 34; y < top - 16; y += 58, k++) {
+        const x = xAt(b, y), dd = k % 2 ? 1 : -1;
+        g += `<path class="leaf" style="transform-origin:${x}px ${y}px;animation-delay:${-k * .9}s" d="M${x},${y} c${dd * 4},-6 ${dd * 11},-8 ${dd * 16},-5 c${-dd * 4},5 ${-dd * 10},7 ${-dd * 16},5Z" fill="${b.col}" fill-opacity=".13" stroke="${b.col}" stroke-opacity=".55" stroke-width=".8"/>`;
+      }
+      g += `<line x1="${xt}" y1="${yE}" x2="${xt}" y2="${yE - 30}" stroke="${b.col}" stroke-width="2" stroke-linecap="round" class="flow" opacity=".7"/>`
+        + `<circle cx="${xt}" cy="${yE - 34}" r="14" fill="${b.col}" opacity=".16" class="halo"/><circle cx="${xt}" cy="${yE - 34}" r="4.5" fill="${b.col}"/><circle cx="${xt}" cy="${yE - 34}" r="1.6" fill="#fff"/>`;
+      tags.push({ b, x: xt, y: yE - 52, html: `<i style="background:${b.col}"></i>${esc(b.name)}<small>growing</small>` });
+    } else {
+      g += `<line x1="${xt - 6}" y1="${yE - 8}" x2="${xt + 6}" y2="${yE - 8}" stroke="${DEAD}" stroke-width="1.5" stroke-linecap="round"/>`;
+      tags.push({ b, x: xt, y: yE - 18, dead: true, html: `<i style="background:${DEAD}"></i>${esc(b.name)}<small>ended ${fmt(b.ended)}</small>` });
+    }
+    b.ev.forEach((e) => {
+      const y = Y(e.y), x = xAt(b, y), c = dead ? DEAD : b.col;
+      g += e.kind === 'start'
+        ? `<circle cx="${x}" cy="${y}" r="5" fill="var(--bg)" stroke="${c}" stroke-width="2"/>`
+        : `<circle cx="${x}" cy="${y}" r="6.5" fill="var(--bg)"/><circle cx="${x}" cy="${y}" r="${e.kind === 'end' ? 3.5 : 4}" fill="${c}"/>`;
+      evs.push({ e, b, x, y, side, dead });
+    });
+    s += g + `</g></g>`;
+  });
+
+  const first = events.reduce((a, c) => (c.y < a.y ? c : a));
+  s += `<g id="leaders"></g><text class="roots-title" x="${CX}" y="${yRoot + 150}" text-anchor="middle">${firstYear} · where it started</text><text class="roots-sub" x="${CX}" y="${yRoot + 172}" text-anchor="middle">${esc(first.title)}</text>`;
+  svg.innerHTML = s;
+
+  stage.insertAdjacentHTML('beforeend', `<span class="today" style="top:${Y(NOW)}px">Today</span><span class="tag me" style="left:${CX}px;top:${yTip - 14}px">Pavlos</span>`);
+  tags.forEach((t) => stage.insertAdjacentHTML('beforeend', `<span class="tag${t.dead ? ' dead' : ''}" data-b="${t.b.id}" style="left:${t.x}px;top:${t.y}px">${t.html}</span>`));
+
+  const nodes = evs.map((v) => {
+    const a = document.createElement(v.e.link ? 'a' : 'div');
+    if (v.e.link) a.href = `/notes/${v.e.slug}`;
+    a.className = `ev${v.dead ? ' dead' : ''}`;
+    a.dataset.b = v.b.id;
+    const chip = v.e.kind === 'start' ? '<em>started</em>' : v.e.kind === 'end' ? '<em>ended</em>' : '';
+    a.innerHTML = `<div class="d">${fmt(v.e.date)}${chip}</div><div class="t">${esc(v.e.title)}</div>`;
+    stage.appendChild(a);
+    return { ...v, el: a };
+  });
+
+  let lead = '';
+  branches.forEach((b) => {
+    let prev = -1e9;
+    nodes.filter((n) => n.b === b).sort((a, c) => a.y - c.y).forEach((n) => {
+      const h = n.el.offsetHeight, st = n.e.kind === 'start';
+      const top = st ? Math.max(n.y - h + 12, prev + 14) : Math.max(n.y - 9, prev + 14);
+      if (!st) prev = top + h;
+      const ax = n.side < 0 ? n.x + 24 : n.x - 24;
+      n.el.classList.toggle('r', n.side > 0);
+      n.el.style.top = top + 'px';
+      n.el.style.left = (n.side < 0 ? ax : ax - 176) + 'px';
+      if (top - (n.y - 9) > 4) lead += `<path d="M${n.x - n.side * 8},${n.y} C${ax},${n.y} ${n.x - n.side * 10},${top + 9} ${ax + n.side * 2},${top + 9}" fill="none" stroke="rgba(25,24,22,.18)" stroke-width="1"/>`;
+    });
+  });
+  document.getElementById('leaders').innerHTML = lead;
+
+  const hl = (id) => {
+    document.body.classList.toggle('dimming', !!id);
+    document.querySelectorAll('[data-b]').forEach((x) => x.classList.toggle('hl', x.dataset.b === id));
+  };
+  document.querySelectorAll('.pill,.ev,.tag').forEach((x) => {
+    x.addEventListener('mouseenter', () => hl(x.dataset.b));
+    x.addEventListener('mouseleave', () => hl(null));
+  });
+
+  let k = 1;
+  document.querySelectorAll('.index .pill').forEach((p) => p.addEventListener('click', () => {
+    const g = document.querySelector(`.br[data-b="${p.dataset.b}"]`);
+    if (g) scrollTo({ top: wrap.offsetTop + (+g.dataset.top) * k - innerHeight * .35, behavior: 'smooth' });
+  }));
+
+  document.querySelectorAll('.br .stem').forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+  const fit = () => { k = Math.min(1, (innerWidth - 32) / W); stage.style.transform = `scale(${k})`; wrap.style.height = H * k + 'px'; };
+  fit(); addEventListener('resize', fit);
+
+  const groups = [...document.querySelectorAll('.br')];
+  const viewing = document.getElementById('viewing'), yrEl = document.getElementById('yr'), prog = document.getElementById('prog');
+  function tick() {
+    const vb = scrollY + innerHeight * .92 - wrap.offsetTop;
+    groups.forEach((g) => { if (!g.classList.contains('in') && +g.dataset.top * k < vb) { g.classList.add('in'); g.querySelector('.stem').style.strokeDashoffset = 0; } });
+    nodes.forEach((n) => { if (!n.el.classList.contains('in') && n.y * k < vb + 40) n.el.classList.add('in'); });
+    const t = NOW - ((scrollY + innerHeight * .5 - wrap.offsetTop) / k - TOP) / PX;
+    yrEl.textContent = Math.max(firstYear, Math.min(nowYear, Math.floor(t)));
+    prog.style.height = Math.max(6, Math.min(100, (NOW - Math.min(NOW, t)) / (NOW - firstYear) * 100)) + '%';
+    viewing.classList.toggle('on', scrollY + innerHeight * .5 > wrap.offsetTop);
+  }
+  addEventListener('scroll', tick, { passive: true });
+  document.fonts.ready.then(tick);
+  tick();
+})();
+</script>
