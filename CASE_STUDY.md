@@ -114,3 +114,13 @@ This is the strongest brief so far, because it turns the homepage into an honest
 - An empty state for launch day: a single sprout with a glowing tip and "The first branch is about to sprout", so the site looks intentional before any content exists.
 - The entry page repeats the tree in miniature: an "On this branch" timeline in the branch colour, with the current entry filled in.
 - Entries without a body show on the tree as plain markers and are not links, so nothing leads to an empty page.
+
+### 2026-11-07 · When one thing belongs to two subjects
+
+**The question.** Pavlos asked what happens when an entry sits in two subjects, for example a post that is both writing and product design.
+
+**Options weighed.** Putting the entry on both branches would double count it and add labels to already busy months. A two-colour dot would say "two subjects" without showing where the second one lives. A node floating between branches does not work when the branches sit on opposite sides of the trunk. The rule we chose has two parts:
+- **A one-off overlap becomes a bridge.** The entry lives on its main branch. A small hollow "echo" dot marks the same moment on the second branch, and the card reads "+ Product design". The dashed bridge between the two only appears on hover, along with both branches. Our first attempt showed every bridge all the time, and long bridges from recent entries arced across the whole tree and through their own cards. Hiding them until hover kept the tree calm and made the connection feel like a discovery.
+- **A recurring overlap becomes a sub-branch.** If the overlap keeps happening, it is a new interest. That branch can grow out of another branch instead of the trunk, which is how real trees grow and makes "where did this come from" visible. The layout search was extended so a sub-branch prefers the lane next to its parent and pays a cost for crossing the trunk. Without that, the first test placed the sub-branch on the opposite side of the tree.
+
+**Content model.** Entries take `also: [branch-id]`. Branches take `from: parent-id`. Both are optional and are checked at build time, so a typo in a branch name fails the build with a clear message instead of silently drawing nothing.

@@ -10,6 +10,7 @@ export interface Branch {
   color: string;
   start: Date;
   ended?: Date;
+  from?: string;
   entries: Entry[];
 }
 
@@ -18,6 +19,7 @@ export interface Entry {
   title: string;
   date: Date;
   branchId: string;
+  also: string[];
   kind: Kind;
   hasBody: boolean;
   raw: CollectionEntry<'entries'>;
@@ -26,11 +28,15 @@ export interface Entry {
 export async function loadTimeline() {
   const [branchFiles, entryFiles] = await Promise.all([getCollection('branches'), getCollection('entries')]);
   const known = new Set(branchFiles.map((b) => b.id));
+  const missing = (where: string, id: string) =>
+    new Error(`${where} points to branch "${id}", but src/content/branches/${id}.md does not exist.`);
 
   for (const e of entryFiles) {
-    if (!known.has(e.data.branch)) {
-      throw new Error(`Entry "${e.id}" points to branch "${e.data.branch}", but src/content/branches/${e.data.branch}.md does not exist.`);
-    }
+    if (!known.has(e.data.branch)) throw missing(`Entry "${e.id}"`, e.data.branch);
+    for (const id of e.data.also) if (!known.has(id)) throw missing(`Entry "${e.id}" (also)`, id);
+  }
+  for (const b of branchFiles) {
+    if (b.data.from && (!known.has(b.data.from) || b.data.from === b.id)) throw missing(`Branch "${b.id}" (from)`, b.data.from);
   }
 
   const branches: Branch[] = branchFiles
@@ -43,6 +49,7 @@ export async function loadTimeline() {
         title: e.data.title,
         date: e.data.date,
         branchId: b.id,
+        also: e.data.also.filter((id) => id !== b.id),
         kind: i === 0 ? 'start' : b.data.ended && i === list.length - 1 ? 'end' : '',
         hasBody: !!e.body?.trim(),
         raw: e,
@@ -54,11 +61,21 @@ export async function loadTimeline() {
         color: b.data.ended ? ENDED_COLOR : CATEGORIES[b.data.category].color,
         start: entries[0]?.date,
         ended: b.data.ended,
+        from: b.data.from,
         entries,
       };
     })
     .filter((b) => b.entries.length > 0)
     .sort((a, c) => a.start.getTime() - c.start.getTime());
+
+  const ids = new Set(branches.map((b) => b.id));
+  for (const b of branches) {
+    if (b.from && !ids.has(b.from)) b.from = undefined;
+    const parent = branches.find((p) => p.id === b.from);
+    if (parent && parent.start > b.start) {
+      throw new Error(`Branch "${b.id}" grows from "${parent.id}", but starts before it. Its first entry must be after ${parent.start.toISOString().slice(0, 10)}.`);
+    }
+  }
 
   const entries = branches
     .flatMap((b) => b.entries)

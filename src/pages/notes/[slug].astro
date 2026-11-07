@@ -10,12 +10,16 @@ export async function getStaticPaths() {
     .filter((e) => e.hasBody)
     .map((entry) => ({
       params: { slug: entry.slug },
-      props: { entry, branch: branches.find((b) => b.id === entry.branchId)! },
+      props: {
+        entry,
+        branch: branches.find((b) => b.id === entry.branchId)!,
+        also: entry.also.map((id) => branches.find((b) => b.id === id)).filter((b): b is Branch => !!b),
+      },
     }));
 }
 
-interface Props { entry: Entry; branch: Branch }
-const { entry, branch } = Astro.props;
+interface Props { entry: Entry; branch: Branch; also: Branch[] }
+const { entry, branch, also } = Astro.props;
 const { Content } = await render(entry.raw);
 const others = [...branch.entries].reverse();
 const status = branch.ended ? `ended ${monthYear(branch.ended)}` : 'growing';
@@ -29,6 +33,9 @@ const status = branch.ended ? `ended ${monthYear(branch.ended)}` : 'growing';
     </a>
     <div class="meta">
       <span class:list={['pill', { dead: branch.ended }]}><i style={`background:${branch.color}`}></i>{branch.name}<small>{status}</small></span>
+      {also.map((b) => (
+        <span class:list={['pill', 'also', { dead: b.ended }]}><i style={`background:${b.color}`}></i>{b.name}</span>
+      ))}
       <time datetime={entry.date.toISOString()}>{fullDate(entry.date)}</time>
       {entry.kind && <em>{entry.kind === 'start' ? 'started' : 'ended'}</em>}
     </div>
@@ -64,6 +71,7 @@ const status = branch.ended ? `ended ${monthYear(branch.ended)}` : 'growing';
   .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 40px; font: 500 12px var(--mono); color: var(--muted); }
   .meta .pill { font-family: Geist, sans-serif; font-size: 12.5px; color: var(--ink); }
   .meta .pill.dead { color: var(--muted); }
+  .meta .pill.also { margin-left: -6px; background: transparent; }
   .meta em { font-style: normal; font-size: 10.5px; padding: 2px 7px; border-radius: 4px; background: rgba(25, 24, 22, .05); color: var(--ink2); }
   h1 { font-weight: 600; font-size: 48px; line-height: 1.05; letter-spacing: -.04em; margin-top: 20px; text-wrap: balance; }
 

@@ -9,6 +9,7 @@ const branches = defineCollection({
     name: z.string(),
     category: z.enum(CATEGORY_IDS),
     ended: z.coerce.date().optional(),
+    from: z.string().optional(),
   }),
 });
 
@@ -18,6 +19,7 @@ const entries = defineCollection({
     title: z.string(),
     date: z.coerce.date(),
     branch: z.string(),
+    also: z.array(z.string()).default([]),
   }),
 });
 

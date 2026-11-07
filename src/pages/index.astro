@@ -30,12 +30,14 @@ const data = {
     name: b.name,
     category: b.category,
     ended: b.ended ? iso(b.ended) : null,
+    from: b.from ?? null,
   })),
   entries: entries.map((e) => ({
     slug: e.slug,
     title: e.title,
     date: iso(e.date),
     branch: e.branchId,
+    also: e.also.filter((id) => branches.some((b) => b.id === id)),
     kind: e.kind,
     link: e.hasBody,
   })),
@@ -100,6 +102,13 @@ const data = {
                       <i style={`background:${b.color}`}></i>
                       <span class="d">{monthYear(e.date)} · {b.name}{e.kind && <em>{e.kind === 'start' ? 'started' : 'ended'}</em>}</span>
                       <span class="t">{e.title}</span>
+                      {e.also.length > 0 && (
+                        <span class="also">
+                          {e.also.filter((id) => branches.some((x) => x.id === id)).map((id) => (
+                            <span><i style={`background:${branchOf(id).color}`}></i>{branchOf(id).name}</span>
+                          ))}
+                        </span>
+                      )}
                     </Tag>
                   </li>
                 );
@@ -152,6 +161,17 @@ const data = {
   .ev .d em, .fi .d em { font-style: normal; font-size: 10px; padding: 1px 6px; border-radius: 4px; background: rgba(25, 24, 22, .05); color: var(--ink2); letter-spacing: .02em; }
   .ev .t { font-size: 14px; font-weight: 500; line-height: 1.35; margin-top: 2px; letter-spacing: -.01em; text-wrap: pretty; }
   .ev.dead .t { color: var(--muted); font-weight: 400; }
+  .also { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; font-size: 11.5px; color: var(--muted); }
+  .also > span { display: inline-flex; align-items: center; gap: 5px; }
+  .also > span::before { content: "+"; font: 500 11px var(--mono); color: var(--soft); margin-right: -1px; }
+  .also i { width: 6px; height: 6px; border-radius: 50%; }
+  .ev.r .also { justify-content: flex-end; }
+  .bridge { opacity: 0; transition: opacity .6s ease; }
+  .bridge.in { opacity: 1; }
+  .bridge path { stroke-dasharray: 1.5 4; opacity: 0; transition: opacity .25s; }
+  .bridge.hl path { opacity: 1; }
+  .bridge .echo { cursor: pointer; }
+  .dimming .bridge.in:not(.hl) { opacity: .12 !important; }
   a.ev:hover .t, a.fi:hover .t { text-decoration: underline; text-decoration-color: rgba(25, 24, 22, .25); text-underline-offset: 3px; }
   .tag { position: absolute; transform: translate(-50%, -100%); display: flex; align-items: center; gap: 7px; white-space: nowrap; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--card); border: 1px solid var(--line); box-shadow: 0 4px 14px -6px rgba(25, 24, 22, .2); transition: opacity .25s; }
   .tag i { width: 7px; height: 7px; border-radius: 50%; }
@@ -188,6 +208,8 @@ const data = {
     .fi i { grid-row: span 2; width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; box-shadow: 0 0 0 4px var(--bg); }
     .fi .t { font-size: 15px; font-weight: 500; line-height: 1.4; margin-top: 2px; letter-spacing: -.01em; }
     .fi.dead .t { color: var(--muted); font-weight: 400; }
+    .fi .also { grid-column: 2; }
+    .fi .also i { display: inline-block; grid-row: auto; width: 6px; height: 6px; margin: 0; box-shadow: none; }
   }
 </style>
 
@@ -209,11 +231,22 @@ const data = {
     const ev = events.filter((e) => e.branch === b.id).sort((a, c) => a.y - c.y);
     return { ...b, ev, ys: ev[0].y, ye: b.ended ? Math.min(NOW, yearOf(b.ended)) : null, seed: 1 + i * 1.37, col: DATA.colors[b.category] };
   }).sort((a, c) => a.ys - c.ys);
+  const byId = Object.fromEntries(branches.map((b) => [b.id, b]));
+  branches.forEach((b) => {
+    const p = byId[b.from];
+    b.parent = p && p.ys <= b.ys && (p.ye == null || p.ye >= b.ys) ? p : null;
+    if (b.parent && !b.ye) b.root = b.parent.ye ? DEAD : b.parent.col;
+  });
 
   const LANES = [-430, 430, -215, 215], FORK = 170 / 400;
   const alive = (o, t) => o.ys <= t && (o.ye == null || o.ye >= t - FORK);
-  const crossCost = (b, off, placed) => placed.reduce((sum, o) =>
-    Math.sign(o.off) === Math.sign(off) && Math.abs(o.off) < Math.abs(off) && alive(o, b.ys) ? sum + (o.ye == null ? 2 : 1) : sum, 0);
+  const originOf = (b, placed) => (b.parent ? placed[branches.indexOf(b.parent)].off : 0);
+  const crossCost = (b, off, placed) => {
+    const o0 = originOf(b, placed), lo = Math.min(o0, off), hi = Math.max(o0, off);
+    const cross = placed.reduce((sum, o) => (o.off > lo && o.off < hi && alive(o, b.ys) ? sum + (o.ye == null ? 2 : 1) : sum), 0);
+    const trunk = b.parent && Math.sign(o0) !== Math.sign(off) ? 3 : 0;
+    return cross + trunk + (b.parent ? Math.abs(off - o0) / 2000 : 0);
+  };
   let best = { cost: Infinity, offs: null }, budget = 20000;
   const search = (i, placed, cost) => {
     if (cost >= best.cost || budget-- < 0) return;
@@ -240,7 +273,7 @@ const data = {
   const xAt = (b, y) => { const top = forkY(b) - RISE, k = Math.max(0, Math.min(1, (top - y) / 120)); return bx(b) + k * 4 * Math.sin(y / 150 + b.seed); };
 
   let s = `<defs><linearGradient id="trunk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#191816" stop-opacity=".15"/><stop offset=".25" stop-color="#191816" stop-opacity=".9"/><stop offset="1" stop-color="#191816"/></linearGradient>`;
-  branches.forEach((b) => { if (!b.ye) s += `<linearGradient id="g-${b.id}" gradientUnits="userSpaceOnUse" x1="0" y1="${forkY(b)}" x2="0" y2="${forkY(b) - RISE * 1.6}"><stop offset="0" stop-color="#191816" stop-opacity=".8"/><stop offset="1" stop-color="${b.col}"/></linearGradient>`; });
+  branches.forEach((b) => { if (!b.ye) s += `<linearGradient id="g-${b.id}" gradientUnits="userSpaceOnUse" x1="0" y1="${forkY(b)}" x2="0" y2="${forkY(b) - RISE * 1.6}"><stop offset="0" stop-color="${b.root || '#191816'}" stop-opacity="${b.root ? 1 : .8}"/><stop offset="1" stop-color="${b.col}"/></linearGradient>`; });
   s += `</defs>`;
 
   for (let yr = Math.ceil(START); yr <= nowYear; yr++) {
@@ -259,7 +292,8 @@ const data = {
   const evs = [], tags = [];
   branches.forEach((b) => {
     const side = Math.sign(b.off), dead = !!b.ye, X = bx(b), fy = forkY(b), top = fy - RISE, yE = dead ? Y(b.ye) : Y(NOW);
-    let d = `M${CX},${fy} C${CX},${fy - RISE * .55} ${X},${fy - RISE * .5} ${X},${top}`;
+    const f0 = b.parent ? Math.min(fy, Y(b.parent.ys) - 6) : fy, x0 = b.parent ? xAt(b.parent, f0) : CX, rise = f0 - top;
+    let d = `M${x0},${f0} C${x0},${f0 - rise * .55} ${X},${f0 - rise * .5} ${X},${top}`;
     for (let y = top - 10; y >= yE; y -= 10) d += ` L${xAt(b, y).toFixed(1)},${y.toFixed(1)}`;
     d += ` L${xAt(b, yE).toFixed(1)},${yE}`;
     let g = `<g class="br" data-b="${b.id}" data-top="${yE}"><path class="stem" d="${d}" fill="none" stroke="${dead ? DEAD : `url(#g-${b.id})`}" stroke-width="${dead ? 1.5 : 2.2}" stroke-linecap="round"/><g class="fade">`;
@@ -287,6 +321,20 @@ const data = {
     s += g + `</g></g>`;
   });
 
+  const bridges = [];
+  evs.forEach(({ e, b: A, x: xa, y }) => {
+    (e.also || []).forEach((id) => {
+      const B = byId[id];
+      if (!B || B === A || B.ys > e.y || (B.ye != null && B.ye < e.y)) return;
+      const xb = xAt(B, y), dx = xb - xa, lift = Math.max(26, Math.min(46, Math.abs(dx) * .14)), cb = B.ye ? DEAD : B.col, ca = A.ye ? DEAD : A.col;
+      const gid = `bg-${bridges.length}`;
+      bridges.push(y);
+      s += `<g class="bridge" data-b="${A.id} ${B.id}" data-e="${e.slug}" data-y="${y}"><defs><linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${ca}"/><stop offset="1" stop-color="${cb}"/></linearGradient></defs>`
+        + `<path d="M${xa + Math.sign(dx) * 7},${y} C${xa + dx * .3},${y - lift} ${xb - dx * .3},${y - lift} ${xb - Math.sign(dx) * 6},${y}" fill="none" stroke="url(#${gid})" stroke-width="1.4" stroke-linecap="round"/>`
+        + `<g class="echo" data-b="${A.id} ${B.id}" data-e="${e.slug}"><circle cx="${xb}" cy="${y}" r="9" fill="transparent"/><circle cx="${xb}" cy="${y}" r="6.5" fill="var(--bg)"/><circle cx="${xb}" cy="${y}" r="3.6" fill="var(--bg)" stroke="${cb}" stroke-width="1.5"/></g></g>`;
+    });
+  });
+
   const first = events.reduce((a, c) => (c.y < a.y ? c : a));
   s += `<g id="leaders"></g><text class="roots-title" x="${CX}" y="${yRoot + 150}" text-anchor="middle">${firstYear} · where it started</text><text class="roots-sub" x="${CX}" y="${yRoot + 172}" text-anchor="middle">${esc(first.title)}</text>`;
   svg.innerHTML = s;
@@ -298,9 +346,12 @@ const data = {
     const a = document.createElement(v.e.link ? 'a' : 'div');
     if (v.e.link) a.href = `/notes/${v.e.slug}`;
     a.className = `ev${v.dead ? ' dead' : ''}`;
-    a.dataset.b = v.b.id;
+    const also = (v.e.also || []).map((id) => byId[id]).filter(Boolean);
+    a.dataset.b = [v.b.id, ...also.map((o) => o.id)].join(' ');
+    if (also.length) a.dataset.e = v.e.slug;
     const chip = v.e.kind === 'start' ? '<em>started</em>' : v.e.kind === 'end' ? '<em>ended</em>' : '';
-    a.innerHTML = `<div class="d">${fmt(v.e.date)}${chip}</div><div class="t">${esc(v.e.title)}</div>`;
+    const alsoHtml = also.length ? `<div class="also">${also.map((o) => `<span><i style="background:${o.ye ? DEAD : o.col}"></i>${esc(o.name)}</span>`).join('')}</div>` : '';
+    a.innerHTML = `<div class="d">${fmt(v.e.date)}${chip}</div><div class="t">${esc(v.e.title)}</div>${alsoHtml}`;
     stage.appendChild(a);
     return { ...v, el: a };
   });
@@ -321,12 +372,15 @@ const data = {
   });
   document.getElementById('leaders').innerHTML = lead;
 
-  const hl = (id) => {
-    document.body.classList.toggle('dimming', !!id);
-    document.querySelectorAll('[data-b]').forEach((x) => x.classList.toggle('hl', x.dataset.b === id));
+  const hl = (ids, entry) => {
+    document.body.classList.toggle('dimming', !!ids);
+    document.querySelectorAll('[data-b]').forEach((x) => {
+      const on = !!ids && (entry && x.classList.contains('bridge') ? x.dataset.e === entry : x.dataset.b.split(' ').some((i) => ids.includes(i)));
+      x.classList.toggle('hl', on);
+    });
   };
-  document.querySelectorAll('.pill,.ev,.tag').forEach((x) => {
-    x.addEventListener('mouseenter', () => hl(x.dataset.b));
+  document.querySelectorAll('.pill,.ev,.tag,.echo').forEach((x) => {
+    x.addEventListener('mouseenter', () => hl(x.dataset.b.split(' '), x.dataset.e));
     x.addEventListener('mouseleave', () => hl(null));
   });
 
@@ -340,12 +394,13 @@ const data = {
   const fit = () => { k = Math.min(1, (innerWidth - 32) / W); stage.style.transform = `scale(${k})`; wrap.style.height = H * k + 'px'; };
   fit(); addEventListener('resize', fit);
 
-  const groups = [...document.querySelectorAll('.br')];
+  const groups = [...document.querySelectorAll('.br')], bridgeEls = [...document.querySelectorAll('.bridge')];
   const viewing = document.getElementById('viewing'), yrEl = document.getElementById('yr'), prog = document.getElementById('prog');
   function tick() {
     const vb = scrollY + innerHeight * .92 - wrap.offsetTop;
     groups.forEach((g) => { if (!g.classList.contains('in') && +g.dataset.top * k < vb) { g.classList.add('in'); g.querySelector('.stem').style.strokeDashoffset = 0; } });
     nodes.forEach((n) => { if (!n.el.classList.contains('in') && n.y * k < vb + 40) n.el.classList.add('in'); });
+    bridgeEls.forEach((g) => { if (!g.classList.contains('in') && +g.dataset.y * k < vb - 60) g.classList.add('in'); });
     const t = NOW - ((scrollY + innerHeight * .5 - wrap.offsetTop) / k - TOP) / PX;
     yrEl.textContent = Math.max(firstYear, Math.min(nowYear, Math.floor(t)));
     prog.style.height = Math.max(6, Math.min(100, (NOW - Math.min(NOW, t)) / (NOW - firstYear) * 100)) + '%';
