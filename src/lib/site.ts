@@ -4,6 +4,15 @@ export const SITE = {
   description: 'A living timeline of what I work on, write about and spend my time on.',
 };
 
+// Drawn as roots under the trunk. Most important first: it becomes the deepest root.
+// `note` is optional, a short line under the name (e.g. "since 2012").
+export const ROOTS: { name: string; note?: string }[] = [
+  { name: 'Design' },
+  { name: 'Photography' },
+  { name: 'Business' },
+  { name: 'Books' },
+];
+
 export const CATEGORIES = {
   design: { label: 'Product design', color: '#2F6B5A' },
   writing: { label: 'Writing', color: '#C08A2E' },

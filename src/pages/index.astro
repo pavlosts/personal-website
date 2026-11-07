@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { loadTimeline } from '../lib/timeline';
-import { CATEGORIES, iso, monthYear } from '../lib/site';
+import { CATEGORIES, ROOTS, iso, monthYear } from '../lib/site';
 
 const { branches, entries } = await loadTimeline();
 const empty = entries.length === 0;
@@ -24,6 +24,7 @@ for (const e of entries) {
 const branchOf = (id: string) => branches.find((b) => b.id === id)!;
 
 const data = {
+  roots: ROOTS,
   colors: Object.fromEntries(Object.entries(CATEGORIES).map(([k, v]) => [k, v.color])),
   branches: branches.map((b) => ({
     id: b.id,
@@ -116,6 +117,12 @@ const data = {
             </ol>
           </div>
         ))}
+        {ROOTS.length > 0 && (
+          <div class="fy roots">
+            <h2>Roots</h2>
+            <ul>{ROOTS.map((r) => <li><b>{r.name}</b>{r.note && <span>{r.note}</span>}</li>)}</ul>
+          </div>
+        )}
       </section>
 
       <script type="application/json" id="tree-data" set:html={JSON.stringify(data)} />
@@ -181,6 +188,9 @@ const data = {
   .today { position: absolute; left: 0; transform: translateY(-50%); font: 500 11px var(--mono); color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px; }
   .roots-title { font: 600 15px Geist, sans-serif; fill: var(--ink); letter-spacing: -.01em; }
   .roots-sub { font: 500 11px var(--mono); fill: var(--muted); }
+  .root-name { font: 500 13px Geist, sans-serif; fill: var(--ink); letter-spacing: -.01em; }
+  .root-note { font: 500 10.5px var(--mono); fill: var(--muted); }
+  .root-eyebrow { font: 500 11px var(--mono); fill: var(--soft); }
 
   .viewing { position: fixed; left: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 14px; background: rgba(255, 255, 255, .78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: 0 10px 30px -14px rgba(25, 24, 22, .3); opacity: 0; transition: opacity .4s; }
   .viewing.on { opacity: 1; }
@@ -208,6 +218,10 @@ const data = {
     .fi i { grid-row: span 2; width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; box-shadow: 0 0 0 4px var(--bg); }
     .fi .t { font-size: 15px; font-weight: 500; line-height: 1.4; margin-top: 2px; letter-spacing: -.01em; }
     .fi.dead .t { color: var(--muted); font-weight: 400; }
+    .fy.roots ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 8px; }
+    .fy.roots li { display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(25, 24, 22, .12); font-size: 13px; }
+    .fy.roots b { font-weight: 500; }
+    .fy.roots span { font: 500 11px var(--mono); color: var(--muted); }
     .fi .also { grid-column: 2; }
     .fi .also i { display: inline-block; grid-row: auto; width: 6px; height: 6px; margin: 0; box-shadow: none; }
   }
@@ -263,7 +277,7 @@ const data = {
   search(0, [], 0);
   branches.forEach((b, i) => { b.off = best.offs ? best.offs[i] : LANES[i % 4]; });
 
-  const START = branches[0].ys - 0.35, H = TOP + (NOW - START) * PX + 260;
+  const START = branches[0].ys - 0.35, H = TOP + (NOW - START) * PX + 440;
   const firstYear = Math.floor(branches[0].ys), nowYear = Math.floor(NOW);
   const Y = (t) => TOP + (NOW - t) * PX;
   const stage = document.getElementById('stage'), svg = document.getElementById('svg'), wrap = document.getElementById('wrap');
@@ -272,7 +286,7 @@ const data = {
   const forkY = (b) => Y(b.ys) + RISE;
   const xAt = (b, y) => { const top = forkY(b) - RISE, k = Math.max(0, Math.min(1, (top - y) / 120)); return bx(b) + k * 4 * Math.sin(y / 150 + b.seed); };
 
-  let s = `<defs><linearGradient id="trunk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#191816" stop-opacity=".15"/><stop offset=".25" stop-color="#191816" stop-opacity=".9"/><stop offset="1" stop-color="#191816"/></linearGradient>`;
+  let s = `<defs><linearGradient id="trunk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#191816" stop-opacity=".8"/><stop offset=".25" stop-color="#191816" stop-opacity=".92"/><stop offset="1" stop-color="#191816"/></linearGradient>`;
   branches.forEach((b) => { if (!b.ye) s += `<linearGradient id="g-${b.id}" gradientUnits="userSpaceOnUse" x1="0" y1="${forkY(b)}" x2="0" y2="${forkY(b) - RISE * 1.6}"><stop offset="0" stop-color="${b.root || '#191816'}" stop-opacity="${b.root ? 1 : .8}"/><stop offset="1" stop-color="${b.col}"/></linearGradient>`; });
   s += `</defs>`;
 
@@ -285,9 +299,19 @@ const data = {
   const yRoot = Y(START) + 40, yTip = Y(NOW) - 44;
   s += `<path d="M${CX - 3.6},${yRoot} C${CX - 3},${yRoot - 600} ${CX - 1.4},${yTip + 500} ${CX - 1.1},${yTip} L${CX + 1.1},${yTip} C${CX + 1.4},${yTip + 500} ${CX + 3},${yRoot - 600} ${CX + 3.6},${yRoot} Z" fill="url(#trunk)"/>`;
   s += `<circle cx="${CX}" cy="${yTip - 4}" r="3.5" fill="#191816"/>`;
-  [[-1, 120, 90], [1, 150, 70], [-1, 60, 130], [1, 70, 120], [-1, 190, 50], [1, 210, 40]].forEach(([d, w, h], i) => {
-    s += `<path d="M${CX},${yRoot - 8} C${CX + d * w * .25},${yRoot + h * .35} ${CX + d * w * .7},${yRoot + h * .55} ${CX + d * w},${yRoot + h}" stroke="#191816" stroke-opacity="${.22 - i * .02}" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+  const roots = DATA.roots || [], rootTop = yRoot - 6, nr = roots.length, span = Math.min(330, 75 * (nr - 1));
+  const slots = roots.map((_, i) => (nr > 1 ? -span + i * (2 * span) / (nr - 1) : 0)).sort((a, c) => Math.abs(a) - Math.abs(c) || a - c);
+  let rootsBottom = rootTop;
+  roots.forEach((r, i) => {
+    const x2 = CX + slots[i], y2 = rootTop + 80 + (1 - i / Math.max(1, nr)) * 150, w = i === 0 ? 1.6 : 1.25, op = (.62 - i * (.24 / Math.max(1, nr - 1))).toFixed(2);
+    rootsBottom = Math.max(rootsBottom, y2 + 40);
+    s += `<path d="M${CX},${rootTop} C${CX + (x2 - CX) * .08},${rootTop + 48} ${x2},${y2 - 70} ${x2},${y2}" fill="none" stroke="#191816" stroke-opacity="${op}" stroke-width="${w}" stroke-linecap="round"/>`
+      + `<circle cx="${x2}" cy="${y2}" r="7" fill="var(--bg)"/><circle cx="${x2}" cy="${y2}" r="3.5" fill="#191816" fill-opacity="${Math.min(1, +op + .3)}"/>`
+      + `<text class="root-name" x="${x2}" y="${y2 + 22}" text-anchor="middle">${esc(r.name)}</text>`
+      + (r.note ? `<text class="root-note" x="${x2}" y="${y2 + 36}" text-anchor="middle">${esc(r.note)}</text>` : '');
   });
+  s += `<circle cx="${CX}" cy="${rootTop}" r="4" fill="#191816"/>`;
+  if (nr) s += `<text class="root-eyebrow" x="${CX + 14}" y="${rootTop + 4}">Roots</text>`;
 
   const evs = [], tags = [];
   branches.forEach((b) => {
@@ -336,7 +360,8 @@ const data = {
   });
 
   const first = events.reduce((a, c) => (c.y < a.y ? c : a));
-  s += `<g id="leaders"></g><text class="roots-title" x="${CX}" y="${yRoot + 150}" text-anchor="middle">${firstYear} · where it started</text><text class="roots-sub" x="${CX}" y="${yRoot + 172}" text-anchor="middle">${esc(first.title)}</text>`;
+  const capY = Math.max(rootsBottom + 44, yRoot + 150);
+  s += `<g id="leaders"></g><text class="roots-title" x="${CX}" y="${capY}" text-anchor="middle">Everything grew from here</text><text class="roots-sub" x="${CX}" y="${capY + 20}" text-anchor="middle">${esc(fmt(first.date))} · ${esc(first.title)}</text>`;
   svg.innerHTML = s;
 
   stage.insertAdjacentHTML('beforeend', `<span class="today" style="top:${Y(NOW)}px">Today</span><span class="tag me" style="left:${CX}px;top:${yTip - 14}px">Pavlos</span>`);
