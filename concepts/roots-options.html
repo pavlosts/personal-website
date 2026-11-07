@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roots · options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F6F4EF;--ink:#191816;--ink2:#4D4A44;--muted:#8E8A82;--soft:#A7A196;--line:rgba(25,24,22,.07)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#ECE9E2;color:var(--ink);font:14px/1.5 Geist,sans-serif;-webkit-font-smoothing:antialiased;padding:56px 40px 80px}
+  h1{font-size:28px;font-weight:600;letter-spacing:-.03em;max-width:1000px;margin:0 auto}
+  .sub{color:var(--ink2);max-width:1000px;margin:8px auto 0;font-size:15px}
+  section{max-width:1000px;margin:44px auto 0}
+  .meta{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+  .meta b{font:500 12px "Geist Mono",monospace;color:var(--muted)}
+  .meta h2{font-size:17px;font-weight:600;letter-spacing:-.015em}
+  .meta p{color:var(--ink2);font-size:13.5px;margin-left:auto;max-width:520px;text-align:right}
+  .panel{position:relative;height:500px;border-radius:20px;background:var(--bg);overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 20px 50px -30px rgba(25,24,22,.35);
+    background-image:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(255,255,255,.65),transparent 70%)}
+  .panel>svg{position:absolute;inset:0;width:100%;height:100%}
+  .mono{font:500 11px "Geist Mono",monospace;fill:var(--muted)}
+
+  /* A */
+  .card{position:absolute;left:50%;top:300px;transform:translateX(-50%);width:400px;padding:20px 22px 18px;border-radius:16px;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);
+    border:1px solid rgba(25,24,22,.06);box-shadow:0 24px 50px -28px rgba(25,24,22,.4),0 2px 6px -2px rgba(25,24,22,.06)}
+  .eyebrow{font:500 11px "Geist Mono",monospace;color:var(--muted);display:flex;gap:8px;align-items:center}
+  .eyebrow i{width:6px;height:6px;border-radius:50%;background:#2F6B5A}
+  .card h3{font-size:19px;font-weight:600;letter-spacing:-.025em;margin-top:8px;line-height:1.25}
+  .stats{display:flex;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  .stats{gap:28px}
+  .stats div{flex:none}
+  .stats b{display:block;font-size:20px;font-weight:600;letter-spacing:-.03em}
+  .stats span{font:500 11px "Geist Mono",monospace;color:var(--muted)}
+
+  /* B */
+  .ring-cap{position:absolute;left:0;right:0;top:392px;text-align:center}
+  .ring-cap h3{font-size:22px;font-weight:600;letter-spacing:-.03em}
+  .ring-cap p{font:500 11.5px "Geist Mono",monospace;color:var(--muted);margin-top:6px}
+
+  /* C */
+  .lbl{font:500 12px Geist,sans-serif;fill:var(--ink)}
+  .lbl.dead{fill:var(--muted)}
+  .yrs{font:500 10.5px "Geist Mono",monospace;fill:var(--muted)}
+  .c-cap{position:absolute;left:0;right:0;bottom:34px;text-align:center}
+  .c-cap h3{font-size:15px;font-weight:600;letter-spacing:-.015em}
+  .c-cap p{font:500 11px "Geist Mono",monospace;color:var(--muted);margin-top:4px}
+
+  /* D */
+  .end{position:absolute;left:0;right:0;top:250px;text-align:center}
+  .end .eyebrow{justify-content:center}
+  .end h3{font-size:40px;font-weight:600;letter-spacing:-.045em;line-height:1.05;margin-top:12px}
+  .end h3 span{color:var(--soft)}
+  .end p{color:var(--ink2);font-size:15px;margin-top:12px}
+  .btns{display:flex;gap:8px;justify-content:center;margin-top:22px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:500;border:1px solid var(--line);background:#fff}
+  .btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+</style>
+</head>
+<body>
+<h1>The roots: four directions</h1>
+<p class="sub">The bottom of the tree, where you land after scrolling back to 2019. Each option keeps the fine-line style and gives the ending a job: summarising, orienting, or sending you back.</p>
+
+<section><div class="meta"><b>A</b><h2>Root system and origin card</h2><p>Fine hair roots that fade into the ground, and a glass card that summarises the whole tree.</p></div><div class="panel" id="A"></div></section>
+<section><div class="meta"><b>B</b><h2>Growth rings</h2><p>The trunk meets the ground as a cross-section. One ring per year, oldest in the middle, today on the outside.</p></div><div class="panel" id="B"></div></section>
+<section><div class="meta"><b>C</b><h2>Roots that mirror the branches</h2><p>One root per branch, in its colour, long for long branches. The bottom becomes a quiet index of everything.</p></div><div class="panel" id="C"></div></section>
+<section><div class="meta"><b>D</b><h2>The beginning, with a way back</h2><p>The trunk ends in a single point on a ground line. Big type closes the story and a button takes you back to today.</p></div><div class="panel" id="D"></div></section>
+
+<script>
+  const W = 1000, CX = 500, BASE = 150;
+  const rng = (seed) => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const svg = (id, inner, html = '') => { document.getElementById(id).innerHTML = `<svg viewBox="0 0 ${W} 500" preserveAspectRatio="xMidYMin slice">${inner}</svg>${html}`; };
+
+  const context = (id, end = BASE) => `
+    <defs><linearGradient id="tr-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#191816"/><stop offset="1" stop-color="#191816" stop-opacity=".85"/></linearGradient></defs>
+    <line x1="0" x2="${W}" y1="64" y2="64" stroke="rgba(25,24,22,.06)"/><text class="mono" x="24" y="56">2019</text>
+    <path d="M${CX - 1.6},0 C${CX - 1.8},${end * .5} ${CX - 2.6},${end * .8} ${CX - 3.4},${end} L${CX + 3.4},${end} C${CX + 2.6},${end * .8} ${CX + 1.8},${end * .5} ${CX + 1.6},0Z" fill="url(#tr-${id})"/>
+    <path d="M120,-10 C300,20 ${CX - 10},40 ${CX},${end - 8}" fill="none" stroke="#2F6B5A" stroke-width="2.2" stroke-linecap="round" opacity=".9"/>
+    <circle cx="190" cy="2" r="5" fill="var(--bg)" stroke="#2F6B5A" stroke-width="2"/>`;
+
+  // A: hair roots + origin card
+  (() => {
+    const r = rng(7); let p = '';
+    const grow = (x, y, a, len, w, d) => {
+      if (d > 4 || len < 8) return;
+      const bend = (r() - .5) * .5, x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len * .8;
+      const cx = x + Math.cos(a + bend) * len * .55, cy = y + Math.sin(a + bend) * len * .45;
+      p += `<path d="M${x.toFixed(1)},${y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}" stroke-width="${w.toFixed(2)}" stroke-opacity="${(.42 - d * .07).toFixed(2)}"/>`;
+      const n = d === 0 ? 2 : r() < .55 ? 2 : 1;
+      for (let i = 0; i < n; i++) {
+        let na = a + (n === 1 ? (r() - .5) * .4 : (i ? .32 : -.32) + (r() - .5) * .3); na = Math.max(Math.PI * .06, Math.min(Math.PI * .94, na));
+        grow(x2, y2, na, len * (.7 + r() * .15), w * .7, d + 1);
+      }
+    };
+    for (let i = 0; i < 7; i++) grow(CX, BASE, Math.PI * (.1 + i * .133), 70 + r() * 40, 1.4, 0);
+    svg('A', `${context('a')}
+      <defs><linearGradient id="fadeA" x1="0" y1="${BASE}" x2="0" y2="440" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="mA"><rect width="${W}" height="500" fill="url(#fadeA)"/></mask></defs>
+      <line x1="0" x2="${W}" y1="${BASE}" y2="${BASE}" stroke="rgba(25,24,22,.1)"/>
+      <rect x="0" y="${BASE}" width="${W}" height="350" fill="url(#soilA)" opacity=".5"/>
+      <defs><linearGradient id="soilA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9E4D9"/><stop offset="1" stop-color="#E9E4D9" stop-opacity="0"/></linearGradient></defs>
+      <g mask="url(#mA)" fill="none" stroke="#191816" stroke-linecap="round">${p}</g>
+      <circle cx="${CX}" cy="${BASE}" r="12" fill="none" stroke="rgba(25,24,22,.15)"/><circle cx="${CX}" cy="${BASE}" r="4.5" fill="#191816"/>
+      <text class="mono" x="${CX + 22}" y="${BASE - 8}">Mar 2019</text>`,
+      `<div class="card"><div class="eyebrow"><i></i>Where it started · Mar 2019</div><h3>Switched from graphic to product design</h3>
+        <div class="stats"><div><b>8</b><span>years</span></div><div><b>7</b><span>branches</span></div><div><b>4</b><span>still growing</span></div><div><b>28</b><span>entries</span></div></div></div>`);
+  })();
+
+  // B: growth rings
+  (() => {
+    const r = rng(3), years = 8, cy = BASE + 110; let g = '';
+    for (let i = 0; i < years; i++) {
+      const rx = 46 + i * 44, ry = rx * .24, pts = [];
+      for (let t = 0; t <= 64; t++) {
+        const a = t / 64 * Math.PI * 2, wob = 1 + Math.sin(a * 3 + i) * .012 + Math.sin(a * 7 + i * 2) * .008;
+        pts.push(`${(CX + Math.cos(a) * rx * wob).toFixed(1)},${(cy + Math.sin(a) * ry * wob).toFixed(1)}`);
+      }
+      const last = i === years - 1;
+      g += `<polygon points="${pts.join(' ')}" fill="none" stroke="${last ? '#2F6B5A' : '#191816'}" stroke-opacity="${last ? .7 : .1 + i * .015}" stroke-width="${last ? 1.4 : 1}" ${last ? 'stroke-dasharray="2 4"' : ''}/>`;
+      if (last) g += `<line x1="${CX + rx * .72}" y1="${cy + ry * .69}" x2="${CX + rx * .72 + 18}" y2="${cy + ry * .69 + 18}" stroke="#2F6B5A" stroke-opacity=".5"/><text class="mono" x="${CX + rx * .72 + 22}" y="${cy + ry * .69 + 30}" style="fill:#2F6B5A">2026 · today</text>`;
+    }
+    g += `<text class="mono" x="${CX}" y="${cy + 26}" text-anchor="middle">2019</text>`;
+    svg('B', `${context('b', cy - 30)}
+      <path d="M${CX},${cy - 30} L${CX},${cy}" stroke="#191816" stroke-width="2"/>
+      <defs><radialGradient id="stump"><stop offset="0" stop-color="#191816" stop-opacity=".06"/><stop offset="1" stop-color="#191816" stop-opacity="0"/></radialGradient></defs>
+      <ellipse cx="${CX}" cy="${cy}" rx="360" ry="90" fill="url(#stump)"/>${g}
+      <circle cx="${CX}" cy="${cy}" r="9" fill="none" stroke="rgba(25,24,22,.2)"/><circle cx="${CX}" cy="${cy}" r="4" fill="#191816"/>`,
+      `<div class="ring-cap"><h3>2019 · where it started</h3><p>Switched from graphic to product design · 8 rings so far</p></div>`);
+  })();
+
+  // C: roots mirror branches
+  (() => {
+    const B = [
+      ['Product design', '#2F6B5A', 2019.2, null], ['Ambient music', '#C9C3B8', 2021.4, 2022.1], ['Film photography', '#C9C3B8', 2022.4, 2024.7],
+      ['Writing in public', '#C08A2E', 2023.8, null], ['3D printing', '#C9C3B8', 2025.0, 2025.9], ['Bouldering', '#C2573C', 2025.2, null], ['SwiftUI', '#4F63B0', 2026.5, null],
+    ];
+    const NOW = 2026.85; let g = '';
+    const L = 205, R = 795, slots = [3, 2, 4, 1, 5, 0, 6];
+    [...B].sort((a, c) => ((c[3] ?? NOW) - c[2]) - ((a[3] ?? NOW) - a[2])).forEach(([name, col, s, e], i) => {
+      const life = (e ?? NOW) - s, x2 = L + slots[i] * (R - L) / (B.length - 1), y2 = BASE + 56 + life * 22;
+      const live = e == null;
+      g += `<path d="M${CX},${BASE} C${CX + (x2 - CX) * .08},${BASE + 48} ${x2},${y2 - 70} ${x2},${y2}" fill="none" stroke="${col}" stroke-width="${live ? 1.6 : 1.2}" stroke-opacity="${live ? .85 : 1}" stroke-linecap="round"/>`;
+      g += live ? `<circle cx="${x2}" cy="${y2}" r="3.5" fill="${col}"/>` : `<circle cx="${x2}" cy="${y2}" r="3" fill="var(--bg)" stroke="${col}" stroke-width="1.4"/>`;
+      g += `<text class="lbl${live ? '' : ' dead'}" x="${x2}" y="${y2 + 20}" text-anchor="middle">${name}</text><text class="yrs" x="${x2}" y="${y2 + 34}" text-anchor="middle">${live ? `since ${Math.floor(s)}` : Math.floor(s) === Math.floor(e) ? Math.floor(s) : `${Math.floor(s)}–${Math.floor(e)}`}</text>`;
+    });
+    svg('C', `${context('c')}<line x1="0" x2="${W}" y1="${BASE}" y2="${BASE}" stroke="rgba(25,24,22,.1)"/>${g}
+      <circle cx="${CX}" cy="${BASE}" r="4.5" fill="#191816"/>`,
+      `<div class="c-cap"><h3>Everything grew from here</h3><p>Mar 2019 · Switched from graphic to product design</p></div>`);
+  })();
+
+  // D: the beginning
+  (() => {
+    const gy = 196;
+    svg('D', `${context('d', gy - 10)}
+      <path d="M${CX},${gy - 10} L${CX},${gy}" stroke="#191816" stroke-width="2.4"/>
+      <defs><linearGradient id="gl" gradientUnits="userSpaceOnUse" x1="120" x2="880" y1="0" y2="0"><stop offset="0" stop-color="#191816" stop-opacity="0"/><stop offset=".5" stop-color="#191816" stop-opacity=".35"/><stop offset="1" stop-color="#191816" stop-opacity="0"/></linearGradient></defs>
+      <line x1="120" x2="880" y1="${gy}" y2="${gy}" stroke="url(#gl)"/>
+      <circle cx="${CX}" cy="${gy}" r="16" fill="#191816" opacity=".06"/><circle cx="${CX}" cy="${gy}" r="5" fill="#191816"/>
+      <text class="mono" x="${CX}" y="${gy + 30}" text-anchor="middle" style="fill:#ABA69C"></text>`,
+      `<div class="end"><div class="eyebrow">Mar 2019 · the first entry</div>
+        <h3>This is where it started. <span><br>Everything above grew from here.</span></h3>
+        <p>Switched from graphic to product design.</p>
+        <div class="btns"><span class="btn dark"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 10V2M2.5 5.5 6 2l3.5 3.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Back to today</span><span class="btn">Read the first entry</span></div></div>`);
+  })();
+</script>
+</body>
+</html>

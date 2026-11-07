@@ -124,3 +124,17 @@ This is the strongest brief so far, because it turns the homepage into an honest
 - **A recurring overlap becomes a sub-branch.** If the overlap keeps happening, it is a new interest. That branch can grow out of another branch instead of the trunk, which is how real trees grow and makes "where did this come from" visible. The layout search was extended so a sub-branch prefers the lane next to its parent and pays a cost for crossing the trunk. Without that, the first test placed the sub-branch on the opposite side of the tree.
 
 **Content model.** Entries take `also: [branch-id]`. Branches take `from: parent-id`. Both are optional and are checked at build time, so a typo in a branch name fails the build with a clear message instead of silently drawing nothing.
+
+**Preview.** `npm run demo` loads the old sample data as `demo-*.md` files that git ignores, so the tree can be shown without real content ever leaking into a deploy.
+
+### 2026-11-07 · Redesigning the roots
+
+**Feedback.** Pavlos flagged the bottom of the tree (six grey root lines and a caption) as basic and amateurish. The roots were pure decoration: they said nothing and gave the reader nothing to do at the end of a long scroll.
+
+**Four directions, mocked in `concepts/roots-options.html`.** Each gives the ending a job.
+- A. Root system and origin card: fine, procedurally grown hair roots fading into a soft soil band, with a glass card summarising the tree (years, branches, still growing, entries).
+- B. Growth rings: the trunk meets the ground as a cross-section, with one ring per year and today as a dashed green outer ring.
+- C. Roots that mirror the branches: one root per branch, in its colour, with depth showing how long it lasted. The longest-lived branch is the taproot, and shorter ones fan outward so no roots cross. The bottom becomes an index.
+- D. The beginning, with a way back: the trunk ends on a ground line, big closing type, and "Back to today" and "Read the first entry" buttons.
+
+**Craft fixes during the mock.** The first procedural roots were too dense and read as a fuzzy blob, so branching depth and opacity came down. Ring year labels sat on the rings, so only 2019 and today are labelled. The mirrored roots crossed each other until they were arranged as a taproot.
