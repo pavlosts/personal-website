@@ -7,3 +7,4 @@ src/content/**/demo-*.md
 
 .vercel
 .env*
+!.env.example

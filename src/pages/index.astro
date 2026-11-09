@@ -5,8 +5,6 @@ import { CATEGORIES, ROOTS, iso, monthYear } from '../lib/site';
 
 const { branches, entries } = await loadTimeline();
 const empty = entries.length === 0;
-const firstYear = empty ? null : branches[0].start.getUTCFullYear();
-const latest = entries[0];
 
 const pills = [...branches].sort((a, c) => Number(!!a.ended) - Number(!!c.ended));
 const span = (b: (typeof branches)[number]) => {
@@ -45,15 +43,10 @@ const data = {
 };
 ---
 
-<Base nav="growth">
+<Base>
   <section class="intro">
-    <span class="badge"><span class="live"></span>Living timeline · {latest ? `updated ${monthYear(latest.date)}` : 'just planted'}</span>
-    <h1>Still growing, <span>one branch at a time.</span></h1>
-    {empty ? (
-      <p class="lead">I'm a product designer. Everything I spend time on becomes a branch here. The ones I'm into keep growing. The ones I let go of stop where they ended. The first branch is about to sprout.</p>
-    ) : (
-      <p class="lead">I'm a product designer. Everything I spend time on becomes a branch. The ones I'm into keep growing. The ones I let go of stop where they ended. Start at today and scroll back to {firstYear}.</p>
-    )}
+    <h1>Hi! 👋 I am Pavlos, <span>and this is my journey</span></h1>
+    <p class="lead">As a creative person with ADHD, I can't stop experimenting with multiple things. I created this place to share about them without a filter. Enjoy!</p>
   </section>
 
   {empty ? (
@@ -186,8 +179,6 @@ const data = {
   .tag.dead { background: var(--bg); box-shadow: none; color: var(--muted); }
   .tag.me { background: var(--ink); color: #fff; border-color: var(--ink); }
   .today { position: absolute; left: 0; transform: translateY(-50%); font: 500 11px var(--mono); color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px; }
-  .roots-title { font: 600 15px Geist, sans-serif; fill: var(--ink); letter-spacing: -.01em; }
-  .roots-sub { font: 500 11px var(--mono); fill: var(--muted); }
   .root-name { font: 500 13px Geist, sans-serif; fill: var(--ink); letter-spacing: -.01em; }
   .root-note { font: 500 10.5px var(--mono); fill: var(--muted); }
   .root-eyebrow { font: 500 11px var(--mono); fill: var(--soft); }
@@ -301,10 +292,8 @@ const data = {
   s += `<circle cx="${CX}" cy="${yTip - 4}" r="3.5" fill="#191816"/>`;
   const roots = DATA.roots || [], rootTop = yRoot - 6, nr = roots.length, span = Math.min(330, 75 * (nr - 1));
   const slots = roots.map((_, i) => (nr > 1 ? -span + i * (2 * span) / (nr - 1) : 0)).sort((a, c) => Math.abs(a) - Math.abs(c) || a - c);
-  let rootsBottom = rootTop;
   roots.forEach((r, i) => {
     const x2 = CX + slots[i], y2 = rootTop + 80 + (1 - i / Math.max(1, nr)) * 150, w = i === 0 ? 1.6 : 1.25, op = (.62 - i * (.24 / Math.max(1, nr - 1))).toFixed(2);
-    rootsBottom = Math.max(rootsBottom, y2 + 40);
     s += `<path d="M${CX},${rootTop} C${CX + (x2 - CX) * .08},${rootTop + 48} ${x2},${y2 - 70} ${x2},${y2}" fill="none" stroke="#191816" stroke-opacity="${op}" stroke-width="${w}" stroke-linecap="round"/>`
       + `<circle cx="${x2}" cy="${y2}" r="7" fill="var(--bg)"/><circle cx="${x2}" cy="${y2}" r="3.5" fill="#191816" fill-opacity="${Math.min(1, +op + .3)}"/>`
       + `<text class="root-name" x="${x2}" y="${y2 + 22}" text-anchor="middle">${esc(r.name)}</text>`
@@ -330,7 +319,7 @@ const data = {
       }
       g += `<line x1="${xt}" y1="${yE}" x2="${xt}" y2="${yE - 30}" stroke="${b.col}" stroke-width="2" stroke-linecap="round" class="flow" opacity=".7"/>`
         + `<circle cx="${xt}" cy="${yE - 34}" r="14" fill="${b.col}" opacity=".16" class="halo"/><circle cx="${xt}" cy="${yE - 34}" r="4.5" fill="${b.col}"/><circle cx="${xt}" cy="${yE - 34}" r="1.6" fill="#fff"/>`;
-      tags.push({ b, x: xt, y: yE - 52, html: `<i style="background:${b.col}"></i>${esc(b.name)}<small>growing</small>` });
+      tags.push({ b, x: xt, y: yE - 52, html: `<i style="background:${b.col}"></i>${esc(b.name)}` });
     } else {
       g += `<line x1="${xt - 6}" y1="${yE - 8}" x2="${xt + 6}" y2="${yE - 8}" stroke="${DEAD}" stroke-width="1.5" stroke-linecap="round"/>`;
       tags.push({ b, x: xt, y: yE - 18, dead: true, html: `<i style="background:${DEAD}"></i>${esc(b.name)}<small>ended ${fmt(b.ended)}</small>` });
@@ -359,9 +348,7 @@ const data = {
     });
   });
 
-  const first = events.reduce((a, c) => (c.y < a.y ? c : a));
-  const capY = Math.max(rootsBottom + 44, yRoot + 150);
-  s += `<g id="leaders"></g><text class="roots-title" x="${CX}" y="${capY}" text-anchor="middle">Everything grew from here</text><text class="roots-sub" x="${CX}" y="${capY + 20}" text-anchor="middle">${esc(fmt(first.date))} · ${esc(first.title)}</text>`;
+  s += `<g id="leaders"></g>`;
   svg.innerHTML = s;
 
   stage.insertAdjacentHTML('beforeend', `<span class="today" style="top:${Y(NOW)}px">Today</span><span class="tag me" style="left:${CX}px;top:${yTip - 14}px">Pavlos</span>`);
@@ -411,9 +398,55 @@ const data = {
 
   let k = 1;
   document.querySelectorAll('.index .pill').forEach((p) => p.addEventListener('click', () => {
-    const g = document.querySelector(`.br[data-b="${p.dataset.b}"]`);
+    const branchId = p.dataset.b;
+    const branch = byId[branchId];
+    window.posthog?.capture('branch_filter_clicked', {
+      branch_id: branchId,
+      branch_name: branch?.name,
+      branch_ended: !!branch?.ye,
+    });
+    const g = document.querySelector(`.br[data-b="${branchId}"]`);
     if (g) scrollTo({ top: wrap.offsetTop + (+g.dataset.top) * k - innerHeight * .35, behavior: 'smooth' });
   }));
+
+  stage.addEventListener('click', (event) => {
+    const link = event.target.closest('a.ev');
+    if (!link) return;
+    const slug = link.getAttribute('href')?.split('/').pop();
+    window.posthog?.capture('note_opened', {
+      slug,
+      title: link.querySelector('.t')?.textContent,
+      source: 'tree',
+      branch_id: link.dataset.b?.split(' ')[0],
+    });
+  });
+
+  document.querySelector('.feed')?.addEventListener('click', (event) => {
+    const link = event.target.closest('a.fi');
+    if (!link) return;
+    const slug = link.getAttribute('href')?.split('/').pop();
+    window.posthog?.capture('note_opened', {
+      slug,
+      title: link.querySelector('.t')?.textContent,
+      source: 'mobile_feed',
+    });
+  });
+
+  const depthMarks = [25, 50, 75, 100];
+  const seenDepth = new Set();
+  const trackDepth = () => {
+    const doc = document.documentElement;
+    const max = Math.max(1, doc.scrollHeight - innerHeight);
+    const pct = Math.round((scrollY / max) * 100);
+    depthMarks.forEach((mark) => {
+      if (pct >= mark && !seenDepth.has(mark)) {
+        seenDepth.add(mark);
+        window.posthog?.capture('tree_scroll_depth', { percent: mark });
+      }
+    });
+  };
+  addEventListener('scroll', trackDepth, { passive: true });
+  trackDepth();
 
   document.querySelectorAll('.br .stem').forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
   const fit = () => { k = Math.min(1, (innerWidth - 32) / W); stage.style.transform = `scale(${k})`; wrap.style.height = H * k + 'px'; };

@@ -166,3 +166,26 @@ This is the strongest brief so far, because it turns the homepage into an honest
 ### 2026-11-09 · Hosted on Vercel
 
 **What happened.** The site is live on Vercel, linked to the GitHub repo so future pushes can redeploy. Project: `pavlosts-projects/personal-website`. Framework set to Astro with `npm run build` and output `dist`. Production URL: [personal-website-tau-three-77.vercel.app](https://personal-website-tau-three-77.vercel.app). Local demo content and drafts are excluded from CLI deploys via `.vercelignore`.
+
+### 2026-11-09 · Root article interview started
+
+**What happened.** Began gathering material for the origin / root article that will sit at the bottom of the tree and explain what the site is and why it exists. Conversation-first, same process as the Steal Like an Artist piece.
+
+**Core story so far (from Pavlos).** Social profiles are useful but niche-locked: LinkedIn for product design work, Instagram for Latin dance photography. ADHD means he constantly tries many things, and he never had a place to share the rest. This site is targeted at him as a whole person, not at one craft. Path in short: started in photography, explored graphic design, now freelance digital product design, and in free time experiments with physical product design (lamps, home decoration). Reads a lot, mostly design and business. The tree is a living timeline of growth: what he is working on now, plus what came before as interests and views change. Roots named so far: Design (passion ~10 years, graphic → product), Photography (first real job, hobby turned work, still a side job), Business (entrepreneurial streak since childhood, including selling in-game items in WoW at ~15), Books (started ~10 years ago with Shoe Dog; thought books were boring until then; ~100 books since, design / business / self-improvement). Audience: people who know him or want to know him as a whole — photographers who do not know the design work, designers who do not know the photography or the book habit, etc.
+
+**Draft decisions.** Childhood / WoW business stories stay short. Length: pretty short but not tiny. Nothing private beyond what he already said. No forced one-liner he did not write. Add that the site was inspired by *Steal Like an Artist*, with a link to the existing reread entry.
+
+**Published.** Live as a Writing-branch entry: `src/content/entries/why-this-site.md`, with portrait at `public/images/pavlos.jpg`. Draft kept at `drafts/why-this-site.md`.
+
+### 2026-11-09 · PostHog analytics added
+
+**What happened.** Product analytics was wired into the Astro site with a dedicated PostHog project named **Personal Website** (EU cloud). The JS web snippet loads from `src/components/posthog.astro` into the shared `Base` layout, gated on `PUBLIC_POSTHOG_PROJECT_TOKEN` / `PUBLIC_POSTHOG_HOST`.
+
+**Events tracked beyond automatic pageviews.**
+- `branch_filter_clicked` — homepage branch pills
+- `note_opened` — opening a note from the tree or mobile feed
+- `tree_scroll_depth` — 25 / 50 / 75 / 100% homepage scroll milestones
+- `note_viewed` — note page open with slug / branch context
+- `back_to_tree_clicked`, `note_external_link_clicked`, `branch_note_clicked` — note-page navigation
+
+**Ops note.** Local values live in `.env.local`. Production needs the same `PUBLIC_*` vars in Vercel so the live site can send events.
