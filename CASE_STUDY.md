@@ -175,7 +175,7 @@ This is the strongest brief so far, because it turns the homepage into an honest
 
 **Draft decisions.** Childhood / WoW business stories stay short. Length: pretty short but not tiny. Nothing private beyond what he already said. No forced one-liner he did not write. Inspiration credit: *Show Your Work!* (second book in Austin Kleon's trilogy), not *Steal Like an Artist*.
 
-**Published.** Live as a Writing-branch entry: `src/content/entries/why-this-site.md`, with portrait at `public/images/pavlos.jpg`. Draft kept at `drafts/why-this-site.md`.
+**Published, then moved to About.** First shipped as a Writing-branch entry, then relocated: content lives at `src/content/about.md`, page at `/about` titled **About me**. The tree root eyebrow (and mobile roots heading) reads "About me" and links there. Writing branch removed. Old `/notes/why-this-site` redirects to `/about`. Portrait at `public/images/pavlos.jpg`.
 
 ### 2026-11-09 · PostHog analytics added
 
@@ -189,3 +189,7 @@ This is the strongest brief so far, because it turns the homepage into an honest
 - `back_to_tree_clicked`, `note_external_link_clicked`, `branch_note_clicked` — note-page navigation
 
 **Ops note.** Local values live in `.env.local`. Production needs the same `PUBLIC_*` vars in Vercel so the live site can send events.
+
+### 2026-11-09 · Deploy rule: review locally first
+
+**Rule.** Do not push to GitHub or deploy to Vercel immediately after changes. Pavlos reviews locally first. Push / deploy only when he explicitly asks.

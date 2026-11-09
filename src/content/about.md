@@ -1,9 +1,3 @@
----
-title: "Why this site"
-date: 2026-11-09
-branch: writing
----
-
 I always knew a presence online mattered. Especially on social media. So I always had a profile.
 
 Those profiles were targeted. LinkedIn is for my professional product design work. Instagram is for my Latin dance photography. They work because they are restricted. I could not post everything else I do there, and I did not want to. I want those audiences tied to that specific thing. LinkedIn is how I promote my work and connect with related people and potential clients. Instagram is for the photography. Mixing hobbies and unrelated design stuff into those feeds would mess that up.
