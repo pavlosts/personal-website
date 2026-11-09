@@ -6,14 +6,6 @@ import { CATEGORIES, ROOTS, iso, monthYear } from '../lib/site';
 const { branches, entries } = await loadTimeline();
 const empty = entries.length === 0;
 
-const pills = [...branches].sort((a, c) => Number(!!a.ended) - Number(!!c.ended));
-const span = (b: (typeof branches)[number]) => {
-  const s = b.start.getUTCFullYear();
-  if (!b.ended) return `since ${s}`;
-  const e = b.ended.getUTCFullYear();
-  return s === e ? `${s}` : `${s}–${e}`;
-};
-
 const byYear = new Map<number, typeof entries>();
 for (const e of entries) {
   const y = e.date.getUTCFullYear();
@@ -71,14 +63,6 @@ const data = {
     </div>
   ) : (
     <>
-      <div class="index" id="index">
-        {pills.map((b) => (
-          <button class:list={['pill', { dead: b.ended }]} data-b={b.id} type="button">
-            <i style={`background:${b.color}`}></i>{b.name}<small>{span(b)}</small>
-          </button>
-        ))}
-      </div>
-
       <div class="wrap" id="wrap"><div class="stage" id="stage"><svg id="svg"></svg></div></div>
       <div class="viewing" id="viewing"><div class="prog"><i id="prog"></i></div><div><small>Viewing</small><b id="yr"></b></div></div>
 
@@ -131,12 +115,7 @@ const data = {
 
   .sprout { display: flex; justify-content: center; margin: 56px 0 40px; }
 
-  .index { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 900px; margin: 40px auto 0; padding: 0 24px; }
-  .index .pill { font: inherit; font-size: 13px; color: inherit; cursor: pointer; }
-  .index .pill:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -8px rgba(25, 24, 22, .25); }
-  .index .pill.dead { color: var(--muted); }
-
-  .wrap { position: relative; margin-top: 24px; }
+  .wrap { position: relative; margin-top: 40px; }
   .stage { position: relative; width: 1200px; margin: 0 auto; transform-origin: top center; }
   .stage svg { position: absolute; left: 0; top: 0; overflow: visible; }
   .yr { font: 500 12px var(--mono); fill: #ABA69C; }
@@ -198,10 +177,6 @@ const data = {
     .intro { padding-top: 120px; }
     .intro h1 { font-size: 44px; }
     .lead { font-size: 15.5px; }
-    .index { margin-top: 28px; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px;
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 24px), transparent); }
-    .index::-webkit-scrollbar { display: none; }
-    .index .pill { flex: none; }
     .wrap, .viewing { display: none; }
     .feed { display: block; max-width: 560px; margin: 40px auto 0; padding: 0 24px; }
     .fy h2 { font: 500 12px var(--mono); color: var(--soft); padding: 18px 0 10px; border-top: 1px solid var(--line); }
@@ -394,23 +369,10 @@ const data = {
       x.classList.toggle('hl', on);
     });
   };
-  document.querySelectorAll('.pill,.ev,.tag,.echo').forEach((x) => {
+  document.querySelectorAll('.ev,.tag,.echo').forEach((x) => {
     x.addEventListener('mouseenter', () => hl(x.dataset.b.split(' '), x.dataset.e));
     x.addEventListener('mouseleave', () => hl(null));
   });
-
-  let k = 1;
-  document.querySelectorAll('.index .pill').forEach((p) => p.addEventListener('click', () => {
-    const branchId = p.dataset.b;
-    const branch = byId[branchId];
-    window.posthog?.capture('branch_filter_clicked', {
-      branch_id: branchId,
-      branch_name: branch?.name,
-      branch_ended: !!branch?.ye,
-    });
-    const g = document.querySelector(`.br[data-b="${branchId}"]`);
-    if (g) scrollTo({ top: wrap.offsetTop + (+g.dataset.top) * k - innerHeight * .35, behavior: 'smooth' });
-  }));
 
   stage.addEventListener('click', (event) => {
     const link = event.target.closest('a.ev');
