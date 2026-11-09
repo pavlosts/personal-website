@@ -174,22 +174,17 @@ const data = {
     .intro { padding-top: 120px; }
     .intro h1 { font-size: 44px; }
     .lead { font-size: 15.5px; }
-    .wrap, .viewing { display: none; }
-    .feed { display: block; max-width: 560px; margin: 40px auto 0; padding: 0 24px; }
-    .fy h2 { font: 500 12px var(--mono); color: var(--soft); padding: 18px 0 10px; border-top: 1px solid var(--line); }
-    .fy.roots h2 a:hover { color: var(--ink); }
-    .fy ol { list-style: none; position: relative; padding-bottom: 12px; }
-    .fy ol::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 18px; width: 1px; background: rgba(25, 24, 22, .12); }
-    .fi { display: grid; grid-template-columns: 9px 1fr; column-gap: 16px; padding: 8px 0; position: relative; }
-    .fi i { grid-row: span 2; width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; box-shadow: 0 0 0 4px var(--bg); }
-    .fi .t { font-size: 15px; font-weight: 500; line-height: 1.4; margin-top: 2px; letter-spacing: -.01em; }
-    .fi.dead .t { color: var(--muted); font-weight: 400; }
-    .fy.roots ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 8px; }
-    .fy.roots li { display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(25, 24, 22, .12); font-size: 13px; }
-    .fy.roots b { font-weight: 500; }
-    .fy.roots span { font: 500 11px var(--mono); color: var(--muted); }
-    .fi .also { grid-column: 2; }
-    .fi .also i { display: inline-block; grid-row: auto; width: 6px; height: 6px; margin: 0; box-shadow: none; }
+    .wrap {
+      margin-top: 28px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      scrollbar-width: thin;
+    }
+    .stage { margin: 0; }
+    .viewing { left: 16px; bottom: max(16px, env(safe-area-inset-bottom)); }
+    .feed { display: none; }
   }
 </style>
 
@@ -327,10 +322,14 @@ const data = {
 
   stage.insertAdjacentHTML('beforeend', `<span class="today" style="top:${Y(NOW)}px">Today</span><span class="tag me" style="left:${CX}px;top:${yTip - 14}px">Pavlos</span>`);
   if (nr) {
-    stage.insertAdjacentHTML(
-      'beforeend',
-      `<a class="ev in" href="/about" data-about="1" style="left:${CX + 24}px;top:${rootTop - 9}px"><div class="d">Roots</div><div class="t">About me</div></a>`,
-    );
+    const about = document.createElement('a');
+    about.href = '/about';
+    about.className = 'ev in';
+    about.dataset.about = '1';
+    about.innerHTML = '<div class="d">Roots</div><div class="t">About me</div>';
+    stage.appendChild(about);
+    about.style.left = `${CX + 14}px`;
+    about.style.top = `${rootTop - about.offsetHeight + 12}px`;
   }
   tags.forEach((t) => stage.insertAdjacentHTML('beforeend', `<span class="tag${t.dead ? ' dead' : ''}" data-b="${t.b.id}" style="left:${t.x}px;top:${t.y}px">${t.html}</span>`));
 
@@ -421,7 +420,21 @@ const data = {
 
   document.querySelectorAll('.br .stem').forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
   let k = 1;
-  const fit = () => { k = Math.min(1, (innerWidth - 32) / W); stage.style.transform = `scale(${k})`; wrap.style.height = H * k + 'px'; };
+  const MOBILE = 760;
+  const centerTrunk = () => {
+    if (innerWidth > MOBILE) return;
+    const maxScroll = Math.max(0, wrap.scrollWidth - wrap.clientWidth);
+    wrap.scrollLeft = maxScroll / 2;
+  };
+  const fit = () => {
+    const mobile = innerWidth <= MOBILE;
+    // Full-size tree on phones: pan horizontally instead of shrinking. Trunk stays at stage center.
+    k = mobile ? 1 : Math.min(1, (innerWidth - 32) / W);
+    stage.style.transform = mobile ? 'none' : `scale(${k})`;
+    wrap.style.height = H * k + 'px';
+    if (mobile) requestAnimationFrame(centerTrunk);
+    else wrap.scrollLeft = 0;
+  };
   fit(); addEventListener('resize', fit);
 
   const groups = [...document.querySelectorAll('.br')], bridgeEls = [...document.querySelectorAll('.bridge')];
