@@ -1,0 +1,5 @@
+src/content/**/demo-*.md
+drafts/
+concepts/
+node_modules/
+.env*

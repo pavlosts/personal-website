@@ -153,8 +153,16 @@ This is the strongest brief so far, because it turns the homepage into an honest
 
 **What happened.** After a conversation-first pass on *Steal Like an Artist*, a draft was written only from Pavlos's notes into `drafts/steal-like-an-artist.md`. Framing: first read at ~20 (second book he ever read), reread at 30. Body follows the highlights he reacted to. Digital product examples kept light on purpose.
 
-**Status.** Awaiting his review. Learned voice in `personal-blog-voice.md` stays empty until he corrects the draft and approves voice notes.
+**Status.** He reviewed the draft, kept it as the tone sample (small grammar fixes: exist→exists, Johnny→Jony), and authorized learning voice from it. Learned voice in `content-helper/references/personal-blog-voice.md` was filled from this piece on 2026-11-09.
 
 ### 2026-11-09 · GitHub repo created
 
 **What happened.** The project was pushed to a new public GitHub repo at [github.com/pavlosts/personal-website](https://github.com/pavlosts/personal-website). Local branch renamed from `master` to `main` and set to track `origin/main`. The article draft in `drafts/` stayed local and untracked.
+
+### 2026-11-09 · First real entry published on the tree
+
+**What happened.** *Rereading Steal Like an Artist* went live as the first real content entry: `src/content/entries/rereading-steal-like-an-artist.md` dated 2026-11-09. It sits on the **Books** branch (`src/content/branches/books.md`, category writing). An initial Writing branch was swapped to Books so book notes live on their own lane.
+
+### 2026-11-09 · Hosted on Vercel
+
+**What happened.** The site is live on Vercel, linked to the GitHub repo so future pushes can redeploy. Project: `pavlosts-projects/personal-website`. Framework set to Astro with `npm run build` and output `dist`. Production URL: [personal-website-tau-three-77.vercel.app](https://personal-website-tau-three-77.vercel.app). Local demo content and drafts are excluded from CLI deploys via `.vercelignore`.

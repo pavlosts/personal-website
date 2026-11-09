@@ -4,3 +4,6 @@ dist/
 .vercel/
 .DS_Store
 src/content/**/demo-*.md
+
+.vercel
+.env*
