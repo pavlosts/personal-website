@@ -414,6 +414,7 @@ const data = {
   trackDepth();
 
   document.querySelectorAll('.br .stem').forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+  let k = 1;
   const fit = () => { k = Math.min(1, (innerWidth - 32) / W); stage.style.transform = `scale(${k})`; wrap.style.height = H * k + 'px'; };
   fit(); addEventListener('resize', fit);
 
