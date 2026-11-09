@@ -160,9 +160,8 @@ const data = {
   .today { position: absolute; left: 0; transform: translateY(-50%); font: 500 11px var(--mono); color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px; }
   .root-name { font: 500 13px Geist, sans-serif; fill: var(--ink); letter-spacing: -.01em; }
   .root-note { font: 500 10.5px var(--mono); fill: var(--muted); }
-  .root-eyebrow { font: 500 11px var(--mono); fill: var(--soft); transition: fill .2s; }
-  a.root-link { cursor: pointer; }
-  a.root-link:hover .root-eyebrow { fill: var(--ink); }
+  .about-root { position: absolute; transform: translateY(-50%); font: 500 11px var(--mono); color: var(--ink2); text-decoration: underline; text-decoration-color: rgba(25, 24, 22, .28); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s, text-decoration-color .2s; }
+  .about-root:hover { color: var(--ink); text-decoration-color: var(--ink); }
 
   .viewing { position: fixed; left: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 14px; background: rgba(255, 255, 255, .78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); box-shadow: 0 10px 30px -14px rgba(25, 24, 22, .3); opacity: 0; transition: opacity .4s; }
   .viewing.on { opacity: 1; }
@@ -180,7 +179,8 @@ const data = {
     .wrap, .viewing { display: none; }
     .feed { display: block; max-width: 560px; margin: 40px auto 0; padding: 0 24px; }
     .fy h2 { font: 500 12px var(--mono); color: var(--soft); padding: 18px 0 10px; border-top: 1px solid var(--line); }
-    .fy.roots h2 a:hover { color: var(--ink); }
+    .fy.roots h2 a { color: var(--ink2); text-decoration: underline; text-decoration-color: rgba(25, 24, 22, .28); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .fy.roots h2 a:hover { color: var(--ink); text-decoration-color: var(--ink); }
     .fy ol { list-style: none; position: relative; padding-bottom: 12px; }
     .fy ol::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 18px; width: 1px; background: rgba(25, 24, 22, .12); }
     .fi { display: grid; grid-template-columns: 9px 1fr; column-gap: 16px; padding: 8px 0; position: relative; }
@@ -278,7 +278,6 @@ const data = {
       + (r.note ? `<text class="root-note" x="${x2}" y="${y2 + 36}" text-anchor="middle">${esc(r.note)}</text>` : '');
   });
   s += `<circle cx="${CX}" cy="${rootTop}" r="4" fill="#191816"/>`;
-  if (nr) s += `<a class="root-link" href="/about"><text class="root-eyebrow" x="${CX + 14}" y="${rootTop + 4}">About me</text></a>`;
 
   const evs = [], tags = [];
   branches.forEach((b) => {
@@ -330,6 +329,7 @@ const data = {
   svg.innerHTML = s;
 
   stage.insertAdjacentHTML('beforeend', `<span class="today" style="top:${Y(NOW)}px">Today</span><span class="tag me" style="left:${CX}px;top:${yTip - 14}px">Pavlos</span>`);
+  if (nr) stage.insertAdjacentHTML('beforeend', `<a class="about-root" href="/about" style="left:${CX + 14}px;top:${rootTop}px">About me</a>`);
   tags.forEach((t) => stage.insertAdjacentHTML('beforeend', `<span class="tag${t.dead ? ' dead' : ''}" data-b="${t.b.id}" style="left:${t.x}px;top:${t.y}px">${t.html}</span>`));
 
   const nodes = evs.map((v) => {
