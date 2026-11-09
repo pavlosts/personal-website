@@ -274,7 +274,7 @@ const data = {
       + `<text class="root-name" x="${x2}" y="${y2 + 22}" text-anchor="middle">${esc(r.name)}</text>`
       + (r.note ? `<text class="root-note" x="${x2}" y="${y2 + 36}" text-anchor="middle">${esc(r.note)}</text>` : '');
   });
-  s += `<circle cx="${CX}" cy="${rootTop}" r="4" fill="#191816"/>`;
+  s += `<circle cx="${CX}" cy="${rootTop}" r="7" fill="var(--bg)"/><circle cx="${CX}" cy="${rootTop}" r="4" fill="#191816"/>`;
 
   const evs = [], tags = [];
   branches.forEach((b) => {
