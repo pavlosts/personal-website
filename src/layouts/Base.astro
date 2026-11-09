@@ -6,9 +6,10 @@ import { SITE } from '../lib/site';
 interface Props {
   title?: string;
   description?: string;
+  nav?: 'growth' | 'about' | null;
 }
 
-const { title = SITE.title, description = SITE.description } = Astro.props;
+const { title = SITE.title, description = SITE.description, nav = null } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
@@ -28,6 +29,13 @@ const year = new Date().getFullYear();
     <PostHog />
   </head>
   <body>
+    <header class="site-header">
+      <a href="/"><b>{SITE.name}</b></a>
+      <nav>
+        <a href="/" class:list={{ on: nav === 'growth' }}>Growth</a>
+        <a href="/about" class:list={{ on: nav === 'about' }}>About</a>
+      </nav>
+    </header>
     <slot />
     <footer class="site-footer">
       <span>{SITE.name} · {year}</span>
