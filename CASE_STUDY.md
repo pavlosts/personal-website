@@ -140,3 +140,21 @@ This is the strongest brief so far, because it turns the homepage into an honest
 **Decision.** Pavlos chose C, with one important change: the roots should not repeat the branches. They show his background and interests, the things that feed everything above ground: design, photography, business and books. That separates two kinds of information. Branches are what he did, over time. Roots are where it comes from, and have no dates. The roots are monochrome ink, so they never compete with the category colours of the branches. The first root in the list becomes the deepest one. They are edited as a short list in `src/lib/site.ts`, each with an optional one-line note, and on phones they appear as a "Roots" row of pills at the end of the feed. Small rootlets were tried for texture but read as loose dashes, so they were removed.
 
 **Craft fixes during the mock.** The first procedural roots were too dense and read as a fuzzy blob, so branching depth and opacity came down. Ring year labels sat on the rings, so only 2019 and today are labelled. The mirrored roots crossed each other until they were arranged as a taproot.
+
+### 2026-11-09 · Blog writing process and voice setup
+
+**What happened.** Blog content will start with conversation-first pieces, beginning with notes on *Steal Like an Artist*. Process: talk the topic through, then write the article only from what Pavlos said, in his tone, and refine the voice from corrections over many conversations.
+
+**Durable artifact.** Personal blog voice lives at `~/.cursor/skills/content-helper/references/personal-blog-voice.md`, separate from Bob LinkedIn voice and from sales/offer copy. Learned tone sections stay empty until real conversation samples and corrections exist. Hard constraints from WRONG_LOG already apply (no em dashes, no AI thesis pattern, no three-line noun-phrase example stacks).
+
+**Next step.** Run the first conversation on *Steal Like an Artist*, then draft the article from that conversation only and update the voice file from any corrections.
+
+### 2026-11-09 · First article draft under review
+
+**What happened.** After a conversation-first pass on *Steal Like an Artist*, a draft was written only from Pavlos's notes into `drafts/steal-like-an-artist.md`. Framing: first read at ~20 (second book he ever read), reread at 30. Body follows the highlights he reacted to. Digital product examples kept light on purpose.
+
+**Status.** Awaiting his review. Learned voice in `personal-blog-voice.md` stays empty until he corrects the draft and approves voice notes.
+
+### 2026-11-09 · GitHub repo created
+
+**What happened.** The project was pushed to a new public GitHub repo at [github.com/pavlosts/personal-website](https://github.com/pavlosts/personal-website). Local branch renamed from `master` to `main` and set to track `origin/main`. The article draft in `drafts/` stayed local and untracked.
