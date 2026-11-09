@@ -12,7 +12,7 @@ The problem is I am a creative person with ADHD. I cannot stop experimenting wit
 
 So I wanted a personal space that is not targeted to one craft. It is targeted to myself, as a person and as a whole. A place where I can post whatever I am working on, or whatever I want to share, without a filter.
 
-This site came together with inspiration from [*Steal Like an Artist*](https://austinkleon.com/steal/). I wrote more about rereading that book [here](/notes/rereading-steal-like-an-artist/).
+This site came together with inspiration from [*Show Your Work!*](https://austinkleon.com/show-your-work/), the second book in Austin Kleon's trilogy.
 
 ![Pavlos](/images/pavlos.jpg)
 
