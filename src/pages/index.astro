@@ -31,6 +31,7 @@ const data = {
     also: e.also.filter((id) => branches.some((b) => b.id === id)),
     kind: e.kind,
     link: e.hasBody,
+    cover: e.cover ?? null,
   })),
 };
 ---
@@ -79,7 +80,8 @@ const data = {
                   <li>
                     <Tag class:list={['fi', { dead: b.ended }]} href={e.hasBody ? `/notes/${e.slug}` : undefined}>
                       <i style={`background:${b.color}`}></i>
-                      <span class="d">{monthYear(e.date)} · {b.name}{e.kind && <em>{e.kind === 'start' ? 'started' : 'ended'}</em>}</span>
+                      {e.cover && <img class="cover" src={e.cover} alt="" loading="lazy" />}
+                      <span class="d">{monthYear(e.date)} · {b.name}</span>
                       <span class="t">{e.title}</span>
                       {e.also.length > 0 && (
                         <span class="also">
@@ -134,10 +136,13 @@ const data = {
   .leaf { transform-box: view-box; animation: sway 7s ease-in-out infinite; }
   @keyframes sway { 50% { transform: rotate(6deg); } }
 
-  .ev { position: absolute; width: 176px; cursor: default; }
+  .ev { position: absolute; width: 176px; cursor: default; display: flex; flex-direction: column; gap: 0; z-index: 2; }
   a.ev { cursor: pointer; }
   .ev.r { text-align: right; }
-  .ev.start { display: flex; flex-direction: column-reverse; }
+  .ev .copy { display: flex; flex-direction: column; }
+  .ev.start .copy { flex-direction: column-reverse; }
+  .ev .cover { display: block; width: 72px; height: 96px; object-fit: cover; object-position: center top; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 8px 18px -12px rgba(25, 24, 22, .45); background: rgba(25, 24, 22, .04); }
+  .ev.r .cover { margin-left: auto; }
   .ev .d, .fi .d { font: 500 11px var(--mono); color: var(--muted); display: flex; gap: 6px; align-items: center; }
   .ev.r .d { justify-content: flex-end; }
   .ev .d em, .fi .d em { font-style: normal; font-size: 10px; padding: 1px 6px; border-radius: 4px; background: rgba(25, 24, 22, .05); color: var(--ink2); letter-spacing: .02em; }
@@ -157,7 +162,7 @@ const data = {
   .bridge .echo { cursor: pointer; }
   .dimming .bridge.in:not(.hl) { opacity: .12 !important; }
   a.ev:hover .t, a.fi:hover .t { text-decoration: underline; text-decoration-color: rgba(25, 24, 22, .25); text-underline-offset: 3px; }
-  .tag { position: absolute; transform: translate(-50%, -100%); display: flex; align-items: center; gap: 7px; white-space: nowrap; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--card); border: 1px solid var(--line); box-shadow: 0 4px 14px -6px rgba(25, 24, 22, .2); transition: opacity .25s; }
+  .tag { position: absolute; transform: translate(-50%, -100%); z-index: 5; display: flex; align-items: center; gap: 7px; white-space: nowrap; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--card); border: 1px solid var(--line); box-shadow: 0 4px 14px -6px rgba(25, 24, 22, .2); transition: opacity .25s; }
   .tag i { width: 7px; height: 7px; border-radius: 50%; }
   .tag small { font: 500 10.5px var(--mono); color: var(--muted); }
   .tag.dead { background: var(--bg); box-shadow: none; color: var(--muted); }
@@ -190,17 +195,20 @@ const data = {
       scrollbar-width: thin;
     }
     .stage { margin: 0; }
-    .ev { width: 118px; }
-    .ev .t { font-size: 12.5px; line-height: 1.3; }
-    .ev .d { font-size: 10px; gap: 4px; }
-    .ev .d em { font-size: 9px; padding: 1px 5px; }
-    .also { font-size: 10.5px; gap: 3px 8px; margin-top: 3px; }
-    .tag { font-size: 11px; padding: 4px 8px; gap: 5px; }
-    .tag small { font-size: 9.5px; }
-    .today { transform: translate(-100%, -50%); }
+    .ev { width: 176px; }
+    .ev .cover { width: 72px; height: 96px; margin-bottom: 8px; border-radius: 7px; }
+    .ev .t { font-size: 16px; line-height: 1.35; }
+    .ev .d { font-size: 11.5px; gap: 5px; }
+    .ev .d em { font-size: 10px; padding: 1px 6px; }
+    .also { font-size: 12px; gap: 4px 10px; margin-top: 4px; }
+    .tag { font-size: 13px; padding: 6px 11px; gap: 7px; }
+    .tag small { font-size: 11px; }
+    .tag i { width: 8px; height: 8px; }
+    .today { transform: translate(-100%, -50%); font-size: 12px; padding: 4px 10px; }
     .viewing { left: 16px; bottom: max(16px, env(safe-area-inset-bottom)); padding: 8px 12px; gap: 10px; }
-    .viewing b { font-size: 18px; }
-    .yr { font-size: 10px; }
+    .viewing b { font-size: 20px; }
+    .yr { font-size: 12px; }
+    .root-name { font-size: 14px; }
     .feed { display: none !important; }
   }
 </style>
@@ -217,20 +225,20 @@ const data = {
   const today = new Date();
   const NOW = today.getFullYear() + today.getMonth() / 12 + (today.getDate() - 1) / 365;
 
-  // Option A on phones: narrow trunk that mostly fits the screen.
-  // Cards sit outside the branches. Pan horizontally only if it still overflows; trunk stays centred.
-  const MOBILE = innerWidth <= 760;
+  // Option A on phones: zoomed-in trunk (larger than the screen), not a shrunk overview.
+  // Cards sit outside the branches. Pan horizontally; trunk stays centred.
+  // Use matchMedia (not a one-shot innerWidth) so resize into mobile rebuilds instead of scale()-shrinking the desktop tree.
+  const mq = matchMedia('(max-width: 760px)');
+  const MOBILE = mq.matches;
   const DEAD = '#C9C3B8';
-  const EV_W = MOBILE ? 118 : 176;
-  const GAP = MOBILE ? 10 : 24;
-  // Lane separation on each side ≈ card width so outside cards do not overlap.
-  // Stage will be wider than most phones; pan keeps the trunk centred.
-  const LANES = MOBILE ? [-168, 168, -56, 56] : [-430, 430, -215, 215];
-  const PX = MOBILE ? 260 : 400;
-  const TOP = MOBILE ? 72 : 140;
-  const RISE = MOBILE ? 88 : 170;
+  const EV_W = MOBILE ? 176 : 176;
+  const GAP = MOBILE ? 16 : 24;
+  const LANES = MOBILE ? [-240, 240, -120, 120] : [-430, 430, -215, 215];
+  const PX = MOBILE ? 420 : 400;
+  const TOP = MOBILE ? 110 : 140;
+  const RISE = MOBILE ? 160 : 170;
   const laneMax = Math.max(...LANES.map((n) => Math.abs(n)));
-  const W = MOBILE ? Math.ceil((laneMax + GAP + EV_W + 16) * 2) : 1200;
+  const W = MOBILE ? Math.ceil((laneMax + GAP + EV_W + 24) * 2) : 1200;
   const CX = W / 2;
   if (MOBILE) document.body.classList.add('narrow-tree');
 
@@ -271,7 +279,7 @@ const data = {
   search(0, [], 0);
   branches.forEach((b, i) => { b.off = best.offs ? best.offs[i] : LANES[i % 4]; });
 
-  const START = branches[0].ys - 0.35, H = TOP + (NOW - START) * PX + (MOBILE ? 320 : 440);
+  const START = branches[0].ys - 0.35, H = TOP + (NOW - START) * PX + (MOBILE ? 400 : 440);
   const firstYear = Math.floor(branches[0].ys), nowYear = Math.floor(NOW);
   const Y = (t) => TOP + (NOW - t) * PX;
   const stage = document.getElementById('stage'), svg = document.getElementById('svg'), wrap = document.getElementById('wrap');
@@ -288,12 +296,14 @@ const data = {
 
   for (let yr = Math.ceil(START); yr <= nowYear; yr++) {
     const y = Y(yr);
-    s += `<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="rgba(25,24,22,.06)"/><text class="yr" x="${MOBILE ? 8 : 0}" y="${y - 10}">${yr}</text>`;
+    // Years hug the trunk on mobile so they stay in the zoomed-in centred view.
+    const yrX = MOBILE ? CX + 12 : 0;
+    s += `<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="rgba(25,24,22,.06)"/><text class="yr" x="${yrX}" y="${y - 10}">${yr}</text>`;
   }
   s += `<line x1="0" x2="${W}" y1="${Y(NOW)}" y2="${Y(NOW)}" stroke="rgba(25,24,22,.18)" stroke-dasharray="3 5"/>`;
 
   const yRoot = Y(START) + 40, yTip = Y(NOW) - 44;
-  const trunkHalf = MOBILE ? 2.4 : 3.6;
+  const trunkHalf = MOBILE ? 4.2 : 3.6;
   s += `<path d="M${CX - trunkHalf},${yRoot} C${CX - trunkHalf * .85},${yRoot - 600} ${CX - 1.2},${yTip + 500} ${CX - 1},${yTip} L${CX + 1},${yTip} C${CX + 1.2},${yTip + 500} ${CX + trunkHalf * .85},${yRoot - 600} ${CX + trunkHalf},${yRoot} Z" fill="url(#trunk)"/>`;
   s += `<circle cx="${CX}" cy="${yTip - 4}" r="3.2" fill="#191816"/>`;
   const roots = DATA.roots || [], rootTop = yRoot - 6, nr = roots.length;
@@ -316,17 +326,21 @@ const data = {
     let d = `M${x0},${f0} C${x0},${f0 - rise * .55} ${X},${f0 - rise * .5} ${X},${top}`;
     for (let y = top - 10; y >= yE; y -= 10) d += ` L${xAt(b, y).toFixed(1)},${y.toFixed(1)}`;
     d += ` L${xAt(b, yE).toFixed(1)},${yE}`;
-    let g = `<g class="br" data-b="${b.id}" data-top="${yE}"><path class="stem" d="${d}" fill="none" stroke="${dead ? DEAD : `url(#g-${b.id})`}" stroke-width="${dead ? 1.5 : (MOBILE ? 2 : 2.2)}" stroke-linecap="round"/><g class="fade">`;
+    const stemW = dead ? (MOBILE ? 2 : 1.5) : (MOBILE ? 2.8 : 2.2);
+    let g = `<g class="br" data-b="${b.id}" data-top="${yE}"><path class="stem" d="${d}" fill="none" stroke="${dead ? DEAD : `url(#g-${b.id})`}" stroke-width="${stemW}" stroke-linecap="round"/><g class="fade">`;
     const xt = xAt(b, yE);
     if (!dead) {
       let k = 0;
-      for (let y = yE + 34; y < top - 16; y += 58, k++) {
+      const leafStep = MOBILE ? 64 : 58;
+      for (let y = yE + 34; y < top - 16; y += leafStep, k++) {
         const x = xAt(b, y), dd = k % 2 ? 1 : -1;
-        g += `<path class="leaf" style="transform-origin:${x}px ${y}px;animation-delay:${-k * .9}s" d="M${x},${y} c${dd * 4},-6 ${dd * 11},-8 ${dd * 16},-5 c${-dd * 4},5 ${-dd * 10},7 ${-dd * 16},5Z" fill="${b.col}" fill-opacity=".13" stroke="${b.col}" stroke-opacity=".55" stroke-width=".8"/>`;
+        const ls = MOBILE ? 1.25 : 1;
+        g += `<path class="leaf" style="transform-origin:${x}px ${y}px;animation-delay:${-k * .9}s" d="M${x},${y} c${dd * 4 * ls},-${6 * ls} ${dd * 11 * ls},-${8 * ls} ${dd * 16 * ls},-${5 * ls} c${-dd * 4 * ls},${5 * ls} ${-dd * 10 * ls},${7 * ls} ${-dd * 16 * ls},${5 * ls}Z" fill="${b.col}" fill-opacity=".13" stroke="${b.col}" stroke-opacity=".55" stroke-width=".8"/>`;
       }
-      g += `<line x1="${xt}" y1="${yE}" x2="${xt}" y2="${yE - 30}" stroke="${b.col}" stroke-width="2" stroke-linecap="round" class="flow" opacity=".7"/>`
-        + `<circle cx="${xt}" cy="${yE - 34}" r="14" fill="${b.col}" opacity=".16" class="halo"/><circle cx="${xt}" cy="${yE - 34}" r="4.5" fill="${b.col}"/><circle cx="${xt}" cy="${yE - 34}" r="1.6" fill="#fff"/>`;
-      tags.push({ b, x: xt, y: yE - 52, html: `<i style="background:${b.col}"></i>${esc(b.name)}` });
+      const tipR = MOBILE ? 18 : 14, tipDot = MOBILE ? 5.5 : 4.5;
+      g += `<line x1="${xt}" y1="${yE}" x2="${xt}" y2="${yE - (MOBILE ? 36 : 30)}" stroke="${b.col}" stroke-width="${MOBILE ? 2.4 : 2}" stroke-linecap="round" class="flow" opacity=".7"/>`
+        + `<circle cx="${xt}" cy="${yE - (MOBILE ? 40 : 34)}" r="${tipR}" fill="${b.col}" opacity=".16" class="halo"/><circle cx="${xt}" cy="${yE - (MOBILE ? 40 : 34)}" r="${tipDot}" fill="${b.col}"/><circle cx="${xt}" cy="${yE - (MOBILE ? 40 : 34)}" r="${MOBILE ? 2 : 1.6}" fill="#fff"/>`;
+      tags.push({ b, x: xt, y: yE - (MOBILE ? 62 : 52), html: `<i style="background:${b.col}"></i>${esc(b.name)}` });
     } else {
       g += `<line x1="${xt - 6}" y1="${yE - 8}" x2="${xt + 6}" y2="${yE - 8}" stroke="${DEAD}" stroke-width="1.5" stroke-linecap="round"/>`;
       tags.push({ b, x: xt, y: yE - 18, dead: true, html: `<i style="background:${DEAD}"></i>${esc(b.name)}<small>ended ${fmt(b.ended)}</small>` });
@@ -366,12 +380,17 @@ const data = {
     about.className = 'ev in';
     about.dataset.about = '1';
     about.style.width = EV_W + 'px';
-    about.innerHTML = '<div class="d">Roots</div><div class="t">About me</div>';
+    about.innerHTML = '<img class="cover" src="/images/pavlos.jpg" alt="" loading="lazy" /><div class="copy"><div class="d">Roots</div><div class="t">About me</div></div>';
     stage.appendChild(about);
-    about.style.left = MOBILE ? `${CX + GAP}px` : `${CX + 14}px`;
-    about.style.top = `${rootTop - about.offsetHeight + 12}px`;
+    const placeAbout = () => {
+      about.style.left = MOBILE ? `${CX + GAP}px` : `${CX + 14}px`;
+      about.style.top = `${rootTop - about.offsetHeight + 12}px`;
+    };
+    placeAbout();
+    const aboutCover = about.querySelector('.cover');
+    if (aboutCover && !aboutCover.complete) aboutCover.addEventListener('load', placeAbout, { once: true });
   }
-  tags.forEach((t) => stage.insertAdjacentHTML('beforeend', `<span class="tag${t.dead ? ' dead' : ''}" data-b="${t.b.id}" style="left:${t.x}px;top:${t.y}px">${t.html}</span>`));
+  tags.forEach((t) => stage.insertAdjacentHTML('beforeend', `<span class="tag${t.dead ? ' dead' : ''}" data-b="${t.b.id}" data-tx="${t.x}" data-ty="${t.y}" style="left:${t.x}px;top:${t.y}px">${t.html}</span>`));
 
   const nodes = evs.map((v) => {
     const a = document.createElement(v.e.link ? 'a' : 'div');
@@ -381,9 +400,9 @@ const data = {
     const also = (v.e.also || []).map((id) => byId[id]).filter(Boolean);
     a.dataset.b = [v.b.id, ...also.map((o) => o.id)].join(' ');
     if (also.length) a.dataset.e = v.e.slug;
-    const chip = st ? '<em>started</em>' : v.e.kind === 'end' ? '<em>ended</em>' : '';
     const alsoHtml = also.length ? `<div class="also">${also.map((o) => `<span><i style="background:${o.ye ? DEAD : o.col}"></i>${esc(o.name)}</span>`).join('')}</div>` : '';
-    a.innerHTML = `<div class="d">${fmt(v.e.date)}${chip}</div><div class="t">${esc(v.e.title)}</div>${alsoHtml}`;
+    const coverHtml = v.e.cover ? `<img class="cover" src="${esc(v.e.cover)}" alt="" loading="lazy" />` : '';
+    a.innerHTML = `${coverHtml}<div class="copy"><div class="d">${fmt(v.e.date)}</div><div class="t">${esc(v.e.title)}</div>${alsoHtml}</div>`;
     stage.appendChild(a);
     return { ...v, el: a, start: st };
   });
@@ -397,15 +416,18 @@ const data = {
       nodes.filter((n) => n.b === b).sort((a, c) => a.y - c.y).forEach((n) => {
         n.el.style.width = EV_W + 'px';
         const dH = n.el.querySelector('.d')?.offsetHeight || 18;
+        const cover = n.el.querySelector('.cover');
+        const coverH = cover?.offsetHeight || 0;
+        const coverGap = coverH ? 8 : 0;
         const h = n.el.offsetHeight;
         // Center the date row on the dot. Start cards stack title above the date
-        // so copy stays off the fork path below the node.
-        let top = n.start ? (n.y - h + dH / 2) : (n.y - dH / 2);
+        // so copy stays off the fork path below the node. Covers sit above the copy.
+        let top = n.start ? (n.y - h + dH / 2) : (n.y - dH / 2 - coverH - coverGap);
         if (!n.start) top = Math.max(top, prevBottom + 14);
         if (MOBILE) top = Math.max(top, sidePrev[n.side] + 10);
         prevBottom = top + h;
         if (MOBILE) sidePrev[n.side] = top + h;
-        const dateY = n.start ? top + h - dH / 2 : top + dH / 2;
+        const dateY = n.start ? top + h - dH / 2 : top + coverH + coverGap + dH / 2;
         n.el.style.top = top + 'px';
         if (MOBILE) {
           // Outside the branch, toward the screen edge (option A).
@@ -422,8 +444,43 @@ const data = {
       });
     });
     document.getElementById('leaders').innerHTML = lead;
+    clearTipTags();
   };
+
+  // Tip labels sit just above the growing tip; a recent card with a cover can land on the same spot.
+  // Nudge the tip tag up (and slightly toward the trunk) until it clears the card.
+  const clearTipTags = () => {
+    stage.querySelectorAll('.tag[data-b]').forEach((tag) => {
+      const id = tag.dataset.b;
+      let x = +tag.dataset.tx, y = +tag.dataset.ty;
+      tag.style.left = x + 'px';
+      tag.style.top = y + 'px';
+      const tw = tag.offsetWidth, th = tag.offsetHeight;
+      const hits = () => nodes.some((n) => {
+        if (!n.el.dataset.b.split(' ').includes(id)) return false;
+        const nl = parseFloat(n.el.style.left), nt = parseFloat(n.el.style.top);
+        const nw = n.el.offsetWidth, nh = n.el.offsetHeight;
+        const tl = x - tw / 2, tt = y - th, tr = x + tw / 2, tb = y;
+        const gap = 12;
+        return !(tr < nl - gap || tl > nl + nw + gap || tb < nt - gap || tt > nt + nh + gap);
+      });
+      const branch = byId[id];
+      const inward = branch ? -Math.sign(branch.off || 1) : 0;
+      let guard = 0;
+      while (hits() && guard++ < 48) {
+        y -= 10;
+        if (guard === 1 && inward) x += inward * Math.min(28, tw * .35);
+        tag.style.top = y + 'px';
+        tag.style.left = x + 'px';
+      }
+    });
+  };
+
   layoutCards();
+  nodes.forEach((n) => {
+    const cover = n.el.querySelector('.cover');
+    if (cover && !cover.complete) cover.addEventListener('load', layoutCards, { once: true });
+  });
 
   const hl = (ids, entry) => {
     document.body.classList.toggle('dimming', !!ids);
@@ -477,7 +534,13 @@ const data = {
     wrap.scrollLeft = maxScroll / 2;
   };
   const fit = () => {
+    // Crossing the breakpoint with a tree built for the other size: rebuild at the right zoom.
+    if (mq.matches !== MOBILE) {
+      location.reload();
+      return;
+    }
     if (MOBILE) {
+      // Never scale() the mobile tree down — that is what made it feel zoomed out.
       k = 1;
       stage.style.transform = 'none';
       wrap.style.height = H + 'px';
@@ -489,7 +552,12 @@ const data = {
       wrap.scrollLeft = 0;
     }
   };
-  fit(); addEventListener('resize', fit);
+  fit();
+  addEventListener('resize', fit);
+  mq.addEventListener('change', () => location.reload());
+  // Cursor / DevTools often open wide then snap to a phone width after first paint.
+  requestAnimationFrame(() => fit());
+  setTimeout(fit, 120);
 
   const groups = [...document.querySelectorAll('.br')], bridgeEls = [...document.querySelectorAll('.bridge')];
   const viewing = document.getElementById('viewing'), yrEl = document.getElementById('yr'), prog = document.getElementById('prog');

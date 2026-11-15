@@ -193,3 +193,31 @@ This is the strongest brief so far, because it turns the homepage into an honest
 ### 2026-11-09 · Deploy rule: review locally first
 
 **Rule.** Do not push to GitHub or deploy to Vercel immediately after changes. Pavlos reviews locally first. Push / deploy only when he explicitly asks.
+
+### 2026-11-09 · Mobile loses the timeline theme
+
+**Problem.** Below 760px the homepage hides the tree and shows a year-grouped feed with colour dots. It is readable, but it no longer feels like a living timeline: no trunk, no growing tips, no viewing-year HUD, no roots as an ending.
+
+**Four directions mocked in `concepts/mobile-timeline-options.html`.** Goal: keep the metaphor on a phone without shrinking the desktop SVG.
+- A. Narrow trunk: center stem, alternating event cards, living tips and a viewing HUD.
+- B. Branch rails: parallel coloured stems on the left, one per living branch; entries attach to their rail.
+- C. Growing spine: chronological feed with a real trunk, glowing today tip, branch-coloured nodes, year ticks, roots at the end.
+- D. Canopy, then one branch: lead with what is growing now; tap a tip to walk a single coloured path, with a tiny whole-tree silhouette for orientation.
+
+**Decision.** Pavlos picked A: a phone-native narrow trunk, not the desktop tree with pan. Cards sit outside the branches; the trunk stays centred. First mobile pass felt zoomed out (stage squeezed into the phone). Zoomed in: larger cards, thicker stems, wider lanes than the viewport, horizontal pan with the trunk centred. Year feed hidden.
+
+### 2026-11-09 · Cover images on tree nodes
+
+**What happened.** Tree cards can show a small cover when an entry has one. Source of truth: optional `cover` frontmatter, otherwise the first markdown image in the body. First use: *Rereading Steal Like an Artist* with `/images/steal-like-an-artist.png`. Covers sit above the card copy; date still lines up with the branch node.
+
+### 2026-11-15 · Second entry: Physical products branch
+
+**What happened.** Second real entry published locally: *The Joy of Making Something Tangible* (`src/content/entries/the-joy-of-making-something-tangible.md`, dated 2026-11-15). New tree branch **Physical products** (`src/content/branches/physical-products.md`, category hobby). Piece is about making a 3D-printed lamp as a tangible creative outlet alongside digital work. Photos added in process order: sketch → Fusion CAD → printing → finished lit lamp as cover (`/images/lamp.jpg`) and in the "Moment It Lit Up" section.
+
+### 2026-11-15 · Dropped started/ended chips on cards
+
+**What happened.** Removed the "started" / "ended" text labels from tree cards, the mobile feed, and note page meta. Branch start/end is still tracked internally for node styling (hollow start dots, ended lanes), but the date line only shows the month.
+
+### 2026-11-15 · About root card gets a cover
+
+**What happened.** The tree's Roots / About me card now shows the same style of photo preview as entry cards, using `/images/pavlos.jpg`. Repositions after the image loads so it stays anchored to the root node.

@@ -2,6 +2,7 @@
 title: "Rereading Steal Like an Artist"
 date: 2026-11-09
 branch: books
+cover: /images/steal-like-an-artist.png
 ---
 
 I first read [*Steal Like an Artist*](https://austinkleon.com/steal/) about ten years ago, when I started reading books. It was basically the second book I ever read. I was 20. I'd been a photographer for about a year, and if I remember correctly I was just starting to learn graphic design.

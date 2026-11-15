@@ -20,6 +20,7 @@ const entries = defineCollection({
     date: z.coerce.date(),
     branch: z.string(),
     also: z.array(z.string()).default([]),
+    cover: z.string().optional(),
   }),
 });
 

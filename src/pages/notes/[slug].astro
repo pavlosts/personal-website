@@ -36,7 +36,6 @@ const others = [...branch.entries].reverse();
         <span class:list={['pill', 'also', { dead: b.ended }]}><i style={`background:${b.color}`}></i>{b.name}</span>
       ))}
       <time datetime={entry.date.toISOString()}>{fullDate(entry.date)}</time>
-      {entry.kind && <em>{entry.kind === 'start' ? 'started' : 'ended'}</em>}
     </div>
     <h1>{entry.title}</h1>
     <div class="prose"><Content /></div>

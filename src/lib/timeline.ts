@@ -22,7 +22,15 @@ export interface Entry {
   also: string[];
   kind: Kind;
   hasBody: boolean;
+  cover?: string;
   raw: CollectionEntry<'entries'>;
+}
+
+/** Prefer frontmatter `cover`; otherwise use the first markdown image in the body. */
+function resolveCover(data: CollectionEntry<'entries'>['data'], body?: string) {
+  if (data.cover) return data.cover;
+  const match = body?.match(/!\[[^\]]*]\(([^)\s]+)(?:\s+"[^"]*")?\)/);
+  return match?.[1];
 }
 
 export async function loadTimeline() {
@@ -52,6 +60,7 @@ export async function loadTimeline() {
         also: e.data.also.filter((id) => id !== b.id),
         kind: i === 0 ? 'start' : b.data.ended && i === list.length - 1 ? 'end' : '',
         hasBody: !!e.body?.trim(),
+        cover: resolveCover(e.data, e.body),
         raw: e,
       }));
       return {
