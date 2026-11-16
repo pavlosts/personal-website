@@ -39,7 +39,7 @@ const data = {
 <Base nav="growth">
   <section class="intro">
     <h1>Hi! 👋 I am Pavlos, <span>and this is my journey</span></h1>
-    <p class="lead">As a creative person with ADHD, I can't stop experimenting with multiple things. I created this place to share about them without a filter. Enjoy!</p>
+    <p class="lead">As a creative person, I can't stop trying new things. I created this blog to share everything in one place!</p>
   </section>
   <div class="intro-rule" aria-hidden="true"></div>
 
@@ -290,22 +290,28 @@ const data = {
   const forkY = (b) => Y(b.ys) + RISE;
   const xAt = (b, y) => { const top = forkY(b) - RISE, k = Math.max(0, Math.min(1, (top - y) / 120)); return bx(b) + k * 4 * Math.sin(y / 150 + b.seed); };
 
-  let s = `<defs><linearGradient id="trunk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#191816" stop-opacity=".8"/><stop offset=".25" stop-color="#191816" stop-opacity=".92"/><stop offset="1" stop-color="#191816"/></linearGradient>`;
+  let s = `<defs>`;
   branches.forEach((b) => { if (!b.ye) s += `<linearGradient id="g-${b.id}" gradientUnits="userSpaceOnUse" x1="0" y1="${forkY(b)}" x2="0" y2="${forkY(b) - RISE * 1.6}"><stop offset="0" stop-color="${b.root || '#191816'}" stop-opacity="${b.root ? 1 : .8}"/><stop offset="1" stop-color="${b.col}"/></linearGradient>`; });
   s += `</defs>`;
+
+  const yRoot = Y(START) + 40, yTip = Y(NOW) - 44;
+  // Option F: hairline spine with year beads. Trunk almost disappears; time markers carry the structure.
+  const trunkW = MOBILE ? 1.6 : 1.25;
+  const beadR = MOBILE ? 2.8 : 2.4;
+  s += `<path d="M${CX},${yTip} L${CX},${yRoot}" fill="none" stroke="#191816" stroke-width="${trunkW}" stroke-linecap="round"/>`;
+  s += `<circle cx="${CX}" cy="${yTip - 4}" r="3.2" fill="#191816"/>`;
 
   for (let yr = Math.ceil(START); yr <= nowYear; yr++) {
     const y = Y(yr);
     // Years hug the trunk on mobile so they stay in the zoomed-in centred view.
-    const yrX = MOBILE ? CX + 12 : 0;
+    const yrX = MOBILE ? CX + 14 : 0;
     s += `<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="rgba(25,24,22,.06)"/><text class="yr" x="${yrX}" y="${y - 10}">${yr}</text>`;
+    if (y > yTip + 20 && y < yRoot - 20) {
+      s += `<circle cx="${CX}" cy="${y}" r="${beadR}" fill="#191816"/>`;
+    }
   }
   s += `<line x1="0" x2="${W}" y1="${Y(NOW)}" y2="${Y(NOW)}" stroke="rgba(25,24,22,.18)" stroke-dasharray="3 5"/>`;
 
-  const yRoot = Y(START) + 40, yTip = Y(NOW) - 44;
-  const trunkHalf = MOBILE ? 4.2 : 3.6;
-  s += `<path d="M${CX - trunkHalf},${yRoot} C${CX - trunkHalf * .85},${yRoot - 600} ${CX - 1.2},${yTip + 500} ${CX - 1},${yTip} L${CX + 1},${yTip} C${CX + 1.2},${yTip + 500} ${CX + trunkHalf * .85},${yRoot - 600} ${CX + trunkHalf},${yRoot} Z" fill="url(#trunk)"/>`;
-  s += `<circle cx="${CX}" cy="${yTip - 4}" r="3.2" fill="#191816"/>`;
   const roots = DATA.roots || [], rootTop = yRoot - 6, nr = roots.length;
   const span = Math.min(MOBILE ? 110 : 330, (MOBILE ? 34 : 75) * Math.max(0, nr - 1));
   const slots = roots.map((_, i) => (nr > 1 ? -span + i * (2 * span) / (nr - 1) : 0)).sort((a, c) => Math.abs(a) - Math.abs(c) || a - c);

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Main trunk · options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F6F4EF;
+    --ink: #191816;
+    --ink2: #4D4A44;
+    --muted: #8E8A82;
+    --soft: #A7A196;
+    --line: rgba(25, 24, 22, .07);
+    --design: #2F6B5A;
+    --hobby: #C2573C;
+    --writing: #C08A2E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #ECE9E2;
+    color: var(--ink);
+    font: 14px/1.5 Geist, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 56px 28px 100px;
+  }
+  .page { max-width: 1180px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 600; letter-spacing: -.03em; }
+  .sub { color: var(--ink2); margin-top: 8px; font-size: 15px; max-width: 720px; }
+  .problem {
+    margin-top: 22px; padding: 14px 16px; border-radius: 14px;
+    background: rgba(255,255,255,.55); border: 1px solid rgba(25,24,22,.06);
+    color: var(--ink2); font-size: 13.5px; max-width: 760px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 36px 24px;
+    margin-top: 48px;
+  }
+  .opt .meta { margin-bottom: 14px; min-height: 108px; }
+  .opt .meta b {
+    display: inline-block; font: 500 11px "Geist Mono", monospace;
+    color: var(--muted); letter-spacing: .04em;
+  }
+  .opt .meta h2 {
+    margin-top: 6px; font-size: 17px; font-weight: 600; letter-spacing: -.015em;
+  }
+  .opt .meta p { margin-top: 6px; color: var(--ink2); font-size: 13.5px; }
+
+  .frame {
+    height: 420px;
+    border-radius: 20px;
+    background: var(--bg);
+    border: 1px solid rgba(25,24,22,.08);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.75) inset,
+      0 28px 60px -28px rgba(25,24,22,.4);
+    position: relative;
+    overflow: hidden;
+    background-image: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(255,255,255,.85), transparent 70%);
+  }
+  .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .today {
+    position: absolute; left: 18px; top: 78px;
+    font: 500 11px "Geist Mono", monospace; color: #fff;
+    background: var(--ink); padding: 3px 9px; border-radius: 999px;
+  }
+  .me {
+    position: absolute; left: 50%; top: 48px; transform: translate(-50%, -100%);
+    display: flex; align-items: center; gap: 7px; white-space: nowrap;
+    padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 500;
+    background: var(--ink); color: #fff; border: 1px solid var(--ink);
+  }
+  .yr { font: 500 11px "Geist Mono", monospace; fill: #ABA69C; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Main trunk: six directions</h1>
+  <p class="sub">The central spine from Today down toward the roots. Current fill can read as parallel ghost lines when the edges diverge. Each option keeps the same tip, year line, and root junction so the comparison is only about the trunk itself.</p>
+  <div class="problem">Focus region: the vertical main branch between the Pavlos tip and the root junction. Side branches stay the same weight so the trunk either leads or disappears.</div>
+
+  <div class="grid">
+    <div class="opt">
+      <div class="meta">
+        <b>A · CURRENT</b>
+        <h2>Filled taper</h2>
+        <p>What is live now: a filled path that is thin at the tip and thicker at the roots. Can silhouette as multiple strokes.</p>
+      </div>
+      <div class="frame" id="A"><span class="me">Pavlos</span><span class="today">Today</span></div>
+    </div>
+
+    <div class="opt">
+      <div class="meta">
+        <b>B</b>
+        <h2>Single stroke</h2>
+        <p>One continuous stroke with a round cap. Thickness grows toward the roots via a clean taper, no fill silhouette.</p>
+      </div>
+      <div class="frame" id="B"><span class="me">Pavlos</span><span class="today">Today</span></div>
+    </div>
+
+    <div class="opt">
+      <div class="meta">
+        <b>C</b>
+        <h2>Even rod</h2>
+        <p>Constant width, rounded tip and root. Feels more like a timeline axis than a botanical trunk.</p>
+      </div>
+      <div class="frame" id="C"><span class="me">Pavlos</span><span class="today">Today</span></div>
+    </div>
+
+    <div class="opt">
+      <div class="meta">
+        <b>D</b>
+        <h2>Ink wash + core</h2>
+        <p>Soft wider underlayer, crisp thin core on top. Depth without the double-edge artifact.</p>
+      </div>
+      <div class="frame" id="D"><span class="me">Pavlos</span><span class="today">Today</span></div>
+    </div>
+
+    <div class="opt">
+      <div class="meta">
+        <b>E</b>
+        <h2>Living tip fade</h2>
+        <p>Ink at the roots fades into a quiet living colour near Today, so growth reads in the spine itself.</p>
+      </div>
+      <div class="frame" id="E"><span class="me">Pavlos</span><span class="today">Today</span></div>
+    </div>
+
+    <div class="opt">
+      <div class="meta">
+        <b>F</b>
+        <h2>Hairline beads</h2>
+        <p>Ultra-thin spine with year beads. The trunk almost disappears; time markers carry the structure.</p>
+      </div>
+      <div class="frame" id="F"><span class="me">Pavlos</span><span class="today">Today</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const W = 280, H = 420, CX = 140;
+  const TIP = 72, ROOT = 340;
+  const design = '#2F6B5A', hobby = '#C2573C', writing = '#C08A2E';
+
+  const context = (extra = '') => `
+    <line x1="0" x2="${W}" y1="${TIP + 18}" y2="${TIP + 18}" stroke="rgba(25,24,22,.18)" stroke-dasharray="3 5"/>
+    <line x1="0" x2="${W}" y1="168" y2="168" stroke="rgba(25,24,22,.06)"/>
+    <text class="yr" x="16" y="158">2026</text>
+    <line x1="0" x2="${W}" y1="268" y2="268" stroke="rgba(25,24,22,.06)"/>
+    <text class="yr" x="16" y="258">2025</text>
+    ${extra}
+    <path d="M${CX},${ROOT} C${CX - 8},${ROOT + 28} ${CX - 48},${ROOT + 52} ${CX - 62},${ROOT + 58}" fill="none" stroke="#191816" stroke-opacity=".45" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M${CX},${ROOT} C${CX + 6},${ROOT + 34} ${CX + 42},${ROOT + 58} ${CX + 58},${ROOT + 66}" fill="none" stroke="#191816" stroke-opacity=".35" stroke-width="1.15" stroke-linecap="round"/>
+    <path d="M${CX},${ROOT} C${CX - 2},${ROOT + 40} ${CX - 22},${ROOT + 70} ${CX - 28},${ROOT + 78}" fill="none" stroke="#191816" stroke-opacity=".28" stroke-width="1.05" stroke-linecap="round"/>
+    <circle cx="${CX}" cy="${ROOT}" r="4" fill="#191816"/>
+  `;
+
+  const branches = `
+    <path d="M${CX},${TIP + 90} C${CX + 18},${TIP + 70} ${CX + 48},${TIP + 58} ${CX + 78},${TIP + 54}" fill="none" stroke="${hobby}" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="${CX + 78}" cy="${TIP + 54}" r="4" fill="${hobby}"/>
+    <path d="M${CX},${TIP + 170} C${CX - 20},${TIP + 150} ${CX - 58},${TIP + 138} ${CX - 88},${TIP + 132}" fill="none" stroke="${writing}" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="${CX - 88}" cy="${TIP + 132}" r="4" fill="${writing}"/>
+    <path d="M${CX},${TIP + 240} C${CX + 16},${TIP + 220} ${CX + 52},${TIP + 208} ${CX + 86},${TIP + 202}" fill="none" stroke="${design}" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="${CX + 86}" cy="${TIP + 202}" r="4" fill="${design}"/>
+  `;
+
+  const paint = (id, trunk) => {
+    document.getElementById(id).insertAdjacentHTML('afterbegin',
+      `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${trunk}${context(branches)}</svg>`);
+  };
+
+  // A: current filled taper (recreates the live silhouette)
+  paint('A', `
+    <defs>
+      <linearGradient id="trA" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#191816" stop-opacity=".8"/>
+        <stop offset=".25" stop-color="#191816" stop-opacity=".92"/>
+        <stop offset="1" stop-color="#191816"/>
+      </linearGradient>
+    </defs>
+    <path d="M${CX - 3.6},${ROOT}
+      C${CX - 3.1},${ROOT - 160} ${CX - 1.2},${TIP + 160} ${CX - 1},${TIP}
+      L${CX + 1},${TIP}
+      C${CX + 1.2},${TIP + 160} ${CX + 3.1},${ROOT - 160} ${CX + 3.6},${ROOT} Z" fill="url(#trA)"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="3.2" fill="#191816"/>
+  `);
+
+  // B: single stroke taper via variable-width polyline approximation (clean edges)
+  paint('B', `
+    <defs>
+      <linearGradient id="trB" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#191816" stop-opacity=".88"/>
+        <stop offset="1" stop-color="#191816"/>
+      </linearGradient>
+    </defs>
+    <path d="M${CX - 1.1},${TIP}
+      C${CX - 1.2},${TIP + 70} ${CX - 1.8},${TIP + 160} ${CX - 2.8},${ROOT - 40}
+      L${CX - 3.4},${ROOT}
+      L${CX + 3.4},${ROOT}
+      L${CX + 2.8},${ROOT - 40}
+      C${CX + 1.8},${TIP + 160} ${CX + 1.2},${TIP + 70} ${CX + 1.1},${TIP} Z" fill="url(#trB)"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="3.2" fill="#191816"/>
+  `);
+
+  // C: even rod
+  paint('C', `
+    <path d="M${CX - 2.4},${TIP + 2}
+      L${CX - 2.4},${ROOT}
+      A2.4,2.4 0 0 0 ${CX + 2.4},${ROOT}
+      L${CX + 2.4},${TIP + 2}
+      A2.4,2.4 0 0 0 ${CX - 2.4},${TIP + 2} Z" fill="#191816"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="3.2" fill="#191816"/>
+  `);
+
+  // D: wash + core
+  paint('D', `
+    <path d="M${CX - 5},${ROOT}
+      C${CX - 4},${ROOT - 140} ${CX - 2.5},${TIP + 120} ${CX - 2},${TIP}
+      L${CX + 2},${TIP}
+      C${CX + 2.5},${TIP + 120} ${CX + 4},${ROOT - 140} ${CX + 5},${ROOT} Z" fill="#191816" opacity=".12"/>
+    <path d="M${CX},${TIP} L${CX},${ROOT}" fill="none" stroke="#191816" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="3.2" fill="#191816"/>
+  `);
+
+  // E: living tip fade
+  paint('E', `
+    <defs>
+      <linearGradient id="trE" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#191816"/>
+        <stop offset=".55" stop-color="#191816"/>
+        <stop offset="1" stop-color="${design}"/>
+      </linearGradient>
+    </defs>
+    <path d="M${CX - 1.1},${TIP}
+      C${CX - 1.2},${TIP + 70} ${CX - 1.8},${TIP + 160} ${CX - 2.8},${ROOT - 40}
+      L${CX - 3.4},${ROOT}
+      L${CX + 3.4},${ROOT}
+      L${CX + 2.8},${ROOT - 40}
+      C${CX + 1.8},${TIP + 160} ${CX + 1.2},${TIP + 70} ${CX + 1.1},${TIP} Z" fill="url(#trE)"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="3.2" fill="${design}"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="1.2" fill="#fff"/>
+  `);
+
+  // F: hairline beads
+  paint('F', `
+    <path d="M${CX},${TIP} L${CX},${ROOT}" fill="none" stroke="#191816" stroke-width="1.25" stroke-linecap="round"/>
+    <circle cx="${CX}" cy="${TIP - 4}" r="3.2" fill="#191816"/>
+    <circle cx="${CX}" cy="168" r="2.4" fill="#191816"/>
+    <circle cx="${CX}" cy="268" r="2.4" fill="#191816"/>
+  `);
+})();
+</script>
+</body>
+</html>

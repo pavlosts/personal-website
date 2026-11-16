@@ -4,6 +4,12 @@ export const SITE = {
   description: 'A living timeline of what I work on, write about and spend my time on.',
 };
 
+export const LINKS = [
+  { label: 'Beegger', href: 'https://www.beegger.com/' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/pavlostsa/' },
+  { label: 'Instagram', href: 'https://www.instagram.com/pavlos.t.photography/' },
+] as const;
+
 // Drawn as roots under the trunk. Most important first: it becomes the deepest root.
 // `note` is optional, a short line under the name (e.g. "since 2012").
 export const ROOTS: { name: string; note?: string }[] = [

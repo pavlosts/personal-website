@@ -221,3 +221,13 @@ This is the strongest brief so far, because it turns the homepage into an honest
 ### 2026-11-15 · About root card gets a cover
 
 **What happened.** The tree's Roots / About me card now shows the same style of photo preview as entry cards, using `/images/pavlos.jpg`. Repositions after the image loads so it stays anchored to the root node.
+
+### 2026-11-15 · Main trunk options
+
+**What happened.** The live filled taper can read as parallel ghost lines when the left and right edges diverge. Six trunk directions mocked in `concepts/trunk-options.html`: A current filled taper, B single clean stroke taper, C even rod, D ink wash + core, E living tip fade, F hairline with year beads.
+
+**Decision.** Pavlos picked F: ultra-thin hairline spine with year beads on the trunk. Side branches keep their colour weight; the main axis almost disappears and the year markers carry the structure.
+
+### 2026-11-15 · Company and social links
+
+**What happened.** Added Beegger, LinkedIn, and Instagram as site-wide links (`LINKS` in `src/lib/site.ts`, rendered in `Base` as `.site-links`). Same URLs wired into the About copy where those profiles and the company are mentioned. Old “Still growing” footer stayed removed.

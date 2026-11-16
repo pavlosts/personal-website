@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import PostHog from '../components/posthog.astro';
-import { SITE } from '../lib/site';
+import { LINKS, SITE } from '../lib/site';
 
 interface Props {
   title?: string;
@@ -10,7 +10,6 @@ interface Props {
 }
 
 const { title = SITE.title, description = SITE.description, nav = null } = Astro.props;
-const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -37,9 +36,10 @@ const year = new Date().getFullYear();
       </nav>
     </header>
     <slot />
-    <footer class="site-footer">
-      <span>{SITE.name} · {year}</span>
-      <span>Still growing</span>
-    </footer>
+    <nav class="site-links" aria-label="Elsewhere">
+      {LINKS.map((link) => (
+        <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+      ))}
+    </nav>
   </body>
 </html>

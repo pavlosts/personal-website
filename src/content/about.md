@@ -1,6 +1,6 @@
 I always knew a presence online mattered. Especially on social media. So I always had a profile.
 
-Those profiles were targeted. LinkedIn is for my professional product design work. Instagram is for my Latin dance photography. They work because they are restricted. I could not post everything else I do there, and I did not want to. I want those audiences tied to that specific thing. LinkedIn is how I promote my work and connect with related people and potential clients. Instagram is for the photography. Mixing hobbies and unrelated design stuff into those feeds would mess that up.
+Those profiles were targeted. [LinkedIn](https://www.linkedin.com/in/pavlostsa/) is for my professional product design work. [Instagram](https://www.instagram.com/pavlos.t.photography/) is for my Latin dance photography. They work because they are restricted. I could not post everything else I do there, and I did not want to. I want those audiences tied to that specific thing. LinkedIn is how I promote my work and connect with related people and potential clients. Instagram is for the photography. Mixing hobbies and unrelated design stuff into those feeds would mess that up.
 
 The problem is I am a creative person with ADHD. I cannot stop experimenting with multiple things. I try a lot. And I never had a place to share the rest.
 
@@ -12,7 +12,7 @@ This site came together with inspiration from [*Show Your Work!*](https://austin
 
 ## Who I am
 
-I am a product designer. I started as a photographer, then explored graphic design. Now I work as a freelance digital product designer. In my free time I experiment with physical product design. I design my own lamps and home decoration, and a lot of other design-related things.
+I am a product designer. I started as a photographer, then explored graphic design. Now I work as a freelance digital product designer through [Beegger](https://www.beegger.com/). In my free time I experiment with physical product design. I design my own lamps and home decoration, and a lot of other design-related things.
 
 I also read a lot of books, mostly around design and business.
 
