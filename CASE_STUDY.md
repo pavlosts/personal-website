@@ -236,6 +236,10 @@ This is the strongest brief so far, because it turns the homepage into an honest
 
 **What happened.** New personal-blog subject proposed: why Pavlos created the startup network community (Greek Startup Networking). Brief started via content-helper; conversation-first interview in progress before any draft. Progress file: `.helper-checklists/content-helper-brief.md`.
 
-### 2026-11-19 · Joy of making: LinkedIn draft staged, post later
+### 2026-11-19 · Joy of making: corrected to blog draft, not LinkedIn
 
-**What happened.** Site entry *The Joy of Making Something Tangible* was already live. Staged a posting draft in `drafts/the-joy-of-making-something-tangible.md`: full share copy (kept Pavlos's original wording) plus a short LinkedIn version. Photos in process order. No LinkedIn/social publish yet; post when he asks.
+**What happened.** Misread "draft for later publishing" as LinkedIn copy. Corrected: removed the live entry `src/content/entries/the-joy-of-making-something-tangible.md` and kept the full personal-blog article in `drafts/the-joy-of-making-something-tangible.md` for later publish. `physical-products` branch file stays; empty branches do not show on the tree. Live site still shows the old entry until this change is pushed.
+
+### 2026-11-19 · LinkedIn draft: Steal Like an Artist + what the blog is
+
+**What happened.** Separate ask: drafted a LinkedIn intro for *Rereading Steal Like an Artist* in `drafts/linkedin-rereading-steal-like-an-artist.md`. Opens with why the personal site exists, then a few second-read highlights. Post later when he asks.
