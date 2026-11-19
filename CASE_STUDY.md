@@ -231,3 +231,11 @@ This is the strongest brief so far, because it turns the homepage into an honest
 ### 2026-11-15 · Company and social links
 
 **What happened.** Added Beegger, LinkedIn, and Instagram as site-wide links (`LINKS` in `src/lib/site.ts`, rendered in `Base` as `.site-links`). Same URLs wired into the About copy where those profiles and the company are mentioned. Old “Still growing” footer stayed removed.
+
+### 2026-11-16 · Subject: Why I created the startup network community
+
+**What happened.** New personal-blog subject proposed: why Pavlos created the startup network community (Greek Startup Networking). Brief started via content-helper; conversation-first interview in progress before any draft. Progress file: `.helper-checklists/content-helper-brief.md`.
+
+### 2026-11-19 · Joy of making: LinkedIn draft staged, post later
+
+**What happened.** Site entry *The Joy of Making Something Tangible* was already live. Staged a posting draft in `drafts/the-joy-of-making-something-tangible.md`: full share copy (kept Pavlos's original wording) plus a short LinkedIn version. Photos in process order. No LinkedIn/social publish yet; post when he asks.
